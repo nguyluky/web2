@@ -22,6 +22,7 @@ require_once 'Database.php';
 require_once 'utils/Response.php';
 require_once 'controllers/BaseController.php';
 require_once 'controllers/ItemController.php';
+require_once 'controllers/UserController.php';
 require_once 'models/Item.php';
 
 // Get the request URI and HTTP method
