@@ -1,5 +1,7 @@
 <?php
 
+require_once '../models/Import.php';
+
 class ImportController extends BaseController {
 
     public function getAll() {

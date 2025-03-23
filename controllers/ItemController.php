@@ -1,4 +1,6 @@
 <?php
+
+require_once '../models/Item.php';
 class ItemController extends BaseController {
     
     // Get all items

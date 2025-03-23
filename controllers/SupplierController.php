@@ -1,5 +1,7 @@
 <?php
 
+require_once '../models/Supplier.php';
+
 class SupplierController extends BaseController {
     // get all of supplier list
     public function getAll() {

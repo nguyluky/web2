@@ -1,14 +1,16 @@
 <?php
 
-class WarrantyControllers extends BaseController {
+require_once '../models/Warranty.php';
+
+class WarrantyController extends BaseController {
     public function getAll() {
-        $model = new WarrantyControllers();
+        $model = new Warranty();
         $warranty = $model->getAll();
-        Response::json(['warrenty' => $warranty]);
+        Response::json(['warranty' => $warranty]);
     }
 
     public function getById($id) {
-        $model = new WarrantyControllers();
+        $model = new Warranty();
         $warranty = $model->getById($id);
         if (!$warranty) {
             Response::json(['error' => 'Warranty not found'], 404);
@@ -18,7 +20,7 @@ class WarrantyControllers extends BaseController {
     }
 
     public function getByAccountId($accountId) {
-        $model = new WarrantyControllers();
+        $model = new Warranty();
         $warranty = $model->getByAccountId($accountId);
         if (!$warranty) {
             Response::json(['error' => 'Warranty not found'], 404);
@@ -28,7 +30,7 @@ class WarrantyControllers extends BaseController {
     }
 
     public function getByProductId($productId) {
-        $model = new WarrantyControllers();
+        $model = new Warranty();
         $warranty = $model->getByProductId($productId);
         if (!$warranty) {
             Response::json(['error' => 'Warranty not found'], 404);
@@ -39,7 +41,7 @@ class WarrantyControllers extends BaseController {
 
     public function update($id, $data) {
         $this->validateRequired($data, ['product_id', 'account_id', 'supplier_id', 'issue_date', 'expiration_date']);
-        $model = new WarrantyControllers();
+        $model = new Warranty();
         $warranty = $model->getById($id);
         if (!$warranty) {
             Response::json(['error' => 'Warranty not found'], 404);

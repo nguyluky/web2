@@ -1,6 +1,6 @@
 <?php
 
-class Warrenty {
+class Warranty {
 
     // TODO
 

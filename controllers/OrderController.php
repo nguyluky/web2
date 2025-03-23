@@ -1,5 +1,6 @@
 <?php
 
+require_once '../models/Order.php';
 class OrderController extends BaseController {
 
     public function getAll() {

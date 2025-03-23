@@ -1,6 +1,8 @@
 <?php
 
-class CartControllers extends BaseController {
+require_once '../models/Cart.php';
+
+class CartController extends BaseController {
     public function create($data) {
         $this->validateRequired($data, ['account_id', 'product_id', 'quantity']);
         $model = new Cart();
@@ -11,13 +13,6 @@ class CartControllers extends BaseController {
             Response::json(['error' => 'Failed to create cart'], 500);
         }
     }
-
-    public function getAll() {
-        $model = new Cart();
-        $carts = $model->getAll();
-        Response::json(['carts' => $carts]);
-    }
-
     public function getByAccountId($id) {
         $model = new Cart();
         $carts = $model->getByAccountId($id);
