@@ -13,7 +13,7 @@ class ItemController extends BaseController {
     // Get item by ID
     public function getById($data, $id) {
         $model = new Item();
-        $item = $model->getById($id);
+        $item = $model->($id);
         
         if (!$item) {
             Response::json(['error' => 'Item not found'], 404);

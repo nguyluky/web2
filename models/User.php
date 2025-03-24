@@ -1,29 +1,41 @@
 <?php
 
 class User {
-    // TODO: Làm đi Tú
+    private $db;
+    private $table = 'users';
+
+    public function __construct() {
+        $this->db = Database::getInstance();
+    }    
+
 
     public function getAll() {
-        // TODO: 
+        $sql = "SELECT * FROM {$this->table} ORDER BY created_at DESC";
+        return $this->db->getRows($sql);    
     }
 
     public function getById($id) {
-        // TODO: 
+        $sql = "SELECT * FROM {$this->table} WHERE id = ?";
+        return $this->db->getRow($sql, [$id]);
     }
-
+ 
     public function getByRule($rule) {
-        // TODO:
+        $sql = "SELECT * FROM {$this->table} WHERE rule = ?";
+        return $this->db->getRow($sql, [$rule]);
     }
 
     public function create($data) {
-        // TODO:
+        $sql = "INSERT INTO {$this->table} (name, email, password, rule) VALUES (?, ?, ?, ?)";
+        return $this->db->query($sql, [$data['name'], $data['email'], $data['password'], $data['rule']]);
     }
 
     public function updateById($id, $data) {
-        // TODO
+        $sql = "UPDATE {$this->table} SET name = ?, email = ?, password = ?, rule = ? WHERE id = ?";
+        return $this->db->query($sql, [$data['name'], $data['email'], $data['password'], $data['rule'], $id]);
     }
 
     public function deleteById($id) {
-        // TODO
+        $sql = "DELETE FROM {$this->table} WHERE id = ?";
+        return $this->db->query($sql, [$id]);
     }
 }
