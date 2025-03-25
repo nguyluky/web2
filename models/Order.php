@@ -2,7 +2,7 @@
 
 class Order {
     private $db;
-    private $table = 'orders';
+    private $table = 'order';
 
     public function __construct() {
         $this->db = Database::getInstance();

@@ -1,15 +1,16 @@
 <?php
 
-class Order {
+class Account {
+
     private $db;
-    private $table = 'orders';
+    private $table = 'account';
 
     public function __construct() {
         $this->db = Database::getInstance();
     }
 
     public function getAll() {
-        $sql = "SELECT * FROM {$this->table} ORDER BY created_at DESC";
+        $sql = "SELECT * FROM {$this->table} ORDER BY created DESC";
         return $this->db->getRows($sql);
     }
 
@@ -19,22 +20,24 @@ class Order {
     }
 
     public function create($data) {
-        $sql = "INSERT INTO {$this->table} (account_id, status, employee_id, payment_method, created_at) 
-                VALUES (?, ?, ?, ?, NOW())";
+        $sql = "INSERT INTO {$this->table} (username, password, rule, status, created, updated) VALUES (?, ?, ?, ?, NOW(), NOW())";
         return $this->db->insert($sql, [
-            $data['account_id'],
-            $data['status'],
-            $data['employee_id'],
-            $data['payment_method']
+            $data['username'],
+            password_hash($data['password'], PASSWORD_BCRYPT),
+            $data['rule'],
+            $data['status']
         ]);
     }
 
-    public function update($id, $data) {
+    public function updateById($id, $data) {
         $fields = [];
         $values = [];
 
         foreach ($data as $key => $value) {
-            if (in_array($key, ['status', 'employee_id', 'payment_method'])) {
+            if (in_array($key, ['username', 'password', 'rule', 'status'])) {
+                if ($key == 'password') {
+                    $value = password_hash($value, PASSWORD_BCRYPT);
+                }
                 $fields[] = "$key = ?";
                 $values[] = $value;
             }
@@ -45,14 +48,13 @@ class Order {
         }
 
         $values[] = $id;
-        $sql = "UPDATE {$this->table} SET " . implode(", ", $fields) . " WHERE id = ?";
+        $sql = "UPDATE {$this->table} SET " . implode(", ", $fields) . ", updated = NOW() WHERE id = ?";
         return $this->db->query($sql, $values);
     }
 
-    public function delete($id) {
+    public function deleteById($id) {
         $sql = "DELETE FROM {$this->table} WHERE id = ?";
         return $this->db->query($sql, [$id]);
     }
 }
-
 ?>
