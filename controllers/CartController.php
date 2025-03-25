@@ -1,7 +1,5 @@
 <?php
 
-require_once '../models/Cart.php';
-
 class CartController extends BaseController {
     public function create($data) {
         $this->validateRequired($data, ['account_id', 'product_id', 'quantity']);

@@ -1,7 +1,5 @@
 <?php
 
-require_once '../models/Warranty.php';
-
 class WarrantyController extends BaseController {
     public function getAll() {
         $model = new Warranty();
