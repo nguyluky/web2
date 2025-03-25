@@ -1,62 +1,58 @@
 <?php
-class Item {
+class Product {
     private $db;
-    private $table = 'items';
+    private $table = 'product';
     
     public function __construct() {
         $this->db = Database::getInstance();
     }
     
-    // Get all items
+    // Get all products
     public function getAll() {
-        $sql = "SELECT * FROM {$this->table} ORDER BY created_at DESC";
+        $sql = "SELECT * FROM {$this->table} ORDER BY id DESC";
         return $this->db->getRows($sql);
     }
     
-    // Get item by ID
+    // Get product by ID
     public function getById($id) {
         $sql = "SELECT * FROM {$this->table} WHERE id = ?";
         return $this->db->getRow($sql, [$id]);
     }
     
-    // Create a new item
+    // Create a new product
     public function create($data) {
-        $sql = "INSERT INTO {$this->table} (name, description, created_at) 
-                VALUES (?, ?, NOW())";
+        $sql = "INSERT INTO {$this->table} (name, category_id, attributes) VALUES (?, ?, ?)";
         return $this->db->insert($sql, [
             $data['name'],
-            $data['description']
+            $data['category_id'],
+            json_encode($data['attributes'])
         ]);
     }
     
-    // Update an item
+    // Update a product
     public function update($id, $data) {
         $fields = [];
         $values = [];
         
-        // Build dynamic update fields
         foreach ($data as $key => $value) {
-            if (in_array($key, ['name', 'description'])) {
+            if (in_array($key, ['name', 'category_id', 'attributes'])) {
                 $fields[] = "$key = ?";
-                $values[] = $value;
+                $values[] = ($key === 'attributes') ? json_encode($value) : $value;
             }
         }
         
         if (empty($fields)) {
-            return true;  // Nothing to update
+            return false; // Nothing to update
         }
         
-        $values[] = $id;  // Add ID for WHERE clause
-        
-        $sql = "UPDATE {$this->table} SET " . implode(", ", $fields) . ", updated_at = NOW() WHERE id = ?";
-        $this->db->query($sql, $values);
-        return true;
+        $values[] = $id;
+        $sql = "UPDATE {$this->table} SET " . implode(", ", $fields) . " WHERE id = ?";
+        return $this->db->query($sql, $values);
     }
     
-    // Delete an item
+    // Delete a product
     public function delete($id) {
         $sql = "DELETE FROM {$this->table} WHERE id = ?";
-        $this->db->query($sql, [$id]);
-        return true;
+        return $this->db->query($sql, [$id]);
     }
 }
