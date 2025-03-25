@@ -1,6 +1,4 @@
 <?php
-
-require_once '../models/Item.php';
 class ItemController extends BaseController {
     
     // Get all items
@@ -13,7 +11,7 @@ class ItemController extends BaseController {
     // Get item by ID
     public function getById($data, $id) {
         $model = new Item();
-        $item = $model->($id);
+        $item = $model->getById($id);
         
         if (!$item) {
             Response::json(['error' => 'Item not found'], 404);

@@ -1,7 +1,5 @@
 <?php
 
-require_once '../models/User.php';
-
 class UserController extends BaseController {
     // Get all users
     public function getAll() {
