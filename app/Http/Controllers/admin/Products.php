@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Log;
 
 class Products extends Controller
 {
+    /**
+     * Lấy danh sách tất cả sản phẩm
+     */
     public function getAll(Request $request)
     {
         $search = $request->query('search');
@@ -60,11 +63,24 @@ class Products extends Controller
         return $validatedData;
     }
 
+    /**
+     * Lấy thông tin một sản phẩm theo ID
+     */
     public function getById(Request $request, $id)
     {
+        // Tìm sản phẩm theo ID
+        $product = Product::find($id);
+
+        // Kiểm tra xem sản phẩm có tồn tại không
+        if (!$product) {
+            return response()->json([
+                'message' => 'Không tìm thấy sản phẩm'
+            ], 404);
+        }
+
         return response()->json([
-            'message' => 'Hello World',
-            'data' => $request->all()
+            'message' => 'Lấy sản phẩm thành công',
+            'data' => $product
         ]);
     }
 
