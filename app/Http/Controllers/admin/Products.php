@@ -59,8 +59,17 @@ class Products extends Controller
     {
 
         $validatedData = $request->validated();
-        Product::insert($validatedData);
-        return $validatedData;
+        $success = Product::insert($validatedData);
+        if ($success) {
+            return response()->json([
+                'message' => 'Tạo sản phẩm thành công',
+                'data' => $validatedData
+            ], 201);
+        } else {
+            return response()->json([
+                'message' => 'Tạo sản phẩm thất bại'
+            ], 500);
+        }
     }
 
     /**
