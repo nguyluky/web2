@@ -6,11 +6,13 @@ use App\Http\Controllers\admin\Products;
 
 
 Route::prefix('admin')->group(function () {
-    Route::controller(Products::class)->group(function () {
-        Route::get('/products', 'getAll');
-        Route::post('/products', 'create');
-        Route::get('/products/{id}', 'getById');
-    });
+    // Route::controller(Products::class)->group(function () {
+    //     Route::post('/products', 'create');
+    //     Route::get('/products', 'getAll');
+    //     Route::get('/products/{id}', 'getById');
+    // });
+    Route::post('/products', [Products::class, 'create']);
+
 });
 
 
