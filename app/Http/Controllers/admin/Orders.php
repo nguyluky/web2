@@ -45,8 +45,8 @@ class Orders extends Controller
             $query->where('created_at', '<=', $date_end);
         }
 
-        $products = $query->paginate($limit);
-        $products->appends([
+        $orders = $query->paginate($limit);
+        $orders->appends([
             'search' => $search,
             'account_id' => $account_id,
             'employee_id' => $employee_id,
