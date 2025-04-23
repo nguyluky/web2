@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers\admin;
 
-use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateProductsRequest;
 use App\Models\Product;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Routing\Controller;
 
 class Products extends Controller
 {

@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
-
+namespace App\Http\Controllers\user;
 use Illuminate\Http\Request;
-use App\Models\Cart;
+use Illuminate\Routing\Controller;
 
 class CartController extends Controller
 {
-    public function addCart(Request $request) {
+    public function addCart(Request $request)
+    {
         $validated = $request->validate([
             'profile_id' => 'required|integer',
             'product_variant_id' => 'required|integer',
@@ -18,7 +18,8 @@ class CartController extends Controller
         return response()->json(['cart' => $cart], 201);
     }
 
-    public function getAllCart() {
+    public function getAllCart()
+    {
         // TODO
     }
 }

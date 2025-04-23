@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\admin;
 
-use App\Http\Controllers\Controller;
 use App\Models\OrderDetail;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 
 class OrderDetails extends Controller
 {
@@ -23,8 +23,8 @@ class OrderDetails extends Controller
 
         $validated = $request->validate([
             'order_id' => 'required|integer|exists:orders,id',
-            'product_id' => 'required|integer|exists:products,id', 
-            'amount' => 'required|integer|min:1', 
+            'product_id' => 'required|integer|exists:products,id',
+            'amount' => 'required|integer|min:1',
         ]);
 
         // Tạo chi tiết đơn hàng mới
