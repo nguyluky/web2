@@ -11,7 +11,48 @@ class Suppliers extends Controller
 
     public function getAll(Request $request)
     {
-        $suppliers = Supplier::all();
+
+
+        $search = $request->query('search');
+        $status = $request->query('status');
+        $date_start = $request->query('date_start');
+        $date_end = $request->query('date_end');
+        $limit = $request->query('limit', 10);
+
+        $query = Supplier::query();
+
+        if ($search) {
+            $query->where('name', 'like', '%' . $search . '%')
+                  ->orWhere('tax', 'like', '%' . $search . '%');
+        }
+
+
+        if ($status) {
+            $query->where('status', $status);
+        }
+
+        if ($date_start && $date_end) {
+            $query->whereBetween('created_at', [$date_start, $date_end]);
+        }
+        if ($date_start && !$date_end) {
+            $query->where('created_at', '>=', $date_start);
+        }
+        if (!$date_start && $date_end) {
+            $query->where('created_at', '<=', $date_end);
+        }
+
+        $suppliers = $query->paginate($limit);
+
+     
+        $suppliers->appends([
+            'search' => $search,
+            'status' => $status,
+            'date_start' => $date_start,
+            'date_end' => $date_end,
+            'limit' => $limit
+        ]);
+
+ 
         return response()->json([
             'message' => 'Lấy danh sách nhà cung cấp thành công',
             'data' => $suppliers

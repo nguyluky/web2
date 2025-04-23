@@ -11,10 +11,13 @@ class Addresss extends Controller
 
     public function getAll(Request $request)
     {
-        $addresss = Address::all();
+        $limit = $request->query('limit', 10);
+        $query = Address::query();
+        $addresss = $query->paginate($limit);
         return response()->json([
             'message' => 'Lấy danh sách thành công',
-            'data' => $addresss
+            'data' => $addresss,
+            'limit' => $limit
         ]);
     }
 

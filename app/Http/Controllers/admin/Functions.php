@@ -11,10 +11,14 @@ class Functions extends Controller
 
     public function getAll(Request $request)
     {
-        $functions = Function_::all();
+        $limit = $request->query('limit', 10);
+        $query = Function_::query();
+        $functions = $query->paginate($limit);
+
         return response()->json([
             'message' => 'Lấy danh sách tài khoản thành công',
-            'data' => $functions
+            'data' => $functions,
+            'limit' => $limit
         ]);
     }
 

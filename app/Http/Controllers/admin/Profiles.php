@@ -10,11 +10,15 @@ class Profiles extends Controller
 {
 
     public function getAll(Request $request)
-    {
-        $profiles = Profile::all();
+    {       
+        $limit = $request->query('limit', 10);
+        $query = Profile::query();
+        $profiles = $query->paginate($limit);
+       
         return response()->json([
             'message' => 'Lấy danh sách tài khoản thành công',
-            'data' => $profiles
+            'data' => $profiles,
+            'limit' => $limit
         ]);
     }
 

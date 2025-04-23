@@ -8,12 +8,63 @@ use Illuminate\Http\Request;
 
 class Warrantys extends Controller
 {
-    /**
-     * Lấy danh sách tất cả bảo hành
-     */
     public function getAll(Request $request)
     {
-        $warranties = Warranty::all();
+
+        // Lấy các tham số query
+        $search = $request->query('search');
+        $accountId = $request->query('account_id');
+        $productId = $request->query('product_id');
+        $supplierId = $request->query('supplier_id');
+        $status = $request->query('status');
+        $date_start = $request->query('date_start');
+        $date_end = $request->query('date_end');
+        $limit = $request->query('limit', 10);
+
+        $query = Warranty::query();
+        if ($search) {
+            $query->where('note', 'like', '%' . $search . '%');
+        }
+
+        if ($accountId) {
+            $query->where('account_id', $accountId);
+        }
+
+        if ($productId) {
+            $query->where('product_id', $productId);
+        }
+
+        if ($supplierId) {
+            $query->where('supplier_id', $supplierId);
+        }
+
+        if ($status) {
+            $query->where('status', $status);
+        }
+
+        if ($date_start && $date_end) {
+            $query->whereBetween('issue_date', [$date_start, $date_end]);
+        }
+        if ($date_start && !$date_end) {
+            $query->where('issue_date', '>=', $date_start);
+        }
+        if (!$date_start && $date_end) {
+            $query->where('issue_date', '<=', $date_end);
+        }
+
+        $warranties = $query->paginate($limit);
+
+        $warranties->appends([
+            'search' => $search,
+            'account_id' => $accountId,
+            'product_id' => $productId,
+            'supplier_id' => $supplierId,
+            'status' => $status,
+            'date_start' => $date_start,
+            'date_end' => $date_end,
+            'limit' => $limit
+        ]);
+
         return response()->json([
             'message' => 'Lấy danh sách bảo hành thành công',
             'data' => $warranties

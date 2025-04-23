@@ -10,11 +10,15 @@ class OrderDetails extends Controller
 {
 
     public function getAll(Request $request)
-    {
-        $order_details = OrderDetail::all();
+    {   
+        $limit = $request->query('limit', 10);
+        $query = OrderDetail::query();
+        $order_details = $query->paginate($limit);
+      
         return response()->json([
             'message' => 'Lấy danh sách chi tiết đơn hàng thành công',
-            'data' => $order_details
+            'data' => $order_details,
+            'limit' => $limit
         ]);
     }
 

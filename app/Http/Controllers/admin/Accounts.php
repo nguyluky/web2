@@ -11,10 +11,14 @@ class Accounts extends Controller
 
     public function getAll(Request $request)
     {
-        $accounts = Account::all();
+        $limit = $request->query('limit', 10);
+        $query = Account::query();
+        $accounts = $query->paginate($limit);
+
         return response()->json([
             'message' => 'Lấy danh sách tài khoản thành công',
-            'data' => $accounts
+            'data' => $accounts,
+            'limit' => $limit
         ]);
     }
 

@@ -11,10 +11,13 @@ class Categorys extends Controller
 
     public function getAll(Request $request)
     {
-        $categorys = Category::all();
+        $limit = $request->query('limit', 10);
+        $query = Category::query();
+        $categorys = $query->paginate($limit);
         return response()->json([
             'message' => 'Lấy danh sách thành công',
-            'data' => $categorys
+            'data' => $categorys,
+            'limit' => $limit
         ]);
     }
 

@@ -19,12 +19,12 @@ class Products extends Controller
         $status = $request->query('status');
         $date_start = $request->query('date_start');
         $date_end = $request->query('date_end');
-        $limt = $request->query('limit', 10);
-
+        $limit = $request->query('limit', 10);
+    
         $query = Product::query();
         if ($search) {
             $query->where('name', 'like', '%' . $search . '%')
-                ->orWhere('sku', 'like', '%' . $search . '%');
+                ->orWhere('id', 'like', '%' . $search . '%');
         }
         if ($categoryId) {
             $query->where('category_id', $categoryId);
@@ -41,17 +41,21 @@ class Products extends Controller
         if (!$date_start && $date_end) {
             $query->where('created_at', '<=', $date_end);
         }
-
-        $request = $query->paginate($limt);
-        $request->appends([
+    
+        $products = $query->paginate($limit);
+        $products->appends([
             'search' => $search,
             'category_id' => $categoryId,
             'status' => $status,
             'date_start' => $date_start,
             'date_end' => $date_end,
-            'limit' => $limt
+            'limit' => $limit
         ]);
-        return $request;
+    
+        return response()->json([
+            'message' => 'Lấy danh sách sản phẩm thành công',
+            'data' => $products
+        ]);
     }
 
     public function create(CreateProductsRequest $request)

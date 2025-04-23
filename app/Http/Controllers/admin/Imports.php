@@ -11,7 +11,48 @@ class Imports extends Controller
 
     public function getAll(Request $request)
     {
-        $imports = Import::all();
+        $search = $request->query('search');
+        $supplier_id = $request->query('supplier_id');
+        $employee_id = $request->query('employee_id');
+        $date_start = $request->query('date_start');
+        $date_end = $request->query('date_end');
+        $limt = $request->query('limit', 10);
+
+        $query = Import::query();
+        if ($search) {
+            $query->where('id', 'like', '%' . $search . '%')
+                ->orWhere('supplier_id', 'like', '%' . $search . '%')
+                ->orWhere('employee_id', 'like', '%' . $search . '%');     
+        }
+        if ($supplier_id) {
+            $query->where('supplier_id', $supplier_id);
+        }
+        if ($employee_id) {
+            $query->where('employee_id', $employee_id);
+        }
+        if ($status) {
+            $query->where('status', $status);
+        }
+        if ($date_start && $date_end) {
+            $query->whereBetween('created_at', [$date_start, $date_end]);
+        }
+        if ($date_start && !$date_end) {
+            $query->where('created_at', '>=', $date_start);
+        }
+        if (!$date_start && $date_end) {
+            $query->where('created_at', '<=', $date_end);
+        }
+
+        $imports = $query->paginate($limit);
+        $imports->appends([
+            'search' => $search,
+            'supplier_id' => $supplier_id,
+            'employee_id' => $employee_id,
+            'status' => $status,
+            'date_start' => $date_start,
+            'date_end' => $date_end,
+            'limit' => $limit
+        ]);
         return response()->json([
             'message' => 'Lấy danh sách phiếu nhập hàng thành công',
             'data' => $imports

@@ -11,7 +11,51 @@ class Orders extends Controller
 
     public function getAll(Request $request)
     {
-        $orders = Order::all();
+        $search = $request->query('search');
+        $account_id = $request->query('account_id');
+        $employee_id = $request->query('employee_id');
+        $payment_method = $request->query('payment_method');
+        $status = $request->query('status');
+        $date_start = $request->query('date_start');
+        $date_end = $request->query('date_end');
+        $limit = $request->query('limit', 10);
+        
+        $query = Order::query();
+        if ($search) {
+            $query->where('id', 'like', '%' . $search . '%')
+                ->orWhere('account_id', 'like', '%' . $search . '%')
+                ->orWhere('employee_id', 'like', '%' . $search . '%');
+        }
+        if ($account_id) {
+            $query->where('account_id', $account_id);
+        }
+        if ($employee_id) {
+            $query->where('employee_id', $employee_id);
+        }
+        if ($status) {
+            $query->where('status', $status);
+        }
+        if ($date_start && $date_end) {
+            $query->whereBetween('created_at', [$date_start, $date_end]);
+        }
+        if ($date_start && !$date_end) {
+            $query->where('created_at', '>=', $date_start);
+        }
+        if (!$date_start && $date_end) {
+            $query->where('created_at', '<=', $date_end);
+        }
+
+        $products = $query->paginate($limit);
+        $products->appends([
+            'search' => $search,
+            'account_id' => $account_id,
+            'employee_id' => $employee_id,
+            'status' => $status,
+            'date_start' => $date_start,
+            'date_end' => $date_end,
+            'limit' => $limit
+        ]);
+
         return response()->json([
             'message' => 'Lấy danh sách đơn hàng thành công',
             'data' => $orders

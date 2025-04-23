@@ -13,10 +13,14 @@ class ImportDetails extends Controller
      */
     public function getAll(Request $request)
     {
-        $import_details = ImportDetail::all();
+
+        $limit = $request->query('limit', 10);
+        $query = ImportDetail::query();
+        $import_details = $query->paginate($limit);
         return response()->json([
             'message' => 'Lấy danh sách chi tiết nhập hàng thành công',
-            'data' => $import_details
+            'data' => $import_details,
+            'limit' => $limit
         ]);
     }
 

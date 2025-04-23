@@ -11,10 +11,14 @@ class RuleFunctions extends Controller
 
     public function getAll(Request $request)
     {
-        $rule_functions = RuleFunction::all();
+        $limit = $request->query('limit', 10);
+        $query = RuleFunction::query();
+        $rule_functions = $query->paginate($limit);
+      
         return response()->json([
             'message' => 'Lấy danh sách thành công',
-            'data' => $rule_functions
+            'data' => $rule_functions,
+            'limit' => $limit
         ]);
     }
 
