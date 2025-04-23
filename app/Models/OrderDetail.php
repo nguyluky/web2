@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * 
  * @property int $id
  * @property int $order_id
- * @property int $product_id
+ * @property int $product_variant_id
  * @property int $serial
  * 
  * @property Order $order
@@ -32,13 +32,13 @@ class OrderDetail extends Model
 	protected $casts = [
 		'id' => 'int',
 		'order_id' => 'int',
-		'product_id' => 'int',
+		'product_variant_id' => 'int',
 		'serial' => 'int'
 	];
 
 	protected $fillable = [
 		'order_id',
-		'product_id',
+		'product_variant_id',
 		'serial'
 	];
 
@@ -47,10 +47,10 @@ class OrderDetail extends Model
 		return $this->belongsTo(Order::class);
 	}
 
-	public function product()
+	public function productVariant()
 	{
-		return $this->belongsTo(Product::class);
-	}
+		return $this->belongsTo(ProductVariant::class, 'product_variant_id');
+	}	
 
 	public function warranties()
 	{
