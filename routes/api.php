@@ -29,6 +29,10 @@ Route::controller(CategoryController::class)->group(function () {
 
     // cart
     Route::post('/cart', 'addCart');
+    Route::get('/cart', 'getAllCart');
+    Route::put('/cart/{variant_id}', 'updateCart');
+    Route::delete('/cart/{variant_id}', 'deleteCart');
+    
 
 });
 

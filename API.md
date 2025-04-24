@@ -58,18 +58,18 @@
 **Request:** ID sản phẩm, số lượng, biến thể  
 **Response:** Thông tin giỏ hàng cập nhật
 
-#### 3.2. Lấy thông tin giỏ hàng
+#### 3.2. Lấy thông tin giỏ hàng ⚠️ (Nghi ngờ bị sai ở phần tham số truyền vào)
 
 **Endpoint:** `GET /api/cart`  
 **Response:** Chi tiết giỏ hàng hiện tại
 
-#### 3.3. Cập nhật sản phẩm trong giỏ hàng
+#### 3.3. Cập nhật sản phẩm trong giỏ hàng ⚠️ (Nghi ngờ bị sai ở phần tham số truyền vào)
 
 **Endpoint:** `PUT /api/cart/:itemId`  
 **Request:** Số lượng mới  
 **Response:** Thông tin giỏ hàng cập nhật
 
-#### 3.4. Xóa sản phẩm khỏi giỏ hàng
+#### 3.4. Xóa sản phẩm khỏi giỏ hàng ⚠️ (Nghi ngờ bị sai ở phần tham số truyền vào)
 
 **Endpoint:** `DELETE /api/cart/:itemId`  
 **Response:** Thông tin giỏ hàng cập nhật
