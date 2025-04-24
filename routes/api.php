@@ -27,6 +27,9 @@ Route::controller(CategoryController::class)->group(function () {
     Route::get('/products/{id}/reviews', 'getReviewsByProductId');
     Route::post('/products/{id}/reviews', 'addReviewById');
 
+    // cart
+    Route::post('/cart', 'addCart');
+
 });
 
 Route::get('/', function () {
