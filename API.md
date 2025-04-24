@@ -2,18 +2,18 @@
 
 ### 1. Quản lý sản phẩm và danh mục
 
-#### 1.1. Lấy thông tin sản phẩm
+#### 1.1. Lấy thông tin sản phẩm ✅
 
 **Endpoint:** `GET /api/products/:id`  
 **Response:** Chi tiết sản phẩm bao gồm thông tin cơ bản, đặc điểm kỹ thuật, biến thể, hình ảnh, giá cả, rating, v.v.
 
-#### 1.2. Lấy danh sách sản phẩm theo danh mục
+#### 1.2. Lấy danh sách sản phẩm theo danh mục ✅
 
 **Endpoint:** `GET /api/categories/:id/products`  
 **Parameters:** `page`, `limit`, `sort`, `filter_*`  
 **Response:** Danh sách sản phẩm thuộc danh mục
 
-#### 1.3. Lấy danh sách danh mục
+#### 1.3. Lấy danh sách danh mục ✅
 
 **Endpoint:** `GET /api/categories`  
 **Response:** Danh sách các danh mục sản phẩm
@@ -30,7 +30,7 @@
 **Parameters:** `limit`  
 **Response:** Danh sách sản phẩm liên quan
 
-#### 1.6. Tìm kiếm sản phẩm
+#### 1.6. Tìm kiếm sản phẩm ✅
 
 **Endpoint:** `GET /api/products/search`  
 **Parameters:** `query`, `page`, `limit`, `sort`, `filter_*`  
@@ -38,13 +38,13 @@
 
 ### 2. Đánh giá sản phẩm
 
-#### 2.1. Lấy đánh giá sản phẩm
+#### 2.1. Lấy đánh giá sản phẩm ✅
 
 **Endpoint:** `GET /api/products/:id/reviews`  
 **Parameters:** `page`, `limit`, `sort`  
 **Response:** Danh sách đánh giá và thống kê rating
 
-#### 2.2. Thêm đánh giá sản phẩm
+#### 2.2. Thêm đánh giá sản phẩm ✅
 
 **Endpoint:** `POST /api/products/:id/reviews`  
 **Request:** Rating, nội dung, hình ảnh  
@@ -52,7 +52,7 @@
 
 ### 3. Giỏ hàng & Thanh toán
 
-#### 3.1. Thêm sản phẩm vào giỏ hàng
+#### 3.1. Thêm sản phẩm vào giỏ hàng ✅
 
 **Endpoint:** `POST /api/cart`  
 **Request:** ID sản phẩm, số lượng, biến thể  

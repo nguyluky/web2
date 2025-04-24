@@ -11,11 +11,22 @@ Route::prefix('admin')->group(function () {
         Route::get('/products', 'getAll');
         Route::get('/products/{id}', 'getById');
     });
-
 });
 
 Route::controller(CategoryController::class)->group(function () {
+    // product
+    Route::get('/products/{id}', 'getById');
+    Route::get('/categories/{id}/products', 'getByCategory');
+    Route::get('/products/search?query={query}&page={page}&limit={limit}&sort={sort}', 'searchProduct');
+
+
+    // category
     Route::get('/categories', 'getAll');
+
+    // review
+    Route::get('/products/{id}/reviews', 'getReviewsByProductId');
+    Route::post('/products/{id}/reviews', 'addReviewById');
+
 });
 
 Route::get('/', function () {
