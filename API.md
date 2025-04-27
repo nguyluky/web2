@@ -80,7 +80,7 @@
 **Request:** Mã giảm giá  
 **Response:** Thông tin giỏ hàng đã áp dụng mã giảm giá
 
-#### 3.6. Tạo đơn hàng
+#### 3.6. Tạo đơn hàng ✅
 
 **Endpoint:** `POST /api/orders`  
 **Request:** Thông tin giao hàng, phương thức thanh toán  
@@ -105,19 +105,19 @@
 
 ### 4. Tài khoản người dùng
 
-#### 4.1. Đăng ký tài khoản
+#### 4.1. Đăng ký tài khoản ✅
 
 **Endpoint:** `POST /api/auth/register`  
 **Request:** Thông tin người dùng  
 **Response:** Token và thông tin người dùng
 
-#### 4.2. Đăng nhập
+#### 4.2. Đăng nhập ✅
 
 **Endpoint:** `POST /api/auth/login`  
 **Request:** Email, mật khẩu  
 **Response:** Token và thông tin người dùng
 
-#### 4.3. Lấy thông tin người dùng
+#### 4.3. Lấy thông tin người dùng ✅
 
 **Endpoint:** `GET /api/users/profile`  
 **Response:** Thông tin chi tiết người dùng

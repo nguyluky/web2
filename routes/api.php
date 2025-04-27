@@ -33,7 +33,12 @@ Route::controller(CategoryController::class)->group(function () {
     Route::put('/cart/{variant_id}', 'updateCart');
     Route::delete('/cart/{variant_id}', 'deleteCart');
     
+    // order
+    Route::post('/orders', 'createOrders');
 
+    // account
+    Route::post('auth/register', 'register');
+    Route::post('auth/login', 'login');
 });
 
 Route::get('/', function () {
