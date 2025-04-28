@@ -41,4 +41,19 @@ class OrderController
             return response()->json(['order' => $order], 201);
         });
     }
+
+    // 3.7. Kiểm tra tình trạng thanh toán
+    public function checkOrderStatus() {
+        // TODO
+    }
+
+    // 3.8. Lấy thông tin vận chuyển
+    public function getDeliveryInfo() {
+        // TODO
+    }
+
+    // 3.9. Mua ngay sản phẩm
+    public function buyNow() {
+        // TODO
+    }
 }

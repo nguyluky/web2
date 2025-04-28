@@ -20,10 +20,20 @@ class ProductController extends Controller
     public function getByCategory(string $category_id)
     {
         $product = Product::where('category_id', $category_id)->get();
-        if ($product->isEmpty()) {
+        if (!$product) {
             return response()->json(['error' => 'product not found'], 404);
         }
         return response()->json(['product' => $product]);
+    }
+
+    // 1.4. Lấy sản phẩm nổi bật
+    public function getFeaturedProduct() {
+        // TODO
+    }
+
+    // 1.5. Lấy sản phẩm liên quan _KHÓ_
+    public function getRelatedProduct() {
+        // TODO
     }
 
     public function searchProduct(Request $request)

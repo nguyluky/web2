@@ -36,9 +36,12 @@ Route::controller(CategoryController::class)->group(function () {
     // order
     Route::post('/orders', 'createOrders');
 
-    // account
-    Route::post('auth/register', 'register');
-    Route::post('auth/login', 'login');
+    // account, profile
+    Route::post('/auth/register', 'register');
+    Route::post('/auth/login', 'login');
+    Route::get('/users/profile', 'getById');
+    Route::put('/users/profile', 'update');
+    Route::put('/users/change-password', 'changePassword');
 });
 
 Route::get('/', function () {
