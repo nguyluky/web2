@@ -58,18 +58,18 @@
 **Request:** ID sản phẩm, số lượng, biến thể  
 **Response:** Thông tin giỏ hàng cập nhật
 
-#### 3.2. Lấy thông tin giỏ hàng
+#### 3.2. Lấy thông tin giỏ hàng ⚠️ (Nghi ngờ bị sai ở phần tham số truyền vào)
 
 **Endpoint:** `GET /api/cart`  
 **Response:** Chi tiết giỏ hàng hiện tại
 
-#### 3.3. Cập nhật sản phẩm trong giỏ hàng
+#### 3.3. Cập nhật sản phẩm trong giỏ hàng ⚠️ (Nghi ngờ bị sai ở phần tham số truyền vào)
 
 **Endpoint:** `PUT /api/cart/:itemId`  
 **Request:** Số lượng mới  
 **Response:** Thông tin giỏ hàng cập nhật
 
-#### 3.4. Xóa sản phẩm khỏi giỏ hàng
+#### 3.4. Xóa sản phẩm khỏi giỏ hàng ⚠️ (Nghi ngờ bị sai ở phần tham số truyền vào)
 
 **Endpoint:** `DELETE /api/cart/:itemId`  
 **Response:** Thông tin giỏ hàng cập nhật
@@ -80,7 +80,7 @@
 **Request:** Mã giảm giá  
 **Response:** Thông tin giỏ hàng đã áp dụng mã giảm giá
 
-#### 3.6. Tạo đơn hàng
+#### 3.6. Tạo đơn hàng ✅
 
 **Endpoint:** `POST /api/orders`  
 **Request:** Thông tin giao hàng, phương thức thanh toán  
@@ -105,19 +105,19 @@
 
 ### 4. Tài khoản người dùng
 
-#### 4.1. Đăng ký tài khoản
+#### 4.1. Đăng ký tài khoản ✅
 
 **Endpoint:** `POST /api/auth/register`  
 **Request:** Thông tin người dùng  
 **Response:** Token và thông tin người dùng
 
-#### 4.2. Đăng nhập
+#### 4.2. Đăng nhập ✅
 
 **Endpoint:** `POST /api/auth/login`  
 **Request:** Email, mật khẩu  
 **Response:** Token và thông tin người dùng
 
-#### 4.3. Lấy thông tin người dùng
+#### 4.3. Lấy thông tin người dùng ✅
 
 **Endpoint:** `GET /api/users/profile`  
 **Response:** Thông tin chi tiết người dùng
