@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $status
  * 
  * @property Collection|Account[] $accounts
- * @property Collection|Function[] $functions
+ * @property Collection|Function_[] $functions
  *
  * @package App\Models
  */

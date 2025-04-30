@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $function_id
  * @property string|null $name
  * 
- * @property Function $function
+ * @property Function_ $function
  * @property Rule $rule
  *
  * @package App\Models

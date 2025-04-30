@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\user;
+use Illuminate\Container\Attributes\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use App\Models\Cart;
@@ -26,19 +27,20 @@ class CartController extends Controller
         return response()->json(['cart' => $cart], 201);
     }
 
-    public function getAllCart(Request $request_)
+    public function getAllCart()
     {
 
-        // $user = auth()->user();
-        $user = $request_->user();
+        $user = auth()->user();
 
-        $profile_id = $user->profile_id();
+        // $profile_id = $user->id;
+        return response()->json(['carts' => $user->profile->carts]);
 
-        $carts = Cart::where('profile_id', $profile_id);
-        if ($carts->isEmpty()) {
-            return response()->json(['error' => 'carts not found'], 404);
-        }
-        return response()->json(['carts' => $carts]);
+
+        // $carts = Cart::where('profile_id', $profile_id);
+        // if ($carts->isEmpty()) {
+        //     return response()->json(['error' => 'carts not found'], 404);
+        // }
+        // return response()->json(['carts' => $carts]);
     }
 
     public function updateCart(int $variant_id, int $profile_id, int $quantity) {
