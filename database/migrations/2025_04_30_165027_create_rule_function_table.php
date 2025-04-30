@@ -12,11 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('rule_function', function (Blueprint $table) {
-            $table->integer('rule_id');
-            $table->integer('function_id')->index('rule_function-function-function_id_idx');
-            $table->string('name', 45)->nullable();
-
+            $table->unsignedBigInteger('rule_id');
+            $table->unsignedBigInteger('function_id');
+            $table->string('name')->nullable();
+            
             $table->primary(['rule_id', 'function_id']);
+            
+            $table->foreign('rule_id')->references('id')->on('rule');
+            $table->foreign('function_id')->references('id')->on('function');
         });
     }
 

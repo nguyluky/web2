@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('rule', function (Blueprint $table) {
-            $table->integer('id')->primary();
-            $table->string('name', 45)->nullable();
-            $table->integer('status')->nullable();
+        Schema::create('function', function (Blueprint $table) {
+            $table->id();
+            $table->string('name')->nullable();
+            // No timestamps as per model definition
         });
     }
 
@@ -23,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('rule');
+        Schema::dropIfExists('function');
     }
 };

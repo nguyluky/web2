@@ -1,10 +1,15 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\user\AccountController;
+use App\Http\Controllers\user\CartController;
+use App\Http\Controllers\user\OrderController;
+use App\Http\Controllers\user\ProductController;
+use App\Http\Controllers\user\ProductReviewController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\admin\Products;
 use App\Http\Controllers\user\CategoryController;
 
+// products
 Route::prefix('admin')->group(function () {
     Route::controller(Products::class)->group(function () {
         Route::post('/products', 'create');
@@ -13,32 +18,47 @@ Route::prefix('admin')->group(function () {
     });
 });
 
-Route::controller(CategoryController::class)->group(function () {
-    // product
+
+// product
+Route::controller(ProductController::class)->group(function () {
     Route::get('/products/{id}', 'getById');
     Route::get('/categories/{id}/products', 'getByCategory');
-    Route::get('/products/search?query={query}&page={page}&limit={limit}&sort={sort}', 'searchProduct');
+    Route::get('/products/search', 'searchProduct');
+    // Route::get('/products', 'getAll');
+});
 
-
-    // category
-    Route::get('/categories', 'getAll');
-
-    // review
+// review
+Route::controller(ProductReviewController::class)->group(function () {
     Route::get('/products/{id}/reviews', 'getReviewsByProductId');
     Route::post('/products/{id}/reviews', 'addReviewById');
+});
 
-    // cart
-    Route::post('/cart', 'addCart');
-    Route::get('/cart', 'getAllCart');
-    Route::put('/cart/{variant_id}', 'updateCart');
-    Route::delete('/cart/{variant_id}', 'deleteCart');
-    
-    // order
-    Route::post('/orders', 'createOrders');
+// cart
+Route::middleware(['auth:api'])->group(function () {
 
-    // account
+    Route::controller(CartController::class)->group(function () {
+        Route::get('/cart', 'getAllCart');
+        Route::post('/cart', 'addCart');
+        Route::put('/cart/{variant_id}', 'updateCart');
+        Route::delete('/cart/{variant_id}', 'deleteCart');
+    });
+
+    Route::controller(OrderController::class)->group(function () {
+        // order
+        Route::post('/orders', 'createOrders');
+    });
+});
+
+
+// account
+Route::controller(AccountController::class)->group(function () {
     Route::post('auth/register', 'register');
-    Route::post('auth/login', 'login');
+    Route::post('auth/login', 'login')->name('login');
+});
+
+// category
+Route::controller(CategoryController::class)->group(function () {
+    Route::get('/categories', 'getAll');
 });
 
 Route::get('/', function () {

@@ -8,7 +8,10 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class Account
@@ -27,14 +30,17 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @package App\Models
  */
-class Account extends Model
+class Account extends Authenticatable implements JWTSubject
 {
+    use SoftDeletes, HasFactory ;
 	protected $table = 'account';
-	public $incrementing = false;
-	public $timestamps = false;
+	public $incrementing = true;
+    const CREATED_AT = 'created';
+    const UPDATED_AT = 'updated';
+	public $timestamps = true;
+
 
 	protected $casts = [
-		'id' => 'int',
 		'rule' => 'int',
 		'created' => 'datetime',
 		'updated' => 'datetime'
@@ -49,9 +55,17 @@ class Account extends Model
 		'password',
 		'rule',
 		'status',
-		'created',
-		'updated'
 	];
+
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
 
 	public function rule()
 	{

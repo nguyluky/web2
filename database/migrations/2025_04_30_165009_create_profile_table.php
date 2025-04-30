@@ -12,11 +12,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('profile', function (Blueprint $table) {
-            $table->integer('id', true);
-            $table->string('fullname', 256)->nullable();
-            $table->string('phone_number', 10)->unique('phone_number_unique');
-            $table->string('email', 45)->nullable()->unique('email_unique');
-            $table->longText('avatar')->nullable();
+            $table->id();
+            $table->string('fullname')->nullable();
+            $table->string('phone_number');
+            $table->string('email')->nullable();
+            $table->string('avatar')->nullable();
+            
+            // No timestamps as per the model definition
+            
+            // Primary key of profile is also a foreign key to account
+            $table->foreign('id')->references('id')->on('account');
         });
     }
 

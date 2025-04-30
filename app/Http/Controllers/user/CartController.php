@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\user;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use App\Models\Cart;
 
 class CartController extends Controller
 {
@@ -25,8 +26,14 @@ class CartController extends Controller
         return response()->json(['cart' => $cart], 201);
     }
 
-    public function getAllCart(int $profile_id)
+    public function getAllCart(Request $request_)
     {
+
+        // $user = auth()->user();
+        $user = $request_->user();
+
+        $profile_id = $user->profile_id();
+
         $carts = Cart::where('profile_id', $profile_id);
         if ($carts->isEmpty()) {
             return response()->json(['error' => 'carts not found'], 404);

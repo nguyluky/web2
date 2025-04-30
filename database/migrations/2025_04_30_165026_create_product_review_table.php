@@ -12,15 +12,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('product_reviews', function (Blueprint $table) {
-            $table->integer('id')->primary();
-            $table->integer('product_id')->index('product_id');
-            $table->integer('user_id')->nullable()->index('user_id');
+            $table->id();
+            $table->unsignedBigInteger('product_id');
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->integer('rating');
             $table->text('comment')->nullable();
-            $table->string('status', 20)->nullable()->default('approved');
-            $table->timestamp('created_at')->nullable()->useCurrent();
-            $table->timestamp('updated_at')->nullable()->useCurrent();
+            $table->string('status')->nullable();
             $table->json('meta_data')->nullable();
+            $table->timestamps();
+            
+            $table->foreign('product_id')->references('id')->on('product');
+            $table->foreign('user_id')->references('id')->on('account');
         });
     }
 

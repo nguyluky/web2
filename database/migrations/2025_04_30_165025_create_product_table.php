@@ -12,20 +12,21 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('product', function (Blueprint $table) {
-            $table->integer('id')->primary();
-            $table->string('sku', 50)->nullable()->unique('sku');
+            $table->id();
+            $table->string('sku')->nullable();
             $table->string('name');
-            $table->string('slug')->unique('slug');
+            $table->string('slug');
             $table->text('description')->nullable();
-            $table->integer('category_id')->nullable()->index('category_id');
-            $table->decimal('base_price', 15);
-            $table->decimal('base_original_price', 15)->nullable();
-            $table->string('status', 20)->nullable()->default('active');
-            $table->timestamp('created_at')->nullable()->useCurrent();
-            $table->timestamp('updated_at')->nullable()->useCurrent();
+            $table->unsignedBigInteger('category_id')->nullable();
+            $table->decimal('base_price', 10, 2);
+            $table->decimal('base_original_price', 10, 2)->nullable();
+            $table->string('status')->nullable();
             $table->json('specifications')->nullable();
             $table->json('features')->nullable();
             $table->json('meta_data')->nullable();
+            $table->timestamps();
+            
+            $table->foreign('category_id')->references('id')->on('categories');
         });
     }
 

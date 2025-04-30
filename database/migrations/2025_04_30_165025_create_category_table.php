@@ -12,13 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('categories', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->id();
             $table->string('name');
-            $table->string('slug')->unique('slug');
-            $table->string('status', 20)->nullable()->default('active');
-            $table->timestamp('created_at')->nullable()->useCurrent();
-            $table->timestamp('updated_at')->nullable()->useCurrent();
-            $table->integer('parent_id')->nullable()->index('parent_id');
+            $table->string('slug');
+            $table->string('status')->nullable();
+            $table->unsignedBigInteger('parent_id')->nullable();
+            $table->json('require_fields')->nullable();
+            $table->timestamps();
+            
+            $table->foreign('parent_id')->references('id')->on('categories');
         });
     }
 

@@ -12,15 +12,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('account', function (Blueprint $table) {
-            $table->integer('id')->unique('id_unique');
-            $table->string('username', 256)->unique('username_unique');
-            $table->string('password', 256);
-            $table->integer('rule')->nullable()->index('account-rule-rule_idx');
-            $table->enum('status', ['active', 'inactive', 'banned'])->default('active')->unique('status_unique');
+            $table->id();
+            $table->string('username');
+            $table->string('password');
+            $table->unsignedBigInteger('rule')->nullable();
+            $table->string('status');
             $table->dateTime('created');
             $table->dateTime('updated');
-
-            $table->primary(['id']);
+            $table->softDeletes();
+            
+            $table->foreign('rule')->references('id')->on('rule');
         });
     }
 

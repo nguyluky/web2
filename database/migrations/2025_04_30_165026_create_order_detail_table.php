@@ -12,10 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('order_detail', function (Blueprint $table) {
-            $table->integer('id')->primary();
-            $table->integer('order_id')->index('order_id_idx');
-            $table->integer('product_id')->index('order_detail-product-product_id_idx');
-            $table->integer('serial')->unique('serial_unique');
+            $table->id();
+            $table->unsignedBigInteger('order_id');
+            $table->unsignedBigInteger('product_variant_id');
+            $table->integer('serial');
+            
+            $table->foreign('order_id')->references('id')->on('order');
+            $table->foreign('product_variant_id')->references('id')->on('product_variants');
         });
     }
 

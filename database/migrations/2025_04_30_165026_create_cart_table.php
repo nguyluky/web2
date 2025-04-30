@@ -12,11 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('cart', function (Blueprint $table) {
-            $table->integer('profile_id')->index('cart-profile-profile_id_id_idx');
-            $table->integer('product_id')->index('cart-product-product_id_id_idx');
+            $table->unsignedBigInteger('profile_id');
+            $table->unsignedBigInteger('product_variant_id');
             $table->integer('amount');
-
-            $table->primary(['profile_id', 'product_id']);
+            
+            $table->primary(['profile_id', 'product_variant_id']);
+            
+            $table->foreign('profile_id')->references('id')->on('profile');
+            $table->foreign('product_variant_id')->references('id')->on('product_variants');
         });
     }
 

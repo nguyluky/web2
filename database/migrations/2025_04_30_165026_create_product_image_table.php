@@ -12,13 +12,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('product_images', function (Blueprint $table) {
-            $table->integer('id')->primary();
-            $table->integer('product_id')->index('product_id');
-            $table->integer('variant_id')->nullable()->index('variant_id');
+            $table->id();
+            $table->unsignedBigInteger('product_id');
+            $table->unsignedBigInteger('variant_id')->nullable();
             $table->string('image_url');
-            $table->boolean('is_primary')->nullable()->default(false);
-            $table->integer('sort_order')->nullable()->default(0);
-            $table->timestamp('created_at')->nullable()->useCurrent();
+            $table->boolean('is_primary')->nullable();
+            $table->integer('sort_order')->nullable();
+            $table->timestamp('created_at')->nullable();
+            
+            $table->foreign('product_id')->references('id')->on('product');
+            $table->foreign('variant_id')->references('id')->on('product_variants');
         });
     }
 
