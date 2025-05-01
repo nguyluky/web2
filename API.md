@@ -122,13 +122,13 @@
 **Endpoint:** `GET /api/users/profile`  
 **Response:** Thông tin chi tiết người dùng
 
-#### 4.4. Cập nhật thông tin cá nhân
+#### 4.4. Cập nhật thông tin cá nhân ✅
 
 **Endpoint:** `PUT /api/users/profile`  
 **Request:** Thông tin cần cập nhật  
 **Response:** Thông tin người dùng đã cập nhật
 
-#### 4.5. Thay đổi mật khẩu
+#### 4.5. Thay đổi mật khẩu ✅
 
 **Endpoint:** `PUT /api/users/change-password`  
 **Request:** Mật khẩu cũ và mới  

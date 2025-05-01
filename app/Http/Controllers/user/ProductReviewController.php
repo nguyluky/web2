@@ -12,7 +12,7 @@ class ProductReviewController extends Controller
     {
         $reviews = ProductReview::where('product_id', $product_id)->get();
 
-        if ($reviews->isEmpty()) {
+        if (!$reviews) {
             return response()->json(['error' => 'No reviews found'], 404);
         }
 

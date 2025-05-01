@@ -54,6 +54,9 @@ Route::middleware(['auth:api'])->group(function () {
 Route::controller(AccountController::class)->group(function () {
     Route::post('auth/register', 'register');
     Route::post('auth/login', 'login')->name('login');
+    Route::get('/users/profile', 'getById');
+    Route::put('/users/profile', 'update');
+    Route::put('/users/change-password', 'changePassword');
 });
 
 // category
