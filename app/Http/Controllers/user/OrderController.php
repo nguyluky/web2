@@ -28,16 +28,16 @@ class OrderController
                 'created_at' => Carbon::now(),
                 'id' => Order::max('id') + 1,
             ];
-    
+
             $order = Order::create($order_data);
-    
+
             foreach($validated['products'] as $product) {
                 OrderDetail::create([
                     'order_id' => $order->id,
                     'product_variant_id' => $product['product_variant_id'],
                     'serial' => $product['serial'],
                 ]);
-            }    
+            }
             return response()->json(['order' => $order], 201);
         });
     }
@@ -54,6 +54,21 @@ class OrderController
 
     // 3.9. Mua ngay sản phẩm
     public function buyNow() {
+        // TODO
+    }
+
+    // 5.1. Lấy danh sách đơn hàng của người dùng
+    public function getAll() {
+        // TODO
+    }
+
+    // 5.2. Lấy chi tiết đơn hàng
+    public function getDetailOrder() {
+        // TODO
+    }
+
+    // 5.3. Hủy đơn hàng
+    public function cancelOrder() {
         // TODO
     }
 }
