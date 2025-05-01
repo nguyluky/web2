@@ -10,7 +10,10 @@ class ProductController extends Controller
 {
     public function getById(string $id)
     {
-        $product = Product::find($id);
+
+        // get product by id including variants and images
+        $product = Product::with(['product_variants', 'product_images'])->where('id', $id)->first();
+
         if (!$product) {
             return response()->json(['error' => 'product not found'], 404);
         }
@@ -29,7 +32,6 @@ class ProductController extends Controller
     public function searchProduct(Request $request)
     {
         $query = $request->input('query');
-        $page = $request->input('page', 1);
         $limit = $request->input('limit', 10);
         $sort = $request->input('sort', 'created_at_desc');
 
@@ -55,7 +57,12 @@ class ProductController extends Controller
                 $products->orderBy('created_at', 'desc');
         }
 
-        $results = $products->paginate($limit, ['*'], 'page', $page);
+        $results = $products->paginate($limit);
+        $results->appends([
+            'query' => $query,
+            'limit' => $limit,
+            'sort' => $sort
+        ]);
 
         return response()->json($results);
     }

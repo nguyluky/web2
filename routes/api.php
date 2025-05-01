@@ -21,9 +21,9 @@ Route::prefix('admin')->group(function () {
 
 // product
 Route::controller(ProductController::class)->group(function () {
+    Route::get('/products/search', 'searchProduct');
     Route::get('/products/{id}', 'getById');
     Route::get('/categories/{id}/products', 'getByCategory');
-    Route::get('/products/search', 'searchProduct');
     // Route::get('/products', 'getAll');
 });
 
