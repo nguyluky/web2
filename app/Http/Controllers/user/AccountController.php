@@ -16,8 +16,8 @@ class AccountController {
             'username' => 'required|string|max:256|unique:account',
             'password' => 'required|string|min:8|max:256',
             "email" => 'required|email|max:256',
-            "fullname" => 'string|max:256',
-            "phone_number" => 'string|max:256'
+            "fullname" => 'required|string|max:256',
+            "phone_number" => 'required|string|max:256'
         ]);
 
 
@@ -61,14 +61,14 @@ class AccountController {
 
         $account = Account::where('username', $validate['username'])->first();
         if (!$account) {
-            return response()->json(['error' => 'not found user'], 404);
+            return response()->json(['message' => 'not found user'], 404);
         }
 
         if (!password_verify($validate['password'], $account->password)) {
-            return response()->json(['error' => 'wrong password'], 401);
+            return response()->json(['message' => 'wrong password'], 401);
         }
         if ($account->status !== 'active') {
-            return response()->json(['error' => 'user is not active'], 403);
+            return response()->json(['message' => 'user is not active'], 403);
         }
         // Đăng nhập và tạo token
         $token = JWTAuth::fromUser($account);
@@ -80,17 +80,20 @@ class AccountController {
         ]);
     }
 
-    public function getById($id) {
-        $user = Profile::find($id);
-        if (!$user) {
-            return response()->json(['error' => 'not found user'], 404);
-        }
-        return response()->json(['user => $user'], 201);
+    public function getById() {
+        $user = auth()->user();
+        // dd($user);
+        // if (!$user) {
+        //     return response()->json(['error' => 'not found user'], 404);
+        // }
+        // return response()->json(['user' => $user], 200);
+        $profile = $user->profile;
+        return response()->json(['data' => $profile], 200);
     }
 
     public function update(Request $request) {
         $validate = $request->validate([
-            'id' => 'required|integer|exists:profile,id',
+            // 'id' => 'required|integer|exists:profile,id',
             'fullname' => 'required|string|max:256',
             'phone_number' => 'required|string|max:10|unique:profile,phone_number,' . $request->id . ',id', // unique for phone_number, except record for id = $request->id
             'email' => 'required|string|max:45|unique:profile,email,' . $request->id . ',id' // unique for email, except record for id = $request->id
