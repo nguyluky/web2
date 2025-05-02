@@ -28,16 +28,16 @@ class OrderController
                 'created_at' => Carbon::now(),
                 'id' => Order::max('id') + 1,
             ];
-    
+
             $order = Order::create($order_data);
-    
+
             foreach($validated['products'] as $product) {
                 OrderDetail::create([
                     'order_id' => $order->id,
                     'product_variant_id' => $product['product_variant_id'],
                     'serial' => $product['serial'],
                 ]);
-            }    
+            }
             return response()->json(['order' => $order], 201);
         });
     }

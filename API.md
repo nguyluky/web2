@@ -134,13 +134,13 @@
 **Request:** Mật khẩu cũ và mới  
 **Response:** Thông báo thành công
 
-#### 4.6. Quên mật khẩu
+#### 4.6. Quên mật khẩu ✅
 
 **Endpoint:** `POST /api/auth/forgot-password`  
 **Request:** Email  
 **Response:** Thông báo đã gửi email khôi phục
 
-#### 4.7. Đặt lại mật khẩu
+#### 4.7. Đặt lại mật khẩu ✅
 
 **Endpoint:** `POST /api/auth/reset-password`  
 **Request:** Token, mật khẩu mới  

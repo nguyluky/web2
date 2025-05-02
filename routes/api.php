@@ -65,6 +65,10 @@ Route::controller(AccountController::class)->group(function () {
     // Route::get('/users/profile', 'getById');
     // Route::put('/users/profile', 'update');
     Route::put('/users/change-password', 'changePassword');
+    // khong biet chen do dung khong nhung ma lam dai ____
+    Route::get('/users/forgot-password', 'forgetPassword');
+    // ___
+    Route::put('/users/reset-password', 'resetPassword');
 });
 
 // category
