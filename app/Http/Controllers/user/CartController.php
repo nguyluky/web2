@@ -11,8 +11,8 @@ class CartController extends Controller
     public function addCart(Request $request)
     {
         $validated = $request->validate([
-            'profile_id' => 'required|integer',
-            'product_variant_id' => 'required|integer',
+            'profile_id' => 'required|integer|exists:profiles,id',
+            'product_variant_id' => 'required|integer|exists:product_variants,id',
             'amount' => 'nullable|integer|min:1',
         ]);
 
@@ -43,25 +43,43 @@ class CartController extends Controller
         // return response()->json(['carts' => $carts]);
     }
 
-    public function updateCart(int $variant_id, int $profile_id, int $quantity) { // maybe wrong
-        $cart = Cart::where('profile_id', $profile_id)->where('product_variant_id', $variant_id)->first();
+    public function updateCart(int $variant_id, int $profile_id, int $quantity) { // Tú đã sửa lại
+        $user = auth()->user();
+        if (!$user || !$user->profile) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $cart = Cart::where('profile_id', $user->profile->id)
+        ->where('product_variant_id', $variant_id)
+        ->first();
         if ($cart) {
             $cart->amount = $quantity;
             $cart->save();
+            return response()->json(['cart' => $cart]);
         }
+        return response()->json(['error' => 'Cart not found'], 404);
     }
 
-    public function deleteCart(int $variant_id, int $profile_id) { // maybe wrong
-        $cart = Cart::where('profile_id', $profile_id)->where('product_variant_id', $variant_id)->first();
-        if ($cart) {
-            $cart->delete();
-        } else {
-            return response()->json(['error' => 'cart not found'], 404);
+    public function deleteCart(int $variant_id, int $profile_id) {  // Tú đã sửa lại
+            $user = auth()->user();
+            if (!$user || !$user->profile) {
+                return response()->json(['error' => 'Unauthorized'], 401);
+            }
+        
+            $cart = Cart::where('profile_id', $user->profile->id)
+                ->where('product_variant_id', $variant_id)
+                ->first();
+        
+            if ($cart) {
+                $cart->delete();
+                return response()->json(['message' => 'Đã xóa giỏ hàng thành công']);
+            }
+        
+            return response()->json(['error' => 'Cart not found'], 404);
         }
-    }
 
     // 3.5. Áp dụng mã giảm giá
     public function promotion() {
-        // TODO
+        // TODO chưa hiểu
     }
 }
