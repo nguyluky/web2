@@ -8,6 +8,7 @@ use App\Http\Controllers\user\ProductReviewController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\admin\Products;
 use App\Http\Controllers\user\CategoryController;
+use App\Http\Controllers\user\ProfileController;
 
 // products
 Route::prefix('admin')->group(function () {
@@ -22,6 +23,7 @@ Route::prefix('admin')->group(function () {
 // product
 Route::controller(ProductController::class)->group(function () {
     Route::get('/products/search', 'searchProduct');
+    Route::get('/products/new', 'getNewProduct');
     Route::get('/products/{id}', 'getById');
     Route::get('/categories/{id}/products', 'getByCategory');
     // Route::get('/products', 'getAll');
@@ -47,6 +49,9 @@ Route::middleware(['auth:api'])->group(function () {
         // order
         Route::post('/orders', 'createOrders');
     });
+
+    Route::get('/users/profile', [AccountController::class, 'getById']);
+    Route::put('/users/profile', [AccountController::class, 'update']);
 });
 
 
@@ -54,8 +59,8 @@ Route::middleware(['auth:api'])->group(function () {
 Route::controller(AccountController::class)->group(function () {
     Route::post('auth/register', 'register');
     Route::post('auth/login', 'login')->name('login');
-    Route::get('/users/profile', 'getById');
-    Route::put('/users/profile', 'update');
+    // Route::get('/users/profile', 'getById');
+    // Route::put('/users/profile', 'update');
     Route::put('/users/change-password', 'changePassword');
     // khong biet chen do dung khong nhung ma lam dai ____
     Route::get('/users/forgot-password', 'forgetPassword');

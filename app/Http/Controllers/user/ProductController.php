@@ -34,6 +34,16 @@ class ProductController extends Controller
         // TODO
     }
 
+    public function getNewProduct() {
+        $limit = request()->input('limit', 10);
+        $data = Product::orderBy('created_at', 'desc')->limit($limit)->get();
+
+        return response()->json([
+            'message' => 'Lấy sản phẩm mới thành công',
+            'data' => $data
+        ]);
+    }
+
     // 1.5. Lấy sản phẩm liên quan _KHÓ_
     public function getRelatedProduct() {
         // TODO
