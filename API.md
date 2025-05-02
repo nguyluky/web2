@@ -148,18 +148,18 @@
 
 ### 5. Quản lý đơn hàng
 
-#### 5.1. Lấy danh sách đơn hàng của người dùng
+#### 5.1. Lấy danh sách đơn hàng của người dùng ✅
 
 **Endpoint:** `GET /api/users/orders`  
 **Parameters:** `page`, `limit`, [status](vscode-file://vscode-app/opt/visual-studio-code/resources/app/out/vs/code/electron-sandbox/workbench/workbench.html)  
 **Response:** Danh sách đơn hàng
 
-#### 5.2. Lấy chi tiết đơn hàng
+#### 5.2. Lấy chi tiết đơn hàng ✅
 
 **Endpoint:** `GET /api/orders/:id`  
 **Response:** Chi tiết đơn hàng
 
-#### 5.3. Hủy đơn hàng
+#### 5.3. Hủy đơn hàng ✅
 
 **Endpoint:** `PUT /api/orders/:id/cancel`  
 **Request:** Lý do hủy  
