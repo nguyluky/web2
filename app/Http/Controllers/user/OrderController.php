@@ -95,47 +95,57 @@ class OrderController
         });
     }
 
-    // 5.1. Lấy danh sách đơn hàng của người dùng
-    public function getAll() {
+    // 5.1. Lấy danh sách đơn hàng
+    public function getUserOrders(Request $request) {
         $user = auth()->user();
         if (!$user) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
-    
-        $orders = Order::where('account_id', $user->id)->get();
-    
-        return response()->json(['orders' => $orders]);
-    }
-    // 5.2. Lấy chi tiết đơn hàng
-    public function getDetailOrder(Request $request) {
-        $validated = $request->validate([
-            'order_id' => 'required|integer|exists:orders,id',
-        ]);
-    
-        $order = Order::with('orderDetails') // tải hiện chi tiết đơn hàng
-            ->where('id', $validated['order_id'])
-            ->where('account_id', auth()->user()->id)
-            ->firstOrFail();
-    
-        return response()->json(['order' => $order]);
-    }
+        $page = $request->query('page', 1);         
+        $limit = $request->query('limit', 10);
+        $status = $request->query('status'); 
 
-    // 5.3. Hủy đơn hàng
-    public function cancelOrder() {
-        $validated = $request->validate([
-            'order_id' => 'required|integer|exists:orders,id',
-        ]);
-
-        $order = Order::where('id', $validated['order_id'])
-        ->where('account_id', auth()->user()->id)
-        ->firstOrFail();
-        if ($order->status !== 'pending') {
-            return response()->json(['error' => 'Cannot cancel non-pending order'], 422);
+        $query = Order::where('account_id', $user->id);
+        if ($status) {
+            $query->where('status', $status);
         }
+
+        $orders = $query->orderBy('created_at', 'desc')
+                        ->paginate($limit, ['*'], 'page', $page);
+        return response()->json($orders, 200);
+    }
+
+    // 5.2. Lấy chi tiết đơn hàng
+    public function getOrderDetail(int $id) {
+        $user = auth()->user();
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+        $orderDetail = OrderDetail::where('order_id', $id)->get();
+
+        return response()->json(['orderDetail' => $orderDetail], 200);
+    }
+
+    // 5.3. Hủy đơn hàng 
+    public function cancelOrder(int $id) {
+        $user = auth()->user();
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $order = Order::find($id);
+        if (!$order) {
+            return response()->json(['error' => 'Order not found'], 404);
+        }
+
+        if ($order->account_id !== $user->id || $order->status == 'completed') {
+            return response()->json(['error' => 'Forbidden'], 403);
+        }
+
+        $order->update([
+            'status' => 'cancelled'
+        ]);
     
-        $order->status = 'cancelled';
-        $order->save();
-    
-        return response()->json(['message' => 'Đã hủy đơn hàng thành công']);
+        return response()->json($order, 200);
     }
 }
