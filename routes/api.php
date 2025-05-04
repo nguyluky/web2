@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\user\AccountController;
+use App\Http\Controllers\user\AddressController;
 use App\Http\Controllers\user\CartController;
 use App\Http\Controllers\user\OrderController;
 use App\Http\Controllers\user\ProductController;
@@ -51,6 +52,14 @@ Route::middleware(['auth:api'])->group(function () {
         Route::get('/user/orders', 'getUserOrders');
         Route::get('/orders/{id}', 'getOrderDetail');
         Route::put('/orders/{id}/cancel', 'cancelOrder');
+    });
+
+    Route::controller(AddressController::class)->group(function () {
+        // address
+        Route::post('/users/addresses', 'addAddress');
+        Route::get('/users/addresses', 'getUserAddress');
+        Route::put('/users/addresses/{id}', 'updateAddress');
+        Route::delete('/users/addresses/{id}', 'deleteAddress');
     });
 
     Route::get('/users/profile', [AccountController::class, 'getById']);
