@@ -2,18 +2,18 @@
 
 ### 1. Quản lý sản phẩm và danh mục
 
-#### 1.1. Lấy thông tin sản phẩm ✅
+#### 1.1. Lấy thông tin sản phẩm ✅ (tested)
 
 **Endpoint:** `GET /api/products/:id`  
 **Response:** Chi tiết sản phẩm bao gồm thông tin cơ bản, đặc điểm kỹ thuật, biến thể, hình ảnh, giá cả, rating, v.v.
 
-#### 1.2. Lấy danh sách sản phẩm theo danh mục ✅
+#### 1.2. Lấy danh sách sản phẩm theo danh mục ✅ (tested)
 
 **Endpoint:** `GET /api/categories/:id/products`  
 **Parameters:** `page`, `limit`, `sort`, `filter_*`  
 **Response:** Danh sách sản phẩm thuộc danh mục
 
-#### 1.3. Lấy danh sách danh mục ✅
+#### 1.3. Lấy danh sách danh mục ✅ (tested)
 
 **Endpoint:** `GET /api/categories`  
 **Response:** Danh sách các danh mục sản phẩm
@@ -30,7 +30,7 @@
 **Parameters:** `limit`  
 **Response:** Danh sách sản phẩm liên quan
 
-#### 1.6. Tìm kiếm sản phẩm ✅
+#### 1.6. Tìm kiếm sản phẩm ✅ (tested)
 
 **Endpoint:** `GET /api/products/search`  
 **Parameters:** `query`, `page`, `limit`, `sort`, `filter_*`  
@@ -38,13 +38,13 @@
 
 ### 2. Đánh giá sản phẩm
 
-#### 2.1. Lấy đánh giá sản phẩm ✅
+#### 2.1. Lấy đánh giá sản phẩm ✅ (tested)
 
 **Endpoint:** `GET /api/products/:id/reviews`  
 **Parameters:** `page`, `limit`, `sort`  
 **Response:** Danh sách đánh giá và thống kê rating
 
-#### 2.2. Thêm đánh giá sản phẩm ✅
+#### 2.2. Thêm đánh giá sản phẩm ✅  
 
 **Endpoint:** `POST /api/products/:id/reviews`  
 **Request:** Rating, nội dung, hình ảnh  
@@ -52,41 +52,41 @@
 
 ### 3. Giỏ hàng & Thanh toán
 
-#### 3.1. Thêm sản phẩm vào giỏ hàng ✅
+#### 3.1. Thêm sản phẩm vào giỏ hàng (not tested yet)
 
 **Endpoint:** `POST /api/cart`  
 **Request:** ID sản phẩm, số lượng, biến thể  
 **Response:** Thông tin giỏ hàng cập nhật
 
-#### 3.2. Lấy thông tin giỏ hàng ⚠️ (Nghi ngờ bị sai ở phần tham số truyền vào)
+#### 3.2. Lấy thông tin giỏ hàng ⚠️ - Nghi ngờ bị sai ở phần tham số truyền vào
 
 **Endpoint:** `GET /api/cart`  
 **Response:** Chi tiết giỏ hàng hiện tại
 
-#### 3.3. Cập nhật sản phẩm trong giỏ hàng ⚠️ (Nghi ngờ bị sai ở phần tham số truyền vào)
+#### 3.3. Cập nhật sản phẩm trong giỏ hàng ⚠️ - Nghi ngờ bị sai ở phần tham số truyền vào
 
 **Endpoint:** `PUT /api/cart/:itemId`  
 **Request:** Số lượng mới  
 **Response:** Thông tin giỏ hàng cập nhật
 
-#### 3.4. Xóa sản phẩm khỏi giỏ hàng ⚠️ (Nghi ngờ bị sai ở phần tham số truyền vào)
+#### 3.4. Xóa sản phẩm khỏi giỏ hàng ⚠️ - Nghi ngờ bị sai ở phần tham số truyền vào
 
 **Endpoint:** `DELETE /api/cart/:itemId`  
 **Response:** Thông tin giỏ hàng cập nhật
 
-#### 3.5. Áp dụng mã giảm giá
+#### 3.5. Áp dụng mã giảm giá 
 
 **Endpoint:** `POST /api/cart/apply-coupon`  
 **Request:** Mã giảm giá  
 **Response:** Thông tin giỏ hàng đã áp dụng mã giảm giá
 
-#### 3.6. Tạo đơn hàng ✅
+#### 3.6. Tạo đơn hàng ✅ 
 
 **Endpoint:** `POST /api/orders`  
 **Request:** Thông tin giao hàng, phương thức thanh toán  
 **Response:** Thông tin đơn hàng đã tạo
 
-#### 3.7. Kiểm tra tình trạng thanh toán _KHÓ_
+#### 3.7. Kiểm tra tình trạng thanh toán _KHÓ_ 
 
 **Endpoint:** `GET /api/orders/:id/payment-status`  
 **Response:** Trạng thái thanh toán
@@ -148,18 +148,18 @@
 
 ### 5. Quản lý đơn hàng
 
-#### 5.1. Lấy danh sách đơn hàng của người dùng
+#### 5.1. Lấy danh sách đơn hàng của người dùng ✅
 
 **Endpoint:** `GET /api/users/orders`  
 **Parameters:** `page`, `limit`, [status](vscode-file://vscode-app/opt/visual-studio-code/resources/app/out/vs/code/electron-sandbox/workbench/workbench.html)  
 **Response:** Danh sách đơn hàng
 
-#### 5.2. Lấy chi tiết đơn hàng
+#### 5.2. Lấy chi tiết đơn hàng ✅
 
 **Endpoint:** `GET /api/orders/:id`  
 **Response:** Chi tiết đơn hàng
 
-#### 5.3. Hủy đơn hàng
+#### 5.3. Hủy đơn hàng ✅
 
 **Endpoint:** `PUT /api/orders/:id/cancel`  
 **Request:** Lý do hủy  
