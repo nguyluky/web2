@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\admin;
 
-use App\Http\Controllers\Controller;
+use Illuminate\Routing\Controller;
 use App\Models\Function_;
 use Illuminate\Http\Request;
+use App\Models\Account;
 
 class Functions extends Controller
 {

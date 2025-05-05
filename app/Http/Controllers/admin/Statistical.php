@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\admin;
 
-use App\Http\Controllers\Controller;
+use Illuminate\Routing\Controller;
 use App\Models\Order;
 use App\Models\ImportDetail;
 use App\Models\Product;
@@ -10,10 +10,25 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * @OA\Tag(
+ *   name="Statistical",
+ *   description="Statistics endpoints"
+ * )
+ * @OA\PathItem(path="/api/admin/revenue-cost")
+ */
 class Statistical extends Controller
 {
     /**
      * 7.1. Thống kê thu chi
+     * @OA\Get(
+     *   path="/api/admin/revenue-cost",
+     *   tags={"Statistical"},
+     *   summary="Thống kê thu chi",
+     *   @OA\Parameter(name="year", in="query", @OA\Schema(type="integer"), description="Year filter"),
+     *   @OA\Parameter(name="type", in="query", @OA\Schema(type="string", enum={"year","month","day"}), description="Group period"),
+     *   @OA\Response(response=200, description="Success")
+     * )
      */
     public function revenueCost(Request $request)
     {

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\admin;
 
-use App\Http\Controllers\Controller;
+use Illuminate\Routing\Controller;
 use App\Models\Import;
 use Illuminate\Http\Request;
 
@@ -16,7 +16,7 @@ class Imports extends Controller
         $employee_id = $request->query('employee_id');
         $date_start = $request->query('date_start');
         $date_end = $request->query('date_end');
-        $limt = $request->query('limit', 10);
+        $limit = $request->query('limit', 10);
 
         $query = Import::query();
         if ($search) {
@@ -30,9 +30,9 @@ class Imports extends Controller
         if ($employee_id) {
             $query->where('employee_id', $employee_id);
         }
-        if ($status) {
-            $query->where('status', $status);
-        }
+        // if ($status) {
+        //     $query->where('status', $status);
+        // }
         if ($date_start && $date_end) {
             $query->whereBetween('created_at', [$date_start, $date_end]);
         }
@@ -48,7 +48,7 @@ class Imports extends Controller
             'search' => $search,
             'supplier_id' => $supplier_id,
             'employee_id' => $employee_id,
-            'status' => $status,
+            // 'status' => $status,
             'date_start' => $date_start,
             'date_end' => $date_end,
             'limit' => $limit

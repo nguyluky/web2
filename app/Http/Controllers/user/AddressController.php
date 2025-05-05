@@ -4,8 +4,9 @@ namespace App\Http\Controllers\user;
 
 use Illuminate\Http\Request;
 use App\Models\Address;
+use Illuminate\Routing\Controller;
 
-class AddressController {
+class AddressController extends Controller {
     // 7.1. Thêm địa chỉ mới
     public function addAddress(Request $request) {
         $user = auth() -> user();

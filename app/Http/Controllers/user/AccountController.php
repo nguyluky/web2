@@ -3,14 +3,58 @@
 namespace App\Http\Controllers\user;
 
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use App\Models\Account;
 use App\Models\Profile;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\DB;
+use OpenApi\Annotations as OA;
 
-class AccountController {
+/**
+ * @OA\Tag(
+ *     name="Authentication",
+ *     description="API Endpoints xác thực người dùng"
+ * )
+ */
+class AccountController extends Controller {
+    /**
+     * @OA\Post(
+     *     path="/api/auth/register",
+     *     operationId="register",
+     *     tags={"Authentication"},
+     *     summary="Đăng ký tài khoản mới",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"username", "password", "email", "fullname", "phone_number"},
+     *             @OA\Property(property="username", type="string", example="johndoe"),
+     *             @OA\Property(property="password", type="string", format="password", example="password123"),
+     *             @OA\Property(property="email", type="string", format="email", example="john@example.com"),
+     *             @OA\Property(property="fullname", type="string", example="John Doe"),
+     *             @OA\Property(property="phone_number", type="string", example="0123456789")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Đăng ký thành công",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="access_token", type="string"),
+     *             @OA\Property(property="token_type", type="string", example="bearer"),
+     *             @OA\Property(property="expires_in", type="integer")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Dữ liệu không hợp lệ",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string"),
+     *             @OA\Property(property="errors", type="object")
+     *         )
+     *     )
+     * )
+     */
     public function register(Request $request)
     {
         $validate = $request->validate([
@@ -53,6 +97,52 @@ class AccountController {
 
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/auth/login",
+     *     operationId="login",
+     *     tags={"Authentication"},
+     *     summary="Đăng nhập",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"username", "password"},
+     *             @OA\Property(property="username", type="string", example="johndoe"),
+     *             @OA\Property(property="password", type="string", format="password", example="password123")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Đăng nhập thành công",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="access_token", type="string"),
+     *             @OA\Property(property="token_type", type="string", example="bearer"),
+     *             @OA\Property(property="expires_in", type="integer")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Mật khẩu không đúng",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="wrong password")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="Tài khoản không active",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="user is not active")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Không tìm thấy người dùng",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="not found user")
+     *         )
+     *     )
+     * )
+     */
     public function login(Request $request)
     {
         $validate = $request->validate([
