@@ -35,7 +35,7 @@ class ProductReviewController extends Controller
         $imagePath = null;
 
         if ($request->hasFile('image')) {
-            // $imagePath = $request->file('image')->store('public/reviews'); // store the image in somewhere
+            $imagePath = $request->file('image')->store('public/reviews'); // store the image in somewhere
         }
 
         // Add image path to meta_data

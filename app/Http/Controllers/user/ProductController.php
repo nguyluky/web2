@@ -11,8 +11,8 @@ class ProductController extends Controller
     public function getById(string $id)
     {
 
-        // get product by id including variants and images
-        $product = Product::with(['product_variants', 'product_images'])->where('id', $id)->first();
+        // get product by id including variants and images and category and reviews, sell count
+        $product = Product::where('id', $id)->first();
 
         if (!$product) {
             return response()->json(['error' => 'product not found'], 404);
