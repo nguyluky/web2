@@ -17,6 +17,7 @@ use App\Http\Controllers\admin\Accounts;
 use App\Http\Controllers\admin\Rules;
 use App\Http\Controllers\user\CategoryController;
 use App\Http\Controllers\user\ProfileController;
+use OpenApi\Annotations as OA;
 
 // products
 Route::prefix('admin')->group(function () {
