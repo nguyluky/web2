@@ -23,7 +23,7 @@ use Illuminate\Database\Eloquent\Model;
 class Cart extends Model
 {
 	protected $table = 'cart';
-	public $incrementing = false;
+	public $incrementing = true;
 	public $timestamps = false;
 
 	protected $casts = [

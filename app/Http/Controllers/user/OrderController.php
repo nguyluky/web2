@@ -4,11 +4,65 @@ namespace App\Http\Controllers\user;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
+use OpenApi\Annotations as OA;
 use App\Models\Order;
 use App\Models\OrderDetail;
+use Illuminate\Routing\Controller;
 
-class OrderController
+/**
+ * @OA\Tag(
+ *     name="Orders",
+ *     description="API Endpoints quản lý đơn hàng"
+ * )
+ */
+class OrderController extends Controller
 {
+    /**
+     * @OA\Post(
+     *     path="/api/orders",
+     *     operationId="createOrder",
+     *     tags={"Orders"},
+     *     summary="Tạo đơn hàng mới",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"account_id", "employee_id", "products", "payment_method"},
+     *             @OA\Property(property="account_id", type="integer"),
+     *             @OA\Property(property="employee_id", type="integer"),
+     *             @OA\Property(property="payment_method", type="string"),
+     *             @OA\Property(
+     *                 property="products",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     @OA\Property(property="product_variant_id", type="integer"),
+     *                     @OA\Property(property="serial", type="integer")
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Tạo đơn hàng thành công",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="order", type="object",
+     *                 @OA\Property(property="id", type="integer"),
+     *                 @OA\Property(property="account_id", type="integer"),
+     *                 @OA\Property(property="employee_id", type="integer"),
+     *                 @OA\Property(property="status", type="string", example="pending"),
+     *                 @OA\Property(property="payment_method", type="string"),
+     *                 @OA\Property(property="created_at", type="string", format="date-time"),
+     *                 @OA\Property(property="updated_at", type="string", format="date-time")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Dữ liệu không hợp lệ"
+     *     )
+     * )
+     */
     public function createOrders(Request $request) {
         $validated = $request->validate([
             'account_id' => 'required|integer|exists:accounts,id',
@@ -95,7 +149,65 @@ class OrderController
         });
     }
 
-    // 5.1. Lấy danh sách đơn hàng
+    /**
+     * @OA\Get(
+     *     path="/api/user/orders",
+     *     operationId="getUserOrders",
+     *     tags={"Orders"},
+     *     summary="Lấy danh sách đơn hàng của người dùng",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="page",
+     *         in="query",
+     *         description="Số trang",
+     *         required=false,
+     *         @OA\Schema(type="integer", default=1)
+     *     ),
+     *     @OA\Parameter(
+     *         name="limit",
+     *         in="query",
+     *         description="Số lượng đơn hàng mỗi trang",
+     *         required=false,
+     *         @OA\Schema(type="integer", default=10)
+     *     ),
+     *     @OA\Parameter(
+     *         name="status",
+     *         in="query",
+     *         description="Lọc theo trạng thái đơn hàng",
+     *         required=false,
+     *         @OA\Schema(type="string", enum={"pending", "processing", "completed", "cancelled"})
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Thành công",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="data", type="array", 
+     *                 @OA\Items(
+     *                     type="object",
+     *                     @OA\Property(property="id", type="integer"),
+     *                     @OA\Property(property="account_id", type="integer"),
+     *                     @OA\Property(property="employee_id", type="integer"),
+     *                     @OA\Property(property="status", type="string"),
+     *                     @OA\Property(property="payment_method", type="string"),
+     *                     @OA\Property(property="created_at", type="string", format="date-time"),
+     *                     @OA\Property(property="updated_at", type="string", format="date-time")
+     *                 )
+     *             ),
+     *             @OA\Property(property="current_page", type="integer"),
+     *             @OA\Property(property="total", type="integer"),
+     *             @OA\Property(property="per_page", type="integer"),
+     *             @OA\Property(property="last_page", type="integer")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Chưa xác thực",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", example="Unauthorized")
+     *         )
+     *     )
+     * )
+     */
     public function getUserOrders(Request $request) {
         $user = auth()->user();
         if (!$user) {
@@ -115,7 +227,50 @@ class OrderController
         return response()->json($orders, 200);
     }
 
-    // 5.2. Lấy chi tiết đơn hàng
+    /**
+     * @OA\Get(
+     *     path="/api/orders/{id}",
+     *     operationId="getOrderDetail",
+     *     tags={"Orders"},
+     *     summary="Lấy chi tiết đơn hàng",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID của đơn hàng",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Thành công",
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="orderDetail",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     type="object",
+     *                     @OA\Property(property="id", type="integer"),
+     *                     @OA\Property(property="order_id", type="integer"),
+     *                     @OA\Property(property="product_id", type="integer"),
+     *                     @OA\Property(property="variant_id", type="integer"),
+     *                     @OA\Property(property="amount", type="integer"),
+     *                     @OA\Property(property="price", type="number", format="float"),
+     *                     @OA\Property(property="created_at", type="string", format="date-time"),
+     *                     @OA\Property(property="updated_at", type="string", format="date-time")
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Chưa xác thực",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", example="Unauthorized")
+     *         )
+     *     )
+     * )
+     */
     public function getOrderDetail(int $id) {
         $user = auth()->user();
         if (!$user) {
@@ -126,7 +281,56 @@ class OrderController
         return response()->json(['orderDetail' => $orderDetail], 200);
     }
 
-    // 5.3. Hủy đơn hàng 
+    /**
+     * @OA\Put(
+     *     path="/api/orders/{id}/cancel",
+     *     operationId="cancelOrder",
+     *     tags={"Orders"},
+     *     summary="Hủy đơn hàng",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID của đơn hàng cần hủy",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Hủy đơn hàng thành công",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="id", type="integer"),
+     *             @OA\Property(property="account_id", type="integer"),
+     *             @OA\Property(property="employee_id", type="integer"),
+     *             @OA\Property(property="status", type="string", example="cancelled"),
+     *             @OA\Property(property="payment_method", type="string"),
+     *             @OA\Property(property="created_at", type="string", format="date-time"),
+     *             @OA\Property(property="updated_at", type="string", format="date-time")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Chưa xác thực",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", example="Unauthorized")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="Không có quyền hủy đơn hàng này",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", example="Forbidden")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Không tìm thấy đơn hàng",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", example="Order not found")
+     *         )
+     *     )
+     * )
+     */
     public function cancelOrder(int $id) {
         $user = auth()->user();
         if (!$user) {

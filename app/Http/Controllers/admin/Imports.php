@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\admin;
 
-use App\Http\Controllers\Controller;
+use Illuminate\Routing\Controller;
 use App\Models\Import;
 use Illuminate\Http\Request;
 
 class Imports extends Controller
 {
-
+    //5.1. Lấy danh sách phiếu nhập hàng
     public function getAll(Request $request)
     {
         $search = $request->query('search');
@@ -16,7 +16,7 @@ class Imports extends Controller
         $employee_id = $request->query('employee_id');
         $date_start = $request->query('date_start');
         $date_end = $request->query('date_end');
-        $limt = $request->query('limit', 10);
+        $limit = $request->query('limit', 10);
 
         $query = Import::query();
         if ($search) {
@@ -30,9 +30,9 @@ class Imports extends Controller
         if ($employee_id) {
             $query->where('employee_id', $employee_id);
         }
-        if ($status) {
-            $query->where('status', $status);
-        }
+        // if ($status) {
+        //     $query->where('status', $status);
+        // }
         if ($date_start && $date_end) {
             $query->whereBetween('created_at', [$date_start, $date_end]);
         }
@@ -48,7 +48,7 @@ class Imports extends Controller
             'search' => $search,
             'supplier_id' => $supplier_id,
             'employee_id' => $employee_id,
-            'status' => $status,
+            // 'status' => $status,
             'date_start' => $date_start,
             'date_end' => $date_end,
             'limit' => $limit
@@ -59,7 +59,7 @@ class Imports extends Controller
         ]);
     }
 
-
+    //5.2. Tạo phiếu nhập hàng
     public function create(Request $request)
     {
         // Xác thực dữ liệu đầu vào dựa trên cấu trúc bảng import
@@ -78,7 +78,7 @@ class Imports extends Controller
         ], 201);
     }
 
-
+    //5.3. Cập nhật phiếu nhập hàng
     public function getById(Request $request, $id)
     {
         // Tìm phiếu nhập hàng theo ID
@@ -94,6 +94,53 @@ class Imports extends Controller
         return response()->json([
             'message' => 'Lấy phiếu nhập hàng thành công',
             'data' => $import
+        ]);
+    }
+
+    //5.4. Cập nhật trạng thái phiếu nhập hàng
+    public function updateStatus(Request $request, $id)
+    {
+        // Tìm phiếu nhập hàng theo ID
+        $import = Import::find($id);
+
+        // Kiểm tra xem phiếu nhập hàng có tồn tại không
+        if (!$import) {
+            return response()->json([
+                'message' => 'Không tìm thấy phiếu nhập hàng'
+            ], 404);
+        }
+
+        // Cập nhật trạng thái phiếu nhập hàng
+        $validated = $request->validate([
+            'status' => 'required|in:pending,completed,cancelled', // Giả sử các giá trị trạng thái
+        ]);
+
+        $import->update($validated);
+
+        return response()->json([
+            'message' => 'Cập nhật trạng thái phiếu nhập hàng thành công',
+            'data' => $import
+        ]);
+    }
+
+    //5.5. Xóa phiếu nhập hàng
+    public function cancelImport($id)
+    {
+        // Tìm phiếu nhập hàng theo ID
+        $import = Import::find($id);
+
+        // Kiểm tra xem phiếu nhập hàng có tồn tại không
+        if (!$import) {
+            return response()->json([
+                'message' => 'Không tìm thấy phiếu nhập hàng'
+            ], 404);
+        }
+
+        // Xóa phiếu nhập hàng
+        $import->delete();
+
+        return response()->json([
+            'message' => 'Xóa phiếu nhập hàng thành công'
         ]);
     }
 }

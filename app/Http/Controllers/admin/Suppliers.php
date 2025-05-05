@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\admin;
 
-use App\Http\Controllers\Controller;
+use Illuminate\Routing\Controller;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
 
 class Suppliers extends Controller
 {
-
+    //4.1 Lấy danh sách nhà cung cấp
     public function getAll(Request $request)
     {
 
@@ -59,7 +59,7 @@ class Suppliers extends Controller
         ]);
     }
 
-
+    //4.2 Tạo nhà cung cấp mới
     public function create(Request $request)
     {
         // Xác thực dữ liệu đầu vào dựa trên cấu trúc bảng supplier
@@ -81,7 +81,7 @@ class Suppliers extends Controller
         ], 201);
     }
 
-
+    //4.3 lấy thông tin nhà cung cấp theo ID
     public function getById(Request $request, $id)
     {
         // Tìm nhà cung cấp theo ID
@@ -99,4 +99,56 @@ class Suppliers extends Controller
             'data' => $supplier
         ]);
     }
+    //4.4 Cập nhật thông tin nhà cung cấp theo ID
+    public function update(Request $request, $id)
+    {
+        // Tìm nhà cung cấp theo ID
+        $supplier = Supplier::find($id);
+
+        // Kiểm tra xem nhà cung cấp có tồn tại không
+        if (!$supplier) {
+            return response()->json([
+                'message' => 'Không tìm thấy nhà cung cấp'
+            ], 404);
+        }
+
+        // Xác thực dữ liệu đầu vào dựa trên cấu trúc bảng supplier
+        $validated = $request->validate([
+            'name' => 'required|string|max:45', // Tên nhà cung cấp, tối đa 45 ký tự
+            'tax' => 'required|string|max:45', // Mã số thuế, tối đa 45 ký tự
+            'contact_name' => 'required|string|max:45', // Tên người liên hệ, tối đa 45 ký tự
+            'phone_number' => 'required|string|max:45|regex:/^[0-9\+]+$/u', // Số điện thoại, chỉ chứa số và dấu +
+            'email' => 'required|string|email|max:45', // Email, phải đúng định dạng email
+            'status' => 'required|in:active,inactive', // Giả sử các giá trị ENUM
+        ]);
+
+        // Cập nhật thông tin nhà cung cấp
+        $supplier->update($validated);
+
+        return response()->json([
+            'message' => 'Cập nhật nhà cung cấp thành công',
+            'data' => $supplier
+        ]);
+    }
+    //4.5 Xóa nhà cung cấp theo ID
+    public function delete($id)
+    {
+        // Tìm nhà cung cấp theo ID
+        $supplier = Supplier::find($id);
+
+        // Kiểm tra xem nhà cung cấp có tồn tại không
+        if (!$supplier) {
+            return response()->json([
+                'message' => 'Không tìm thấy nhà cung cấp'
+            ], 404);
+        }
+
+        // Xóa nhà cung cấp
+        $supplier->delete();
+
+        return response()->json([
+            'message' => 'Xóa nhà cung cấp thành công'
+        ]);
+    }
+
 }
