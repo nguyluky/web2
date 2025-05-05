@@ -9,9 +9,8 @@ use Illuminate\Routing\Controller;
 
 class Products extends Controller
 {
-    /**
-     * Lấy danh sách tất cả sản phẩm
-     */
+
+    //1.1 Lấy danh sách sản phẩm
     public function getAll(Request $request)
     {
         $search = $request->query('search');
@@ -58,6 +57,7 @@ class Products extends Controller
         ]);
     }
 
+    //1.2 Tạo sản phẩm
     public function create(CreateProductsRequest $request)
     {
 
@@ -75,9 +75,7 @@ class Products extends Controller
         }
     }
 
-    /**
-     * Lấy thông tin một sản phẩm theo ID
-     */
+    //1.3 Lấy sản phẩm theo ID
     public function getById(Request $request, $id)
     {
         // Tìm sản phẩm theo ID
@@ -96,6 +94,115 @@ class Products extends Controller
         ]);
     }
 
+    //1.4 Cập nhật sản phẩm
+    public function update(CreateProductsRequest $request, $id)
+    {
+        // Tìm sản phẩm theo ID
+        $product = Product::find($id);
+
+        // Kiểm tra xem sản phẩm có tồn tại không
+        if (!$product) {
+            return response()->json([
+                'message' => 'Không tìm thấy sản phẩm'
+            ], 404);
+        }
+
+        // Cập nhật thông tin sản phẩm
+        $validatedData = $request->validated();
+        $product->update($validatedData);
+
+        return response()->json([
+            'message' => 'Cập nhật sản phẩm thành công',
+            'data' => $product
+        ]);
+    }
+
+//1.5 Xóa sản phẩm
+    public function delete($id)
+    {
+        // Tìm sản phẩm theo ID
+        $product = Product::find($id);
+
+        // Kiểm tra xem sản phẩm có tồn tại không
+        if (!$product) {
+            return response()->json([
+                'message' => 'Không tìm thấy sản phẩm'
+            ], 404);
+        }
+
+        // Xóa sản phẩm
+        $product->delete();
+
+        return response()->json([
+            'message' => 'Xóa sản phẩm thành công'
+        ]);
+    }
+    //1.6 Thêm trạng thái sản phẩm
+    public function addStatus(Request $request, $id)
+    {
+        // Tìm sản phẩm theo ID
+        $product = Product::find($id);
+
+        // Kiểm tra xem sản phẩm có tồn tại không
+        if (!$product) {
+            return response()->json([
+                'message' => 'Không tìm thấy sản phẩm'
+            ], 404);
+        }
+
+        // Thêm trạng thái sản phẩm
+        $product->status = $request->input('status');
+        $product->save();
+
+        return response()->json([
+            'message' => 'Thêm trạng thái sản phẩm thành công',
+            'data' => $product
+        ]);
+    }
+//1.7 Thay đổi trạng thái sản phẩm
+    public function updateStatus(Request $request, $id)
+    {
+        // Tìm sản phẩm theo ID
+        $product = Product::find($id);
+
+        // Kiểm tra xem sản phẩm có tồn tại không
+        if (!$product) {
+            return response()->json([
+                'message' => 'Không tìm thấy sản phẩm'
+            ], 404);
+        }
+
+        // Thay đổi trạng thái sản phẩm
+        $product->status = $request->input('status');
+        $product->save();
+
+        return response()->json([
+            'message' => 'Thay đổi trạng thái sản phẩm thành công',
+            'data' => $product
+        ]);
+    }
+    //1.8 Xóa trạng thái sản phẩm
+    public function deleteStatus($id)
+    {
+        // Tìm sản phẩm theo ID
+        $product = Product::find($id);
+
+        // Kiểm tra xem sản phẩm có tồn tại không
+        if (!$product) {
+            return response()->json([
+                'message' => 'Không tìm thấy sản phẩm'
+            ], 404);
+        }
+
+        // Xóa trạng thái sản phẩm
+        $product->status = null;
+        $product->save();
+
+        return response()->json([
+            'message' => 'Xóa trạng thái sản phẩm thành công',
+            'data' => $product
+        ]);
+    }
 
 
 }

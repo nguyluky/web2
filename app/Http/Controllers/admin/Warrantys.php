@@ -7,7 +7,8 @@ use App\Models\Warranty;
 use Illuminate\Http\Request;
 
 class Warrantys extends Controller
-{
+{   
+    //6.1 Lấy danh sách bảo hành
     public function getAll(Request $request)
     {
 
@@ -71,7 +72,7 @@ class Warrantys extends Controller
         ]);
     }
 
-
+    //6.2 Tạo bảo hành mới
     public function create(Request $request)
     {
         $validated = $request->validate([
@@ -93,9 +94,7 @@ class Warrantys extends Controller
         ], 201);
     }
 
-    /**
-     * Lấy thông tin một bảo hành theo ID
-     */
+    //6.3 Lấy thông tin bảo hành theo ID
     public function getById(Request $request, $id)
     {
         // Tìm bảo hành theo ID
@@ -111,6 +110,59 @@ class Warrantys extends Controller
         return response()->json([
             'message' => 'Lấy bảo hành thành công',
             'data' => $warranty
+        ]);
+    }
+
+    //6.4 Cập nhật thông tin bảo hành theo ID
+    public function update(Request $request, $id)
+    {
+        // Tìm bảo hành theo ID
+        $warranty = Warranty::find($id);
+
+        // Kiểm tra xem bảo hành có tồn tại không
+        if (!$warranty) {
+            return response()->json([
+                'message' => 'Không tìm thấy bảo hành'
+            ], 404);
+        }
+
+        // Validate dữ liệu đầu vào
+        $validated = $request->validate([
+            'account_id' => 'sometimes|required|integer|exists:accounts,id',
+            'product_id' => 'sometimes|required|integer|exists:products,id', 
+            'supplier_id' => 'sometimes|required|integer|exists:suppliers,id', 
+            'issue_date' => 'sometimes|required|date_format:Y-m-d',
+            'expiration_date' => 'sometimes|required|date_format:Y-m-d|after_or_equal:issue_date',
+            'status' => 'sometimes|required|in:pending,approved,rejected',
+            'note' => 'nullable|string',
+        ]);
+
+        // Cập nhật thông tin bảo hành
+        $warranty->update($validated);
+
+        return response()->json([
+            'message' => 'Cập nhật bảo hành thành công',
+            'data' => $warranty
+        ]);
+    }
+    //6.5 Xóa bảo hành theo ID
+    public function delete($id)
+    {
+        // Tìm bảo hành theo ID
+        $warranty = Warranty::find($id);
+
+        // Kiểm tra xem bảo hành có tồn tại không
+        if (!$warranty) {
+            return response()->json([
+                'message' => 'Không tìm thấy bảo hành'
+            ], 404);
+        }
+
+        // Xóa bảo hành
+        $warranty->delete();
+
+        return response()->json([
+            'message' => 'Xóa bảo hành thành công'
         ]);
     }
 }

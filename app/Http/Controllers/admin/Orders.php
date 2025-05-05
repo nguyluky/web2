@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 class Orders extends Controller
 {
-
+    //3.1 Lấy danh sách đơn hàng
     public function getAll(Request $request)
     {
         $search = $request->query('search');
@@ -63,23 +63,23 @@ class Orders extends Controller
     }
 
 
-    public function create(Request $request)
-    {
-        $validated = $request->validate([
-            'account_id' => 'required|integer|exists:accounts,id', // Kiểm tra account_id tồn tại trong bảng accounts
-            'status' => 'required|in:pending,processing,shipped,delivered,cancelled', // Giả sử các giá trị ENUM
-            'employee_id' => 'nullable|integer|exists:employees,id', // employee_id có thể null, nếu có thì phải tồn tại
-            'payment_method' => 'required|in:cash,credit_card,paypal', // Giả sử các giá trị ENUM
-        ]);
+    // public function create(Request $request)
+    // {
+    //     $validated = $request->validate([
+    //         'account_id' => 'required|integer|exists:accounts,id', // Kiểm tra account_id tồn tại trong bảng accounts
+    //         'status' => 'required|in:pending,processing,shipped,delivered,cancelled', // Giả sử các giá trị ENUM
+    //         'employee_id' => 'nullable|integer|exists:employees,id', // employee_id có thể null, nếu có thì phải tồn tại
+    //         'payment_method' => 'required|in:cash,credit_card,paypal', // Giả sử các giá trị ENUM
+    //     ]);
 
 
-        $order = Order::create($validated);
+    //     $order = Order::create($validated);
 
-        return response()->json([
-            'message' => 'Tạo đơn hàng thành công',
-            'data' => $order
-        ], 201);
-    }
+    //     return response()->json([
+    //         'message' => 'Tạo đơn hàng thành công',
+    //         'data' => $order
+    //     ], 201);
+    // }
 
 
     public function getById(Request $request, $id)
@@ -94,6 +94,64 @@ class Orders extends Controller
 
         return response()->json([
             'message' => 'Lấy đơn hàng thành công',
+            'data' => $order
+        ]);
+    }
+
+    //3.2 Lấy chi tiết đơn hàng theo id
+    public function getOrderDetails(Request $request, $id)
+    {
+        $order = Order::with('order_details')->find($id);
+
+        if (!$order) {
+            return response()->json([
+                'message' => 'Không tìm thấy đơn hàng'
+            ], 404);
+        }
+
+        return response()->json([
+            'message' => 'Lấy chi tiết đơn hàng thành công',
+            'data' => $order->order_details
+        ]);
+    }
+
+    //3.3 Cập nhật trạng thái đơn hàng
+    public function updateStatus(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'status' => 'required|in:pending,processing,shipped,delivered,cancelled', // Giả sử các giá trị ENUM
+        ]);
+
+        $order = Order::find($id);
+
+        if (!$order) {
+            return response()->json([
+                'message' => 'Không tìm thấy đơn hàng'
+            ], 404);
+        }
+
+        $order->update($validated);
+
+        return response()->json([
+            'message' => 'Cập nhật trạng thái đơn hàng thành công',
+            'data' => $order
+        ]);
+    }
+    //3.4 Hủy đơn hàng
+    public function cancelOrder(Request $request, $id)
+    {
+        $order = Order::find($id);
+
+        if (!$order) {
+            return response()->json([
+                'message' => 'Không tìm thấy đơn hàng'
+            ], 404);
+        }
+
+        $order->update(['status' => 'cancelled']);
+
+        return response()->json([
+            'message' => 'Hủy đơn hàng thành công',
             'data' => $order
         ]);
     }
