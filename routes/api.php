@@ -8,6 +8,13 @@ use App\Http\Controllers\user\ProductController;
 use App\Http\Controllers\user\ProductReviewController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\admin\Products;
+use App\Http\Controllers\admin\Category;
+use App\Http\Controllers\admin\Orders;
+use App\Http\Controllers\admin\Suppliers;
+use App\Http\Controllers\admin\Warrantys;
+use App\Http\Controllers\admin\Statisticals;
+use App\Http\Controllers\admin\Accounts;
+use App\Http\Controllers\admin\Rules;
 use App\Http\Controllers\user\CategoryController;
 use App\Http\Controllers\user\ProfileController;
 
@@ -17,9 +24,99 @@ Route::prefix('admin')->group(function () {
         Route::post('/products', 'create');
         Route::get('/products', 'getAll');
         Route::get('/products/{id}', 'getById');
+        Route::put('/products/{id}', 'update');
+        Route::delete('/products/{id}', 'delete');
+        Route::post('/products/{id}', 'addStatus');
+        Route::put('/products/{id}', 'updateStatus');
+        Route::delete('/products/{id}', 'updateStatus');
     });
 });
 
+// categories
+Route::prefix('admin')->group(function () {
+    Route::controller(Category::class)->group(function () {
+        Route::post('/categories', 'create');
+        Route::get('/categories', 'getAll');
+        Route::get('/categories/{id}', 'getById');
+        Route::put('/categories/{id}', 'update');
+        Route::delete('/categories/{id}', 'delete');
+    });
+});
+
+// orders
+Route::prefix('admin')->group(function () {
+    Route::controller(Orders::class)->group(function () {
+        Route::get('/orders', 'getAll');
+        Route::get('/orders/{id}', 'getById');
+        Route::put('/orders/{id}', 'updateStatus');
+        Route::delete('/orders/{id}', 'cancelOrder');
+        Route::get('/orders/{id}/details', 'getOrderDetails');
+    });
+});
+
+// suppliers
+Route::prefix('admin')->group(function () {
+    Route::controller(Suppliers::class)->group(function () {
+        Route::post('/suppliers', 'create');
+        Route::get('/suppliers', 'getAll');
+        Route::get('/suppliers/{id}', 'getById');
+        Route::put('/suppliers/{id}', 'update');
+        Route::delete('/suppliers/{id}', 'delete');
+    });
+});
+
+// import
+Route::prefix('admin')->group(function () {
+    Route::controller(Orders::class)->group(function () {
+        Route::post('/import', 'create');
+        Route::get('/import', 'getAll');
+        Route::get('/import/{id}', 'getById');
+        Route::put('/import/{id}', 'updateStatus');
+        Route::delete('/import/{id}', 'cancelImport');
+    });
+});
+
+//Warranty
+Route::prefix('admin')->group(function () {
+    Route::controller(Warrantys::class)->group(function () {
+        Route::post('/warrantys', 'create');
+        Route::get('/warrantys', 'getAll');
+        Route::get('/warrantys/{id}', 'getById');
+        Route::put('/warrantys/{id}', 'update');
+        Route::delete('/warrantys/{id}', 'delete');
+    });
+});
+
+// statistical 
+Route::prefix('admin')->controller(Statistical::class)->group(function () {
+    Route::get('revenue-cost', 'revenueCost');
+    Route::get('inventory', 'inventory');
+    Route::get('dashboard', 'dashboard');
+    Route::get('revenue-by-products', 'revenueByProducts');
+    Route::get('revenue-by-categories', 'revenueByCategories');
+});
+
+// account
+Route::prefix('admin')->group(function () {
+    Route::controller(Accounts::class)->group(function () {
+        Route::post('/accounts', 'create');
+        Route::get('/accounts', 'getAll');
+        Route::get('/accounts/{id}', 'getById');
+        Route::put('/accounts/{id}', 'update');
+        Route::delete('/accounts/{id}', 'delete');
+    });
+});
+
+// rule
+Route::prefix('admin')->group(function () {
+    Route::controller(Rules::class)->group(function () {
+        Route::post('/rules', 'create');
+        Route::get('/rules', 'getAll');
+        Route::get('/rules/{id}', 'getById');
+        Route::put('/rules/{id}', 'update');
+        Route::delete('/rules/{id}', 'delete');
+    });
+});
 
 // product
 Route::controller(ProductController::class)->group(function () {

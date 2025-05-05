@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 class Rules extends Controller
 {
 
+    //8.6. Lấy danh sách quyền
     public function getAll(Request $request)
     {
         $limit = $request->query('limit', 10);
@@ -22,6 +23,7 @@ class Rules extends Controller
         ]);
     }
 
+    //8.7. Tạo quyền
     public function create(Request $request)
     {
         $validated = $request->validate([
@@ -37,6 +39,7 @@ class Rules extends Controller
         ], 201);
     }
 
+    //8.8. Cập nhật quyền
     public function getById(Request $request, $id)
     {
 
@@ -51,6 +54,23 @@ class Rules extends Controller
         return response()->json([
             'message' => 'Lấy thành công',
             'data' => $rule
+        ]);
+    }
+    //8.9. Xóa quyền
+    public function delete(Request $request, $id)
+    {
+        $rule = Rule::find($id);
+
+        if (!$rule) {
+            return response()->json([
+                'message' => 'Không tìm thấy'
+            ], 404);
+        }
+
+        $rule->delete();
+
+        return response()->json([
+            'message' => 'Xóa thành công',
         ]);
     }
 }

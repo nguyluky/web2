@@ -57,4 +57,5 @@ class OrderDetails extends Controller
             'data' => $order_detail
         ]);
     }
+    //3.2 Lấy
 }
