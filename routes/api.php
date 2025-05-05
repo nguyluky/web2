@@ -62,8 +62,8 @@ Route::middleware(['auth:api'])->group(function () {
         Route::delete('/users/addresses/{id}', 'deleteAddress');
     });
 
-    Route::get('/users/profile', [AccountController::class, 'getById']);
-    Route::put('/users/profile', [AccountController::class, 'update']);
+    Route::get('/users/profile', [ProfileController::class, 'getProfile']);
+    Route::put('/users/profile', [ProfileController::class, 'updateProfile']);
 });
 
 
@@ -71,8 +71,6 @@ Route::middleware(['auth:api'])->group(function () {
 Route::controller(AccountController::class)->group(function () {
     Route::post('auth/register', 'register');
     Route::post('auth/login', 'login')->name('login');
-    // Route::get('/users/profile', 'getById');
-    // Route::put('/users/profile', 'update');
     Route::put('/users/change-password', 'changePassword');
     // khong biet chen do dung khong nhung ma lam dai ____
     Route::get('/users/forgot-password', 'forgetPassword');
