@@ -8,6 +8,9 @@ use App\Http\Controllers\user\ProductController;
 use App\Http\Controllers\user\ProductReviewController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\admin\Products;
+use App\Http\Controllers\admin\ProductVariants;
+use App\Http\Controllers\admin\Imports;
+use App\Http\Controllers\admin\Profiles;
 use App\Http\Controllers\admin\Categorys;
 use App\Http\Controllers\admin\Orders;
 use App\Http\Controllers\admin\Suppliers;
@@ -68,12 +71,12 @@ Route::prefix('admin')->group(function () {
 
 // import
 Route::prefix('admin')->group(function () {
-    Route::controller(Orders::class)->group(function () {
-        Route::post('/import', 'create');
-        Route::get('/import', 'getAll');
-        Route::get('/import/{id}', 'getById');
-        Route::put('/import/{id}', 'updateStatus');
-        Route::delete('/import/{id}', 'cancelImport');
+    Route::controller(Imports::class)->group(function () {
+        Route::post('/imports', 'create');
+        Route::get('/imports', 'getAll');
+        Route::get('/imports/{id}', 'getById');
+        Route::put('/imports/{id}', 'updateStatus');
+        Route::delete('/imports/{id}', 'cancelImport');
     });
 });
 
@@ -116,6 +119,24 @@ Route::prefix('admin')->group(function () {
         Route::get('/rules/{id}', 'getById');
         Route::put('/rules/{id}', 'update');
         Route::delete('/rules/{id}', 'delete');
+    });
+});
+
+// product variant
+Route::prefix('admin')->group(function () {
+    Route::controller(ProductVariants::class)->group(function () {
+        Route::get('/product-variants', 'getAll');
+    });
+});
+
+//prolife
+Route::prefix('admin')->group(function () {
+    Route::controller(Profiles::class)->group(function () {
+        Route::post('/users', 'create');
+        Route::get('/users', 'getAll');
+        Route::get('/users/{id}', 'getById');
+        Route::put('/users/{id}', 'update');
+        Route::delete('/users/{id}', 'delete');
     });
 });
 
