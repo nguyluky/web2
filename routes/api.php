@@ -11,6 +11,7 @@ use App\Http\Controllers\admin\Products;
 use App\Http\Controllers\admin\ProductVariants;
 use App\Http\Controllers\admin\Imports;
 use App\Http\Controllers\admin\Profiles;
+use App\Http\Controllers\admin\ImportDetails;
 use App\Http\Controllers\admin\Categorys;
 use App\Http\Controllers\admin\Orders;
 use App\Http\Controllers\admin\Suppliers;
@@ -137,6 +138,16 @@ Route::prefix('admin')->group(function () {
         Route::get('/users/{id}', 'getById');
         Route::put('/users/{id}', 'update');
         Route::delete('/users/{id}', 'delete');
+    });
+});
+// import detail
+Route::prefix('admin')->group(function () {
+    Route::controller(ImportDetails::class)->group(function () {
+        Route::post('/import-details', 'create');
+        Route::get('/import-details', 'getAll');
+        Route::get('/import-details/{id}', 'getById');
+        Route::put('/import-details/{id}', 'update');
+        Route::delete('/import-details/{id}', 'delete');
     });
 });
 
