@@ -8,7 +8,7 @@ use App\Http\Controllers\user\ProductController;
 use App\Http\Controllers\user\ProductReviewController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\admin\Products;
-use App\Http\Controllers\admin\Category;
+use App\Http\Controllers\admin\Categorys;
 use App\Http\Controllers\admin\Orders;
 use App\Http\Controllers\admin\Suppliers;
 use App\Http\Controllers\admin\Warrantys;
@@ -35,7 +35,7 @@ Route::prefix('admin')->group(function () {
 
 // categories
 Route::prefix('admin')->group(function () {
-    Route::controller(Category::class)->group(function () {
+    Route::controller(Categorys::class)->group(function () {
         Route::post('/categories', 'create');
         Route::get('/categories', 'getAll');
         Route::get('/categories/{id}', 'getById');
