@@ -152,23 +152,9 @@ class CartController extends Controller
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
-        // get all carts of user
-        // include product and product_variant
-        // $cart = $user->profile->carts()->with('product_variant')->get();
-        $cart = Cart::where('profile_id', $user->profile->id)->get();
+        $cart = Cart::with(['productVariant.product'])->where('profile_id', $user->profile->id)->get();
 
-        $data = $cart->map(function ($item) {
-            $item->product_variant = $item->productVariant()->with('product')->first();
-            return $item;
-        });
-
-        return response()->json(['carts' => $data]);
-
-        // $carts = Cart::where('profile_id', $profile_id);
-        // if ($carts->isEmpty()) {
-        //     return response()->json(['error' => 'carts not found'], 404);
-        // }
-        // return response()->json(['carts' => $carts]);
+        return response()->json(['carts' => $cart]);
     }
 
     /**

@@ -96,7 +96,43 @@ class OrderController extends Controller
         });
     }
 
-    // 3.7. Kiểm tra tình trạng thanh toán
+    /**
+     * @OA\Post(
+     *     path="/api/orders/check-status",
+     *     operationId="checkOrderStatus",
+     *     tags={"Orders"},
+     *     summary="Kiểm tra tình trạng thanh toán của đơn hàng",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"order_id"},
+     *             @OA\Property(property="order_id", type="integer", description="ID của đơn hàng cần kiểm tra")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Thành công",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="pending")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Chưa xác thực",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", example="Unauthorized")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Không tìm thấy đơn hàng",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", example="Not found")
+     *         )
+     *     )
+     * )
+     */
     public function checkOrderStatus(Request $request) {
         $validated = $request->validate([
             'order_id' => 'required|integer|exists:orders,id',
@@ -109,13 +145,92 @@ class OrderController extends Controller
         return response()->json(['status' => $order->status]);
     }
 
-    // 3.8. Lấy thông tin vận chuyển
+    /**
+     * @OA\Get(
+     *     path="/api/orders/delivery-info",
+     *     operationId="getDeliveryInfo",
+     *     tags={"Orders"},
+     *     summary="Lấy thông tin vận chuyển",
+     *     description="API này chưa được triển khai đầy đủ",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Thành công",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Chức năng đang được phát triển")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Chưa xác thực",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", example="Unauthorized")
+     *         )
+     *     )
+     * )
+     */
     public function getDeliveryInfo() {
         // TODO
         // Tú chưa hiểu lắm về thông tin vận chuyển
     }
 
-    // 3.9. Mua ngay sản phẩm
+    /**
+     * @OA\Post(
+     *     path="/api/orders/buy-now",
+     *     operationId="buyNow",
+     *     tags={"Orders"},
+     *     summary="Mua ngay sản phẩm",
+     *     description="Tạo đơn hàng mới và mua sản phẩm ngay lập tức",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"account_id", "employee_id", "products", "payment_method"},
+     *             @OA\Property(property="account_id", type="integer"),
+     *             @OA\Property(property="employee_id", type="integer"),
+     *             @OA\Property(property="payment_method", type="string"),
+     *             @OA\Property(
+     *                 property="products",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     @OA\Property(property="product_variant_id", type="integer"),
+     *                     @OA\Property(property="serial", type="integer")
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Đặt hàng thành công",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="order", type="object",
+     *                 @OA\Property(property="id", type="integer"),
+     *                 @OA\Property(property="account_id", type="integer"),
+     *                 @OA\Property(property="employee_id", type="integer"),
+     *                 @OA\Property(property="status", type="string", example="pending"),
+     *                 @OA\Property(property="payment_method", type="string"),
+     *                 @OA\Property(property="created_at", type="string", format="date-time"),
+     *                 @OA\Property(property="updated_at", type="string", format="date-time")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Dữ liệu không hợp lệ",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="The given data was invalid."),
+     *             @OA\Property(property="errors", type="object")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Chưa xác thực",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", example="Unauthorized")
+     *         )
+     *     )
+     * )
+     */
     public function buyNow(Request $request) {
         $validated = $request->validate([
             'account_id' => 'required|integer|exists:accounts,id',
