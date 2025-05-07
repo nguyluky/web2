@@ -56,12 +56,21 @@ class ProductController extends Controller
     public function getById(string $id)
     {
 
-        // get product by id including variants and images and category and reviews, sell count
-        $product = Product::where('id', $id)->first();
+        // get product by id including variants and images and category and reviews, sell count, and user reviews
+        $product = Product::with(['product_variants', 'product_images'])
+            ->where('id', $id)
+            ->with(['category'])
+            ->with(['product_reviews'])
+            ->with(['product_reviews.account.profile'])
+            ->first();
+        
+        // $product['product_reviews'] = $product->product_reviews->map(function ($review) {
+        //     return $review->with(['account.profile'])->first();
+        // });
 
-        if (!$product) {
-            return response()->json(['error' => 'product not found'], 404);
-        }
+        // if (!$product) {
+        //     return response()->json(['error' => 'product not found'], 404);
+        // }
         return response()->json(['product' => $product]);
     }
 
