@@ -28,10 +28,9 @@ class OrderController extends Controller
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-     *             required={"account_id", "employee_id", "products", "payment_method"},
-     *             @OA\Property(property="account_id", type="integer"),
-     *             @OA\Property(property="employee_id", type="integer"),
-     *             @OA\Property(property="payment_method", type="string"),
+     *             required={"profile_id", "products", "payment_method"},
+     *             @OA\Property(property="profile_id", type="integer"),
+     *             @OA\Property(property="payment_method", type="integer"),
      *             @OA\Property(
      *                 property="products",
      *                 type="array",
@@ -48,10 +47,9 @@ class OrderController extends Controller
      *         @OA\JsonContent(
      *             @OA\Property(property="order", type="object",
      *                 @OA\Property(property="id", type="integer"),
-     *                 @OA\Property(property="account_id", type="integer"),
-     *                 @OA\Property(property="employee_id", type="integer"),
+     *                 @OA\Property(property="profile_id", type="integer"),
      *                 @OA\Property(property="status", type="string", example="pending"),
-     *                 @OA\Property(property="payment_method", type="string"),
+     *                 @OA\Property(property="payment_method", type="integer"),
      *                 @OA\Property(property="created_at", type="string", format="date-time"),
      *                 @OA\Property(property="updated_at", type="string", format="date-time")
      *             )
@@ -65,18 +63,15 @@ class OrderController extends Controller
      */
     public function createOrders(Request $request) {
         $validated = $request->validate([
-            'account_id' => 'required|integer|exists:accounts,id',
-            'employee_id' => 'required|integer|exists:employees,id',
+            'profile_id' => 'required|integer|exists:profile,id',
             'products.*.product_variant_id' => 'required|integer|exists:product_variants,id',
-            'payment_method' => 'required|string',
+            'payment_method' => 'required|integer|exists:payment,id',
             'products' => 'required|array',
-            'products.*.serial' => 'required|integer',
         ]);
 
         DB::transaction(function () use ($validated) {
             $order_data = [
-                'account_id' => $validated['account_id'],
-                'employee_id' => $validated['employee_id'],
+                'profile_id' => $validated['profile_id'],
                 'status' => 'pending',
                 'payment_method' => $validated['payment_method'],
                 'created_at' => Carbon::now(),
@@ -89,7 +84,7 @@ class OrderController extends Controller
                 OrderDetail::create([
                     'order_id' => $order->id,
                     'product_variant_id' => $product['product_variant_id'],
-                    'serial' => $product['serial'],
+                    'serial' => rand(),
                 ]);
             }
             return response()->json(['order' => $order], 201);
@@ -137,11 +132,11 @@ class OrderController extends Controller
         $validated = $request->validate([
             'order_id' => 'required|integer|exists:orders,id',
         ]);
-    
+
         $order = Order::where('id', $validated['order_id'])
-            ->where('account_id', auth()->user()->id)
+            ->where('profile_id', auth()->user()->id)
             ->firstOrFail();
-    
+
         return response()->json(['status' => $order->status]);
     }
 
@@ -185,10 +180,9 @@ class OrderController extends Controller
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-     *             required={"account_id", "employee_id", "products", "payment_method"},
-     *             @OA\Property(property="account_id", type="integer"),
-     *             @OA\Property(property="employee_id", type="integer"),
-     *             @OA\Property(property="payment_method", type="string"),
+     *             required={"profile_id", "products", "payment_method"},
+     *             @OA\Property(property="profile_id", type="integer"),
+     *             @OA\Property(property="payment_method", type="integer"),
      *             @OA\Property(
      *                 property="products",
      *                 type="array",
@@ -205,10 +199,9 @@ class OrderController extends Controller
      *         @OA\JsonContent(
      *             @OA\Property(property="order", type="object",
      *                 @OA\Property(property="id", type="integer"),
-     *                 @OA\Property(property="account_id", type="integer"),
-     *                 @OA\Property(property="employee_id", type="integer"),
+     *                 @OA\Property(property="profile_id", type="integer"),
      *                 @OA\Property(property="status", type="string", example="pending"),
-     *                 @OA\Property(property="payment_method", type="string"),
+     *                 @OA\Property(property="payment_method", type="integer"),
      *                 @OA\Property(property="created_at", type="string", format="date-time"),
      *                 @OA\Property(property="updated_at", type="string", format="date-time")
      *             )
@@ -233,18 +226,15 @@ class OrderController extends Controller
      */
     public function buyNow(Request $request) {
         $validated = $request->validate([
-            'account_id' => 'required|integer|exists:accounts,id',
-            'employee_id' => 'required|integer|exists:employees,id',
+            'profile_id' => 'required|integer|exists:profile,id',
             'products.*.product_variant_id' => 'required|integer|exists:product_variants,id',
-            'payment_method' => 'required|string',
+            'payment_method' => 'required|integer|exists:payment,id',
             'products' => 'required|array',
-            'products.*.serial' => 'required|integer',
         ]);
 
         DB::transaction(function () use ($validated) {
             $order_data = [
-                'account_id' => $validated['account_id'],
-                'employee_id' => $validated['employee_id'],
+                'profile_id' => $validated['profile_id'],
                 'status' => 'pending',
                 'payment_method' => $validated['payment_method'],
                 'created_at' => Carbon::now(),
@@ -257,7 +247,7 @@ class OrderController extends Controller
                 OrderDetail::create([
                     'order_id' => $order->id,
                     'product_variant_id' => $product['product_variant_id'],
-                    'serial' => $product['serial'],
+                    'serial' => rand(),
                 ]);
             }
             return response()->json(['order' => $order], 201);
@@ -296,14 +286,13 @@ class OrderController extends Controller
      *         response=200,
      *         description="Thành công",
      *         @OA\JsonContent(
-     *             @OA\Property(property="data", type="array", 
+     *             @OA\Property(property="data", type="array",
      *                 @OA\Items(
      *                     type="object",
      *                     @OA\Property(property="id", type="integer"),
-     *                     @OA\Property(property="account_id", type="integer"),
-     *                     @OA\Property(property="employee_id", type="integer"),
+     *                     @OA\Property(property="profile_id", type="integer"),
      *                     @OA\Property(property="status", type="string"),
-     *                     @OA\Property(property="payment_method", type="string"),
+     *                     @OA\Property(property="payment_method", type="integer"),
      *                     @OA\Property(property="created_at", type="string", format="date-time"),
      *                     @OA\Property(property="updated_at", type="string", format="date-time")
      *                 )
@@ -328,11 +317,11 @@ class OrderController extends Controller
         if (!$user) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
-        $page = $request->query('page', 1);         
+        $page = $request->query('page', 1);
         $limit = $request->query('limit', 10);
-        $status = $request->query('status'); 
+        $status = $request->query('status');
 
-        $query = Order::where('account_id', $user->id);
+        $query = Order::where('profile_od', $user->id);
         if ($status) {
             $query->where('status', $status);
         }
@@ -415,10 +404,9 @@ class OrderController extends Controller
      *         description="Hủy đơn hàng thành công",
      *         @OA\JsonContent(
      *             @OA\Property(property="id", type="integer"),
-     *             @OA\Property(property="account_id", type="integer"),
-     *             @OA\Property(property="employee_id", type="integer"),
+     *             @OA\Property(property="profile_id", type="integer"),
      *             @OA\Property(property="status", type="string", example="cancelled"),
-     *             @OA\Property(property="payment_method", type="string"),
+     *             @OA\Property(property="payment_method", type="integer"),
      *             @OA\Property(property="created_at", type="string", format="date-time"),
      *             @OA\Property(property="updated_at", type="string", format="date-time")
      *         )
@@ -457,14 +445,14 @@ class OrderController extends Controller
             return response()->json(['error' => 'Order not found'], 404);
         }
 
-        if ($order->account_id !== $user->id || $order->status == 'completed') {
+        if ($order->profile_id !== $user->id || $order->status == 'completed') {
             return response()->json(['error' => 'Forbidden'], 403);
         }
 
         $order->update([
             'status' => 'cancelled'
         ]);
-    
+
         return response()->json($order, 200);
     }
 }
