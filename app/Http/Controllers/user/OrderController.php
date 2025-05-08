@@ -29,14 +29,17 @@ class OrderController extends Controller
      *         required=true,
      *         @OA\JsonContent(
      *             required={"profile_id", "products", "payment_method"},
-     *             @OA\Property(property="profile_id", type="integer"),
-     *             @OA\Property(property="payment_method", type="integer"),
+     *             @OA\Property(property="profile_id", type="integer", description="ID của profile người dùng"),
+     *             @OA\Property(property="payment_method", type="integer", description="ID của phương thức thanh toán"),
      *             @OA\Property(
      *                 property="products",
      *                 type="array",
+     *                 description="Danh sách sản phẩm trong đơn hàng",
      *                 @OA\Items(
-     *                     @OA\Property(property="product_variant_id", type="integer"),
-     *                     @OA\Property(property="serial", type="integer")
+     *                     type="object",
+     *                     required={"product_variant_id"},
+     *                     @OA\Property(property="product_variant_id", type="integer", description="ID của biến thể sản phẩm"),
+     *                     @OA\Property(property="serial", type="integer", description="Số serial của sản phẩm (sẽ được tự động tạo nếu không có)")
      *                 )
      *             )
      *         )
@@ -46,18 +49,36 @@ class OrderController extends Controller
      *         description="Tạo đơn hàng thành công",
      *         @OA\JsonContent(
      *             @OA\Property(property="order", type="object",
-     *                 @OA\Property(property="id", type="integer"),
-     *                 @OA\Property(property="profile_id", type="integer"),
-     *                 @OA\Property(property="status", type="string", example="pending"),
-     *                 @OA\Property(property="payment_method", type="integer"),
-     *                 @OA\Property(property="created_at", type="string", format="date-time"),
-     *                 @OA\Property(property="updated_at", type="string", format="date-time")
+     *                 @OA\Property(property="id", type="integer", description="ID của đơn hàng"),
+     *                 @OA\Property(property="profile_id", type="integer", description="ID của profile người dùng"),
+     *                 @OA\Property(property="status", type="string", example="pending", description="Trạng thái đơn hàng"),
+     *                 @OA\Property(property="payment_method", type="integer", description="ID của phương thức thanh toán"),
+     *                 @OA\Property(property="created_at", type="string", format="date-time", description="Thời gian tạo đơn hàng"),
+     *                 @OA\Property(property="updated_at", type="string", format="date-time", description="Thời gian cập nhật đơn hàng gần nhất")
      *             )
      *         )
      *     ),
      *     @OA\Response(
      *         response=422,
-     *         description="Dữ liệu không hợp lệ"
+     *         description="Dữ liệu không hợp lệ",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="The given data was invalid."),
+     *             @OA\Property(
+     *                 property="errors",
+     *                 type="object",
+     *                 @OA\Property(property="profile_id", type="array", @OA\Items(type="string")),
+     *                 @OA\Property(property="payment_method", type="array", @OA\Items(type="string")),
+     *                 @OA\Property(property="products", type="array", @OA\Items(type="string")),
+     *                 @OA\Property(property="products.*.product_variant_id", type="array", @OA\Items(type="string"))
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Chưa xác thực",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", example="Unauthorized")
+     *         )
      *     )
      * )
      */

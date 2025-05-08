@@ -44,6 +44,678 @@
                 }
             }
         },
+        "/api/admin/orders": {
+            "get": {
+                "tags": [
+                    "Admin/Orders"
+                ],
+                "summary": "Lấy danh sách đơn hàng",
+                "description": "Lấy danh sách tất cả đơn hàng với các tùy chọn lọc và phân trang",
+                "operationId": "adminGetAllOrders",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Từ khóa tìm kiếm",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "account_id",
+                        "in": "query",
+                        "description": "Lọc theo ID tài khoản",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "employee_id",
+                        "in": "query",
+                        "description": "Lọc theo ID nhân viên",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "payment_method",
+                        "in": "query",
+                        "description": "Lọc theo phương thức thanh toán",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Lọc theo trạng thái đơn hàng",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "pending",
+                                "processing",
+                                "shipped",
+                                "delivered",
+                                "cancelled"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "date_start",
+                        "in": "query",
+                        "description": "Lọc từ ngày (format: Y-m-d)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "date_end",
+                        "in": "query",
+                        "description": "Lọc đến ngày (format: Y-m-d)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Số lượng bản ghi trên một trang",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Danh sách đơn hàng được lấy thành công",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Lấy danh sách đơn hàng thành công"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "current_page": {
+                                                    "type": "integer"
+                                                },
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer"
+                                                            },
+                                                            "account_id": {
+                                                                "type": "integer"
+                                                            },
+                                                            "employee_id": {
+                                                                "type": "integer"
+                                                            },
+                                                            "status": {
+                                                                "type": "string"
+                                                            },
+                                                            "payment_method": {
+                                                                "type": "string"
+                                                            },
+                                                            "created_at": {
+                                                                "type": "string",
+                                                                "format": "date-time"
+                                                            },
+                                                            "updated_at": {
+                                                                "type": "string",
+                                                                "format": "date-time"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "first_page_url": {
+                                                    "type": "string"
+                                                },
+                                                "from": {
+                                                    "type": "integer"
+                                                },
+                                                "last_page": {
+                                                    "type": "integer"
+                                                },
+                                                "last_page_url": {
+                                                    "type": "string"
+                                                },
+                                                "links": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "next_page_url": {
+                                                    "type": "string",
+                                                    "nullable": true
+                                                },
+                                                "path": {
+                                                    "type": "string"
+                                                },
+                                                "per_page": {
+                                                    "type": "integer"
+                                                },
+                                                "prev_page_url": {
+                                                    "type": "string",
+                                                    "nullable": true
+                                                },
+                                                "to": {
+                                                    "type": "integer"
+                                                },
+                                                "total": {
+                                                    "type": "integer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Không được phép truy cập",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/orders/{id}": {
+            "get": {
+                "tags": [
+                    "Admin/Orders"
+                ],
+                "summary": "Lấy thông tin đơn hàng theo ID",
+                "description": "Lấy thông tin chi tiết của một đơn hàng dựa trên ID",
+                "operationId": "adminGetOrderById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID của đơn hàng cần lấy thông tin",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lấy đơn hàng thành công",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Lấy đơn hàng thành công"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer"
+                                                },
+                                                "account_id": {
+                                                    "type": "integer"
+                                                },
+                                                "employee_id": {
+                                                    "type": "integer"
+                                                },
+                                                "status": {
+                                                    "type": "string"
+                                                },
+                                                "payment_method": {
+                                                    "type": "string"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Không tìm thấy đơn hàng",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Không tìm thấy đơn hàng"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Không được phép truy cập",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/orders/{id}/details": {
+            "get": {
+                "tags": [
+                    "Admin/Orders"
+                ],
+                "summary": "Lấy chi tiết đơn hàng theo ID",
+                "description": "Lấy danh sách các sản phẩm trong đơn hàng dựa trên ID đơn hàng",
+                "operationId": "adminGetOrderDetails",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID của đơn hàng cần lấy chi tiết",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lấy chi tiết đơn hàng thành công",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Lấy chi tiết đơn hàng thành công"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "order_id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "product_variant_id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "serial": {
+                                                        "type": "integer"
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    },
+                                                    "updated_at": {
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Không tìm thấy đơn hàng",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Không tìm thấy đơn hàng"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Không được phép truy cập",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/orders/{id}/status": {
+            "put": {
+                "tags": [
+                    "Admin/Orders"
+                ],
+                "summary": "Cập nhật trạng thái đơn hàng",
+                "description": "Cập nhật trạng thái của một đơn hàng dựa trên ID",
+                "operationId": "adminUpdateOrderStatus",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID của đơn hàng cần cập nhật trạng thái",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "status"
+                                ],
+                                "properties": {
+                                    "status": {
+                                        "description": "Trạng thái mới của đơn hàng",
+                                        "type": "string",
+                                        "enum": [
+                                            "pending",
+                                            "processing",
+                                            "shipped",
+                                            "delivered",
+                                            "cancelled"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Cập nhật trạng thái đơn hàng thành công",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Cập nhật trạng thái đơn hàng thành công"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer"
+                                                },
+                                                "account_id": {
+                                                    "type": "integer"
+                                                },
+                                                "employee_id": {
+                                                    "type": "integer"
+                                                },
+                                                "status": {
+                                                    "type": "string"
+                                                },
+                                                "payment_method": {
+                                                    "type": "string"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Không tìm thấy đơn hàng",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Không tìm thấy đơn hàng"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Dữ liệu đầu vào không hợp lệ",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Không được phép truy cập",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/orders/{id}/cancel": {
+            "put": {
+                "tags": [
+                    "Admin/Orders"
+                ],
+                "summary": "Hủy đơn hàng",
+                "description": "Cập nhật trạng thái của đơn hàng thành cancelled",
+                "operationId": "adminCancelOrder",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID của đơn hàng cần hủy",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Hủy đơn hàng thành công",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Hủy đơn hàng thành công"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer"
+                                                },
+                                                "account_id": {
+                                                    "type": "integer"
+                                                },
+                                                "employee_id": {
+                                                    "type": "integer"
+                                                },
+                                                "status": {
+                                                    "type": "string",
+                                                    "example": "cancelled"
+                                                },
+                                                "payment_method": {
+                                                    "type": "string"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Không tìm thấy đơn hàng",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Không tìm thấy đơn hàng"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Không được phép truy cập",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/admin/products": {
             "get": {
                 "tags": [
@@ -1631,20 +2303,315 @@
                         "application/json": {
                             "schema": {
                                 "required": [
-                                    "account_id",
-                                    "employee_id",
+                                    "profile_id",
                                     "products",
                                     "payment_method"
                                 ],
                                 "properties": {
-                                    "account_id": {
-                                        "type": "integer"
-                                    },
-                                    "employee_id": {
+                                    "profile_id": {
+                                        "description": "ID của profile người dùng",
                                         "type": "integer"
                                     },
                                     "payment_method": {
-                                        "type": "string"
+                                        "description": "ID của phương thức thanh toán",
+                                        "type": "integer"
+                                    },
+                                    "products": {
+                                        "description": "Danh sách sản phẩm trong đơn hàng",
+                                        "type": "array",
+                                        "items": {
+                                            "required": [
+                                                "product_variant_id"
+                                            ],
+                                            "properties": {
+                                                "product_variant_id": {
+                                                    "description": "ID của biến thể sản phẩm",
+                                                    "type": "integer"
+                                                },
+                                                "serial": {
+                                                    "description": "Số serial của sản phẩm (sẽ được tự động tạo nếu không có)",
+                                                    "type": "integer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Tạo đơn hàng thành công",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "order": {
+                                            "properties": {
+                                                "id": {
+                                                    "description": "ID của đơn hàng",
+                                                    "type": "integer"
+                                                },
+                                                "profile_id": {
+                                                    "description": "ID của profile người dùng",
+                                                    "type": "integer"
+                                                },
+                                                "status": {
+                                                    "description": "Trạng thái đơn hàng",
+                                                    "type": "string",
+                                                    "example": "pending"
+                                                },
+                                                "payment_method": {
+                                                    "description": "ID của phương thức thanh toán",
+                                                    "type": "integer"
+                                                },
+                                                "created_at": {
+                                                    "description": "Thời gian tạo đơn hàng",
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                },
+                                                "updated_at": {
+                                                    "description": "Thời gian cập nhật đơn hàng gần nhất",
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Dữ liệu không hợp lệ",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "profile_id": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "payment_method": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "products": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "products.*.product_variant_id": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Chưa xác thực",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/orders/check-status": {
+            "post": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Kiểm tra tình trạng thanh toán của đơn hàng",
+                "operationId": "checkOrderStatus",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "order_id"
+                                ],
+                                "properties": {
+                                    "order_id": {
+                                        "description": "ID của đơn hàng cần kiểm tra",
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Thành công",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "pending"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Chưa xác thực",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Không tìm thấy đơn hàng",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/orders/delivery-info": {
+            "get": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Lấy thông tin vận chuyển",
+                "description": "API này chưa được triển khai đầy đủ",
+                "operationId": "getDeliveryInfo",
+                "responses": {
+                    "200": {
+                        "description": "Thành công",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Chức năng đang được phát triển"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Chưa xác thực",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/orders/buy-now": {
+            "post": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Mua ngay sản phẩm",
+                "description": "Tạo đơn hàng mới và mua sản phẩm ngay lập tức",
+                "operationId": "buyNow",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "profile_id",
+                                    "products",
+                                    "payment_method"
+                                ],
+                                "properties": {
+                                    "profile_id": {
+                                        "type": "integer"
+                                    },
+                                    "payment_method": {
+                                        "type": "integer"
                                     },
                                     "products": {
                                         "type": "array",
@@ -1668,7 +2635,7 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "Tạo đơn hàng thành công",
+                        "description": "Đặt hàng thành công",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1678,10 +2645,7 @@
                                                 "id": {
                                                     "type": "integer"
                                                 },
-                                                "account_id": {
-                                                    "type": "integer"
-                                                },
-                                                "employee_id": {
+                                                "profile_id": {
                                                     "type": "integer"
                                                 },
                                                 "status": {
@@ -1689,7 +2653,7 @@
                                                     "example": "pending"
                                                 },
                                                 "payment_method": {
-                                                    "type": "string"
+                                                    "type": "integer"
                                                 },
                                                 "created_at": {
                                                     "type": "string",
@@ -1708,8 +2672,40 @@
                             }
                         }
                     },
-                    "422": {
-                        "description": "Dữ liệu không hợp lệ"
+                    "400": {
+                        "description": "Dữ liệu không hợp lệ",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Chưa xác thực",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -1777,17 +2773,14 @@
                                                     "id": {
                                                         "type": "integer"
                                                     },
-                                                    "account_id": {
-                                                        "type": "integer"
-                                                    },
-                                                    "employee_id": {
+                                                    "profile_id": {
                                                         "type": "integer"
                                                     },
                                                     "status": {
                                                         "type": "string"
                                                     },
                                                     "payment_method": {
-                                                        "type": "string"
+                                                        "type": "integer"
                                                     },
                                                     "created_at": {
                                                         "type": "string",
@@ -1961,10 +2954,7 @@
                                         "id": {
                                             "type": "integer"
                                         },
-                                        "account_id": {
-                                            "type": "integer"
-                                        },
-                                        "employee_id": {
+                                        "profile_id": {
                                             "type": "integer"
                                         },
                                         "status": {
@@ -1972,7 +2962,7 @@
                                             "example": "cancelled"
                                         },
                                         "payment_method": {
-                                            "type": "string"
+                                            "type": "integer"
                                         },
                                         "created_at": {
                                             "type": "string",
@@ -2392,15 +3382,80 @@
                 "tags": [
                     "Profile"
                 ],
-                "operationId": "3f9528407005ad8b0313925a2125ff18",
+                "summary": "Get the authenticated user's profile",
+                "description": "Returns the profile information of the currently authenticated user",
+                "operationId": "getUserProfile",
                 "responses": {
                     "200": {
-                        "description": "User profile retrieved"
+                        "description": "User profile retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "account_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "fullname": {
+                                                    "type": "string",
+                                                    "example": "John Doe"
+                                                },
+                                                "phone_number": {
+                                                    "type": "string",
+                                                    "example": "0123456789"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "format": "email",
+                                                    "example": "john@example.com"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
                     {
-                        "sanctum": []
+                        "bearerAuth": []
                     }
                 ]
             },
@@ -2408,21 +3463,33 @@
                 "tags": [
                     "Profile"
                 ],
-                "operationId": "8c92391a461ad84d846289ec1e57b57e",
+                "summary": "Update the authenticated user's profile",
+                "description": "Updates the profile information of the currently authenticated user",
+                "operationId": "updateUserProfile",
                 "requestBody": {
+                    "description": "Profile data to update",
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
+                                "required": [
+                                    "fullname",
+                                    "phone_number",
+                                    "email"
+                                ],
                                 "properties": {
                                     "fullname": {
+                                        "description": "User's full name",
                                         "type": "string",
                                         "example": "John Doe"
                                     },
                                     "phone_number": {
+                                        "description": "User's phone number",
                                         "type": "string",
                                         "example": "0123456789"
                                     },
                                     "email": {
+                                        "description": "User's email address",
                                         "type": "string",
                                         "format": "email",
                                         "example": "john@example.com"
@@ -2435,18 +3502,258 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Profile updated"
+                        "description": "Profile updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "account_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "fullname": {
+                                                    "type": "string",
+                                                    "example": "John Doe"
+                                                },
+                                                "phone_number": {
+                                                    "type": "string",
+                                                    "example": "0123456789"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "format": "email",
+                                                    "example": "john@example.com"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "fullname": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "The fullname field is required."
+                                                    }
+                                                },
+                                                "phone_number": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "The phone number field is required."
+                                                    }
+                                                },
+                                                "email": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "The email field must be a valid email address."
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
                     {
-                        "sanctum": []
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/users/profile/avatar": {
+            "post": {
+                "tags": [
+                    "Profile"
+                ],
+                "summary": "Upload user avatar",
+                "description": "Upload a new avatar image for the authenticated user",
+                "operationId": "uploadUserAvatar",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "avatar"
+                                ],
+                                "properties": {
+                                    "avatar": {
+                                        "description": "The avatar image to upload",
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Avatar uploaded successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "account_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "fullname": {
+                                                    "type": "string",
+                                                    "example": "John Doe"
+                                                },
+                                                "phone_number": {
+                                                    "type": "string",
+                                                    "example": "0123456789"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "format": "email",
+                                                    "example": "john@example.com"
+                                                },
+                                                "avatar": {
+                                                    "type": "string",
+                                                    "example": "avatars/filename.jpg"
+                                                },
+                                                "avatar_url": {
+                                                    "type": "string",
+                                                    "example": "http://localhost:8000/storage/avatars/filename.jpg"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "avatar": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "The avatar field is required."
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
                     }
                 ]
             }
         }
     },
     "tags": [
+        {
+            "name": "Admin/Orders",
+            "description": "API quản lý đơn hàng dành cho Admin"
+        },
         {
             "name": "Admin Products",
             "description": "API Endpoints quản lý sản phẩm (admin)"

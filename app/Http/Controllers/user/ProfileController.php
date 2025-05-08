@@ -133,4 +133,87 @@ class ProfileController extends Controller
             'data' => $user->profile
         ]);
     }
+
+    /**
+     * @OA\Post(
+     *   path="/api/users/profile/avatar",
+     *   tags={"Profile"},
+     *   summary="Upload user avatar",
+     *   description="Upload a new avatar image for the authenticated user",
+     *   operationId="uploadUserAvatar",
+     *   security={{"bearerAuth":{}}},
+     *   @OA\RequestBody(
+     *     required=true,
+     *     @OA\MediaType(
+     *       mediaType="multipart/form-data",
+     *       @OA\Schema(
+     *         required={"avatar"},
+     *         @OA\Property(
+     *           property="avatar",
+     *           type="string",
+     *           format="binary",
+     *           description="The avatar image to upload"
+     *         )
+     *       )
+     *     )
+     *   ),
+     *   @OA\Response(
+     *     response=200,
+     *     description="Avatar uploaded successfully",
+     *     @OA\JsonContent(
+     *       @OA\Property(property="status", type="string", example="success"),
+     *       @OA\Property(
+     *         property="data",
+     *         type="object",
+     *         @OA\Property(property="id", type="integer", example=1),
+     *         @OA\Property(property="account_id", type="integer", example=1),
+     *         @OA\Property(property="fullname", type="string", example="John Doe"),
+     *         @OA\Property(property="phone_number", type="string", example="0123456789"),
+     *         @OA\Property(property="email", type="string", format="email", example="john@example.com"),
+     *         @OA\Property(property="avatar", type="string", example="avatars/filename.jpg"),
+     *         @OA\Property(property="avatar_url", type="string", example="http://localhost:8000/storage/avatars/filename.jpg")
+     *       )
+     *     )
+     *   ),
+     *   @OA\Response(
+     *     response=401,
+     *     description="Unauthenticated",
+     *     @OA\JsonContent(
+     *       @OA\Property(property="message", type="string", example="Unauthenticated")
+     *     )
+     *   ),
+     *   @OA\Response(
+     *     response=422,
+     *     description="Validation error",
+     *     @OA\JsonContent(
+     *       @OA\Property(property="message", type="string", example="The given data was invalid."),
+     *       @OA\Property(
+     *         property="errors",
+     *         type="object",
+     *         @OA\Property(property="avatar", type="array", @OA\Items(type="string", example="The avatar field is required."))
+     *       )
+     *     )
+     *   )
+     * )
+     */
+    public function uploadAvatar(Request $request)
+    {
+        $user = auth()->user();
+        $validate = $request->validate([
+            'avatar' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        if ($request->hasFile('avatar')) {
+            $avatarPath = $request->file('avatar')->store('avatars', 'public');
+            $user->profile()->update(['avatar' => $avatarPath]);
+            
+            // Update the profile with the full URL to the avatar
+            $user->profile->avatar_url = asset('storage/' . $avatarPath);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $user->profile
+        ]);
+    }
 }

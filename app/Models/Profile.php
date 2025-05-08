@@ -36,6 +36,16 @@ class Profile extends Model
 		'avatar'
 	];
 
+	protected $appends = ['avatar_url'];
+
+	public function getAvatarUrlAttribute()
+	{
+		if ($this->avatar) {
+			return asset('storage/' . $this->avatar);
+		}
+		return null;
+	}
+
 	public function account()
 	{
 		return $this->belongsTo(Account::class, 'id');
