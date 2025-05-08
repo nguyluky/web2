@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('profile_id');
             $table->string('status');
             $table->timestamp('created_at');
-            $table->integer('payment_method');
+            $table->unsignedBigInteger('payment_method');
 
             $table->foreign('profile_id')->references('id')->on('profile');
             $table->foreign('payment_method')->references('id')->on('payment');
