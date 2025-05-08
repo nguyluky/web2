@@ -12,15 +12,14 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Order
- * 
+ *
  * @property int $id
- * @property int $account_id
+ * @property int $profile_id
  * @property string $status
  * @property Carbon $created_at
- * @property int $employee_id
- * @property string $payment_method
- * 
- * @property Account $account
+ * @property int $payment_method
+ *
+ * @property Profile $profile
  * @property Collection|OrderDetail[] $order_details
  *
  * @package App\Models
@@ -33,21 +32,15 @@ class Order extends Model
 
 	protected $casts = [
 		'id' => 'int',
-		'account_id' => 'int',
-		'employee_id' => 'int'
+		'profile_id' => 'int',
 	];
 
 	protected $fillable = [
-		'account_id',
+		'profile_id',
 		'status',
-		'employee_id',
 		'payment_method'
 	];
 
-	public function account()
-	{
-		return $this->belongsTo(Account::class, 'employee_id');
-	}
 
 	public function order_details()
 	{

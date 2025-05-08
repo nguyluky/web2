@@ -11,14 +11,14 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Profile
- * 
+ *
  * @property int $id
  * @property string|null $fullname
  * @property string $phone_number
  * @property string|null $email
  * @property string|null $avatar
- * 
- * @property Account $account
+ *
+ * @property Profile $profile
  * @property Collection|Address[] $addresses
  * @property Collection|Cart[] $carts
  *
@@ -36,9 +36,9 @@ class Profile extends Model
 		'avatar'
 	];
 
-	public function account()
+	public function profile()
 	{
-		return $this->belongsTo(Account::class, 'id');
+		return $this->belongsTo(Profile::class, 'id');
 	}
 
 	public function addresses()

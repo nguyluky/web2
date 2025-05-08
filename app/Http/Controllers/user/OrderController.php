@@ -81,11 +81,13 @@ class OrderController extends Controller
             $order = Order::create($order_data);
 
             foreach($validated['products'] as $product) {
-                OrderDetail::create([
+                $order_detail = [
+                    'id' => OrderDetail::max('id') + 1,
                     'order_id' => $order->id,
                     'product_variant_id' => $product['product_variant_id'],
                     'serial' => rand(),
-                ]);
+                ];
+                OrderDetail::create($order_detail);
             }
             return response()->json(['order' => $order], 201);
         });
