@@ -24,11 +24,9 @@ use Illuminate\Database\Eloquent\Model;
 class Rule extends Model
 {
 	protected $table = 'rule';
-	public $incrementing = false;
 	public $timestamps = false;
 
 	protected $casts = [
-		'id' => 'int',
 		'status' => 'int'
 	];
 

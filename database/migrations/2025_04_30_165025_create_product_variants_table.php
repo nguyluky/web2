@@ -19,7 +19,7 @@ return new class extends Migration
             $table->decimal('original_price', 10, 2)->nullable();
             $table->integer('stock')->nullable();
             $table->string('status')->nullable();
-            $table->json('attributes');
+            $table->json('specifications');
             $table->timestamps();
             
             $table->foreign('product_id')->references('id')->on('product');

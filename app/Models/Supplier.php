@@ -30,12 +30,7 @@ use Illuminate\Database\Eloquent\Model;
 class Supplier extends Model
 {
 	protected $table = 'supplier';
-	public $incrementing = false;
 	public $timestamps = false;
-
-	protected $casts = [
-		'id' => 'int'
-	];
 
 	protected $fillable = [
 		'name',

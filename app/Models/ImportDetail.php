@@ -25,11 +25,9 @@ use Illuminate\Database\Eloquent\Model;
 class ImportDetail extends Model
 {
 	protected $table = 'import_detail';
-	public $incrementing = false;
 	public $timestamps = false;
 
 	protected $casts = [
-		'id' => 'int',
 		'import_id' => 'int',
 		'product_id' => 'int',
 		'import_price' => 'int',

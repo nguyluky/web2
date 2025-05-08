@@ -28,11 +28,9 @@ use Illuminate\Database\Eloquent\Model;
 class ProductImage extends Model
 {
 	protected $table = 'product_images';
-	public $incrementing = false;
 	public $timestamps = false;
 
 	protected $casts = [
-		'id' => 'int',
 		'product_id' => 'int',
 		'variant_id' => 'int',
 		'is_primary' => 'bool',

@@ -27,11 +27,9 @@ use Illuminate\Database\Eloquent\Model;
 class Warranty extends Model
 {
 	protected $table = 'warranty';
-	public $incrementing = false;
 	public $timestamps = false;
 
 	protected $casts = [
-		'id' => 'int',
 		'product_id' => 'int',
 		'supplier_id' => 'int'
 	];

@@ -22,16 +22,14 @@ use Illuminate\Database\Eloquent\Model;
  * @property float $base_price
  * @property float|null $base_original_price
  * @property string|null $status
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
  * @property array|null $specifications
  * @property array|null $features
  * @property array|null $meta_data
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * 
  * @property Category|null $category
- * @property Collection|Cart[] $carts
  * @property Collection|ImportDetail[] $import_details
- * @property Collection|OrderDetail[] $order_details
  * @property Collection|ProductImage[] $product_images
  * @property Collection|ProductReview[] $product_reviews
  * @property Collection|ProductVariant[] $product_variants
@@ -41,16 +39,14 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
 	protected $table = 'product';
-	public $incrementing = false;
 
 	protected $casts = [
-		'id' => 'int',
 		'category_id' => 'int',
 		'base_price' => 'float',
 		'base_original_price' => 'float',
-		'specifications' => 'json',
-		'features' => 'json',
-		'meta_data' => 'json'
+		'specifications' => 'array',
+		'features' => 'array',
+		'meta_data' => 'array'
 	];
 
 	protected $fillable = [
@@ -72,19 +68,9 @@ class Product extends Model
 		return $this->belongsTo(Category::class);
 	}
 
-	public function carts()
-	{
-		return $this->hasMany(Cart::class);
-	}
-
 	public function import_details()
 	{
 		return $this->hasMany(ImportDetail::class);
-	}
-
-	public function order_details()
-	{
-		return $this->hasMany(OrderDetail::class);
 	}
 
 	public function product_images()
@@ -100,5 +86,26 @@ class Product extends Model
 	public function product_variants()
 	{
 		return $this->hasMany(ProductVariant::class);
+	}
+
+	// Ensure JSON fields are properly pre-processed before JSON serialization
+	protected function serializeDate($date)
+	{
+		return $date->format('Y-m-d H:i:s');
+	}
+
+	// Override toArray to ensure JSON fields are properly decoded
+	public function toArray()
+	{
+		$array = parent::toArray();
+		
+		// Make sure JSON fields are properly decoded when serializing
+		foreach (['specifications', 'features', 'meta_data'] as $field) {
+			if (isset($array[$field]) && is_string($array[$field])) {
+				$array[$field] = json_decode($array[$field], true);
+			}
+		}
+		
+		return $array;
 	}
 }

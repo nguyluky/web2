@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $status
  * @property Carbon|null $created_at
  * 
+ * @property Account|null $account
  * @property Supplier $supplier
  * @property Collection|ImportDetail[] $import_details
  *
@@ -27,11 +28,9 @@ use Illuminate\Database\Eloquent\Model;
 class Import extends Model
 {
 	protected $table = 'import';
-	public $incrementing = false;
 	public $timestamps = false;
 
 	protected $casts = [
-		'id' => 'int',
 		'suppiler_id' => 'int',
 		'employee_id' => 'int'
 	];
@@ -41,6 +40,11 @@ class Import extends Model
 		'employee_id',
 		'status'
 	];
+
+	public function account()
+	{
+		return $this->belongsTo(Account::class, 'employee_id');
+	}
 
 	public function supplier()
 	{

@@ -18,7 +18,7 @@ class ProductImageSeeder extends Seeder
             'id' => 1,
             'product_id' => 1,
             'variant_id' => null,
-            'image_url' => 'products/gaming_pro_x1_1.jpg',
+            'image_url' => 'https://placehold.co/600x600',
             'is_primary' => true,
             'sort_order' => 1,
             'created_at' => Carbon::now()
@@ -28,7 +28,7 @@ class ProductImageSeeder extends Seeder
             'id' => 2,
             'product_id' => 1,
             'variant_id' => null,
-            'image_url' => 'products/gaming_pro_x1_2.jpg',
+            'image_url' => 'https://placehold.co/600x600',
             'is_primary' => false,
             'sort_order' => 2,
             'created_at' => Carbon::now()
@@ -39,7 +39,7 @@ class ProductImageSeeder extends Seeder
             'id' => 3,
             'product_id' => 2,
             'variant_id' => null,
-            'image_url' => 'products/business_elite_b5_1.jpg',
+            'image_url' => 'https://placehold.co/600x600',
             'is_primary' => true,
             'sort_order' => 1,
             'created_at' => Carbon::now()
@@ -49,7 +49,7 @@ class ProductImageSeeder extends Seeder
             'id' => 4,
             'product_id' => 2,
             'variant_id' => null,
-            'image_url' => 'products/business_elite_b5_2.jpg',
+            'image_url' => 'https://placehold.co/600x600',
             'is_primary' => false,
             'sort_order' => 2,
             'created_at' => Carbon::now()
@@ -60,7 +60,7 @@ class ProductImageSeeder extends Seeder
             'id' => 5,
             'product_id' => 3,
             'variant_id' => null,
-            'image_url' => 'products/galaxy_ultra_s25_1.jpg',
+            'image_url' => 'https://placehold.co/600x600',
             'is_primary' => true,
             'sort_order' => 1,
             'created_at' => Carbon::now()
@@ -70,7 +70,7 @@ class ProductImageSeeder extends Seeder
             'id' => 6,
             'product_id' => 3,
             'variant_id' => null,
-            'image_url' => 'products/galaxy_ultra_s25_2.jpg',
+            'image_url' => 'https://placehold.co/600x600',
             'is_primary' => false,
             'sort_order' => 2,
             'created_at' => Carbon::now()
@@ -81,7 +81,7 @@ class ProductImageSeeder extends Seeder
             'id' => 7,
             'product_id' => 4,
             'variant_id' => null,
-            'image_url' => 'products/iphone_16_pro_1.jpg',
+            'image_url' => 'https://placehold.co/600x600',
             'is_primary' => true,
             'sort_order' => 1,
             'created_at' => Carbon::now()
@@ -91,7 +91,7 @@ class ProductImageSeeder extends Seeder
             'id' => 8,
             'product_id' => 4,
             'variant_id' => null,
-            'image_url' => 'products/iphone_16_pro_2.jpg',
+            'image_url' => 'https://placehold.co/600x600',
             'is_primary' => false,
             'sort_order' => 2,
             'created_at' => Carbon::now()
@@ -102,7 +102,7 @@ class ProductImageSeeder extends Seeder
             'id' => 9,
             'product_id' => 5,
             'variant_id' => null,
-            'image_url' => 'products/pro_wireless_earbuds_1.jpg',
+            'image_url' => 'https://placehold.co/600x600',
             'is_primary' => true,
             'sort_order' => 1,
             'created_at' => Carbon::now()
@@ -113,7 +113,7 @@ class ProductImageSeeder extends Seeder
             'id' => 10,
             'product_id' => 6,
             'variant_id' => null,
-            'image_url' => 'products/smart_watch_series_5_1.jpg',
+            'image_url' => 'https://placehold.co/600x600',
             'is_primary' => true,
             'sort_order' => 1,
             'created_at' => Carbon::now()
@@ -124,7 +124,7 @@ class ProductImageSeeder extends Seeder
             'id' => 11,
             'product_id' => 7,
             'variant_id' => null,
-            'image_url' => 'products/gaming_mouse_pro_1.jpg',
+            'image_url' => 'https://placehold.co/600x600',
             'is_primary' => true,
             'sort_order' => 1,
             'created_at' => Carbon::now()
@@ -135,7 +135,7 @@ class ProductImageSeeder extends Seeder
             'id' => 12,
             'product_id' => 8,
             'variant_id' => null,
-            'image_url' => 'products/gaming_stealth_g7_1.jpg',
+            'image_url' => 'https://placehold.co/600x600',
             'is_primary' => true,
             'sort_order' => 1,
             'created_at' => Carbon::now()
@@ -146,7 +146,7 @@ class ProductImageSeeder extends Seeder
             'id' => 13,
             'product_id' => 3,
             'variant_id' => 5, // Galaxy Ultra S25 - Black
-            'image_url' => 'products/galaxy_ultra_s25_black.jpg',
+            'image_url' => 'https://placehold.co/600x600',
             'is_primary' => false,
             'sort_order' => 3,
             'created_at' => Carbon::now()
@@ -156,7 +156,7 @@ class ProductImageSeeder extends Seeder
             'id' => 14,
             'product_id' => 3,
             'variant_id' => 6, // Galaxy Ultra S25 - Silver
-            'image_url' => 'products/galaxy_ultra_s25_silver.jpg',
+            'image_url' => 'https://placehold.co/600x600',
             'is_primary' => false,
             'sort_order' => 4,
             'created_at' => Carbon::now()

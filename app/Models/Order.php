@@ -12,13 +12,14 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Order
- *
+ * 
  * @property int $id
  * @property int $profile_id
  * @property string $status
  * @property Carbon $created_at
  * @property int $payment_method
- *
+ * 
+ * @property Payment $payment
  * @property Profile $profile
  * @property Collection|OrderDetail[] $order_details
  *
@@ -27,12 +28,11 @@ use Illuminate\Database\Eloquent\Model;
 class Order extends Model
 {
 	protected $table = 'order';
-	public $incrementing = false;
 	public $timestamps = false;
 
 	protected $casts = [
-		'id' => 'int',
 		'profile_id' => 'int',
+		'payment_method' => 'int'
 	];
 
 	protected $fillable = [
@@ -41,6 +41,15 @@ class Order extends Model
 		'payment_method'
 	];
 
+	public function payment()
+	{
+		return $this->belongsTo(Payment::class, 'payment_method');
+	}
+
+	public function profile()
+	{
+		return $this->belongsTo(Profile::class);
+	}
 
 	public function order_details()
 	{

@@ -26,11 +26,9 @@ use Illuminate\Database\Eloquent\Model;
 class Address extends Model
 {
 	protected $table = 'address';
-	public $incrementing = false;
 	public $timestamps = false;
 
 	protected $casts = [
-		'id' => 'int',
 		'profile_id' => 'int'
 	];
 

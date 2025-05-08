@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $serial
  * 
  * @property Order $order
- * @property Product $product
+ * @property ProductVariant $product_variant
  * @property Collection|Warranty[] $warranties
  *
  * @package App\Models
@@ -26,11 +26,9 @@ use Illuminate\Database\Eloquent\Model;
 class OrderDetail extends Model
 {
 	protected $table = 'order_detail';
-	public $incrementing = false;
 	public $timestamps = false;
 
 	protected $casts = [
-		'id' => 'int',
 		'order_id' => 'int',
 		'product_variant_id' => 'int',
 		'serial' => 'int'
@@ -47,10 +45,10 @@ class OrderDetail extends Model
 		return $this->belongsTo(Order::class);
 	}
 
-	public function productVariant()
+	public function product_variant()
 	{
-		return $this->belongsTo(ProductVariant::class, 'product_variant_id');
-	}	
+		return $this->belongsTo(ProductVariant::class);
+	}
 
 	public function warranties()
 	{

@@ -16,7 +16,7 @@ use App\Http\Controllers\admin\Categorys;
 use App\Http\Controllers\admin\Orders;
 use App\Http\Controllers\admin\Suppliers;
 use App\Http\Controllers\admin\Warrantys;
-use App\Http\Controllers\admin\Statisticals;
+use App\Http\Controllers\admin\Statistical;
 use App\Http\Controllers\admin\Accounts;
 use App\Http\Controllers\admin\Rules;
 use App\Http\Controllers\user\CategoryController;
@@ -101,8 +101,8 @@ Route::prefix('admin')->controller(Statistical::class)->group(function () {
     Route::get('revenue-by-categories', 'revenueByCategories');
 });
 
-// account
 Route::prefix('admin')->group(function () {
+    // account
     Route::controller(Accounts::class)->group(function () {
         Route::post('/accounts', 'create');
         Route::get('/accounts', 'getAll');
@@ -110,10 +110,8 @@ Route::prefix('admin')->group(function () {
         Route::put('/accounts/{id}', 'update');
         Route::delete('/accounts/{id}', 'delete');
     });
-});
 
-// rule
-Route::prefix('admin')->group(function () {
+    // rule
     Route::controller(Rules::class)->group(function () {
         Route::post('/rules', 'create');
         Route::get('/rules', 'getAll');
@@ -121,17 +119,13 @@ Route::prefix('admin')->group(function () {
         Route::put('/rules/{id}', 'update');
         Route::delete('/rules/{id}', 'delete');
     });
-});
 
-// product variant
-Route::prefix('admin')->group(function () {
+    // product variant
     Route::controller(ProductVariants::class)->group(function () {
         Route::get('/product-variants', 'getAll');
     });
-});
 
-//prolife
-Route::prefix('admin')->group(function () {
+    //prolife
     Route::controller(Profiles::class)->group(function () {
         Route::post('/users', 'create');
         Route::get('/users', 'getAll');
@@ -139,9 +133,8 @@ Route::prefix('admin')->group(function () {
         Route::put('/users/{id}', 'update');
         Route::delete('/users/{id}', 'delete');
     });
-});
-// import detail
-Route::prefix('admin')->group(function () {
+
+    // import detail
     Route::controller(ImportDetails::class)->group(function () {
         Route::post('/import-details', 'create');
         Route::get('/import-details', 'getAll');
@@ -212,6 +205,7 @@ Route::controller(AccountController::class)->group(function () {
 // category
 Route::controller(CategoryController::class)->group(function () {
     Route::get('/categories', 'getAll');
+    Route::get('/categories/{id}/filter', 'getFilter');
 });
 
 Route::get('/', function () {
