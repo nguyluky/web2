@@ -264,7 +264,7 @@ return [
         */
 
         'casts' => [
-            '*_json' => 'json',
+            'json' => 'array',
         ],
 
         /*

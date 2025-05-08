@@ -83,8 +83,10 @@ class CartController extends Controller
         if (!$cart) {
             $cart = Cart::create($validated);
         } else {
-            $cart->amount = $request->amount;
-            $cart->save();
+
+            Cart::where('profile_id', $user->profile->id)
+                ->where('product_variant_id', $request->product_variant_id)
+                ->update(['amount' => $cart->amount + $request->amount]);
         }
 
         return response()->json(['cart' => $cart], 201);

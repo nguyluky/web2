@@ -34,13 +34,112 @@ class ProductController extends Controller
      *         @OA\JsonContent(
      *             @OA\Property(property="product", type="object",
      *                 @OA\Property(property="id", type="integer"),
+     *                 @OA\Property(property="sku", type="string"),
      *                 @OA\Property(property="name", type="string"),
+     *                 @OA\Property(property="slug", type="string"),
      *                 @OA\Property(property="description", type="string"),
      *                 @OA\Property(property="category_id", type="integer"),
-     *                 @OA\Property(property="supplier_id", type="integer"),
-     *                 @OA\Property(property="status", type="integer"),
+     *                 @OA\Property(property="base_price", type="number", format="float"),
+     *                 @OA\Property(property="base_original_price", type="number", format="float"),
+     *                 @OA\Property(property="status", type="string"),
+     *                 @OA\Property(
+     *                     property="specifications",
+     *                     type="object",
+     *                     description="Thông số kỹ thuật của sản phẩm",
+     *                     example={"processor":"Intel Core i9 13900K","graphics":"NVIDIA RTX 4080","display":"17.3\" QHD 240Hz","memory":"32GB DDR5"}
+     *                 ),
+     *                 @OA\Property(
+     *                     property="features", 
+     *                     type="array", 
+     *                     description="Tính năng nổi bật của sản phẩm",
+     *                     @OA\Items(type="string"),
+     *                     example={"RGB Keyboard", "Thunderbolt 4", "Wi-Fi 6E"}
+     *                 ),
+     *                 @OA\Property(
+     *                     property="meta_data", 
+     *                     type="object", 
+     *                     nullable=true,
+     *                     description="Dữ liệu bổ sung của sản phẩm"
+     *                 ),
      *                 @OA\Property(property="created_at", type="string", format="date-time"),
-     *                 @OA\Property(property="updated_at", type="string", format="date-time")
+     *                 @OA\Property(property="updated_at", type="string", format="date-time"),
+     *                 @OA\Property(
+     *                     property="product_variants",
+     *                     type="array",
+     *                     @OA\Items(
+     *                         type="object",
+     *                         @OA\Property(property="id", type="integer"),
+     *                         @OA\Property(property="product_id", type="integer"),
+     *                         @OA\Property(property="sku", type="string"),
+     *                         @OA\Property(property="price", type="number", format="float"),
+     *                         @OA\Property(property="original_price", type="number", format="float"),
+     *                         @OA\Property(property="stock", type="integer"),
+     *                         @OA\Property(property="status", type="string"),
+     *                         @OA\Property(
+     *                             property="specifications",
+     *                             type="object",
+     *                             description="Thông số kỹ thuật của biến thể sản phẩm",
+     *                             example={"color":"Black","ram":"32GB","storage":"1TB"}
+     *                         ),
+     *                         @OA\Property(property="created_at", type="string", format="date-time"),
+     *                         @OA\Property(property="updated_at", type="string", format="date-time")
+     *                     )
+     *                 ),
+     *                 @OA\Property(
+     *                     property="product_images",
+     *                     type="array",
+     *                     @OA\Items(
+     *                         type="object",
+     *                         @OA\Property(property="id", type="integer"),
+     *                         @OA\Property(property="product_id", type="integer"),
+     *                         @OA\Property(property="variant_id", type="integer", nullable=true),
+     *                         @OA\Property(property="image_url", type="string"),
+     *                         @OA\Property(property="is_primary", type="boolean"),
+     *                         @OA\Property(property="sort_order", type="integer"),
+     *                         @OA\Property(property="created_at", type="string", format="date-time")
+     *                     )
+     *                 ),
+     *                 @OA\Property(
+     *                     property="category",
+     *                     type="object",
+     *                     @OA\Property(property="id", type="integer"),
+     *                     @OA\Property(property="name", type="string"),
+     *                     @OA\Property(property="slug", type="string"),
+     *                     @OA\Property(property="status", type="string"),
+     *                     @OA\Property(property="parent_id", type="integer", nullable=true),
+     *                     @OA\Property(
+     *                         property="require_fields", 
+     *                         type="object", 
+     *                         description="Các trường bắt buộc cho danh mục",
+     *                         example={"color":true,"size":true,"material":false}
+     *                     ),
+     *                     @OA\Property(property="created_at", type="string", format="date-time"),
+     *                     @OA\Property(property="updated_at", type="string", format="date-time")
+     *                 ),
+     *                 @OA\Property(
+     *                     property="product_reviews",
+     *                     type="array",
+     *                     @OA\Items(
+     *                         type="object",
+     *                         @OA\Property(property="id", type="integer"),
+     *                         @OA\Property(property="product_id", type="integer"),
+     *                         @OA\Property(property="user_id", type="integer"),
+     *                         @OA\Property(property="rating", type="integer"),
+     *                         @OA\Property(property="comment", type="string"),
+     *                         @OA\Property(property="created_at", type="string", format="date-time"),
+     *                         @OA\Property(
+     *                             property="account",
+     *                             type="object",
+     *                             @OA\Property(property="id", type="integer"),
+     *                             @OA\Property(property="username", type="string"),
+     *                             @OA\Property(property="profile", type="object",
+     *                                 @OA\Property(property="id", type="integer"),
+     *                                 @OA\Property(property="fullname", type="string"),
+     *                                 @OA\Property(property="avatar", type="string", nullable=true)
+     *                             )
+     *                         )
+     *                     )
+     *                 )
      *             )
      *         )
      *     ),
@@ -151,13 +250,49 @@ class ProductController extends Controller
      *                 @OA\Items(
      *                     type="object",
      *                     @OA\Property(property="id", type="integer"),
+     *                     @OA\Property(property="sku", type="string"),
      *                     @OA\Property(property="name", type="string"),
+     *                     @OA\Property(property="slug", type="string"),
      *                     @OA\Property(property="description", type="string"),
      *                     @OA\Property(property="category_id", type="integer"),
-     *                     @OA\Property(property="supplier_id", type="integer"),
-     *                     @OA\Property(property="status", type="integer"),
+     *                     @OA\Property(property="base_price", type="number", format="float"),
+     *                     @OA\Property(property="base_original_price", type="number", format="float"),
+     *                     @OA\Property(property="status", type="string"),
+     *                     @OA\Property(
+     *                         property="specifications",
+     *                         type="object",
+     *                         description="Thông số kỹ thuật của sản phẩm",
+     *                         example={"processor":"Intel Core i9 13900K","graphics":"NVIDIA RTX 4080","display":"17.3\" QHD 240Hz","memory":"32GB DDR5"}
+     *                     ),
+     *                     @OA\Property(
+     *                         property="features", 
+     *                         type="array", 
+     *                         description="Tính năng nổi bật của sản phẩm",
+     *                         @OA\Items(type="string"),
+     *                         example={"RGB Keyboard", "Thunderbolt 4", "Wi-Fi 6E"}
+     *                     ),
+     *                     @OA\Property(
+     *                         property="meta_data", 
+     *                         type="object", 
+     *                         nullable=true,
+     *                         description="Dữ liệu bổ sung của sản phẩm"
+     *                     ),
      *                     @OA\Property(property="created_at", type="string", format="date-time"),
-     *                     @OA\Property(property="updated_at", type="string", format="date-time")
+     *                     @OA\Property(property="updated_at", type="string", format="date-time"),
+     *                     @OA\Property(
+     *                         property="product_images",
+     *                         type="array",
+     *                         @OA\Items(
+     *                             type="object",
+     *                             @OA\Property(property="id", type="integer"),
+     *                             @OA\Property(property="product_id", type="integer"),
+     *                             @OA\Property(property="variant_id", type="integer", nullable=true),
+     *                             @OA\Property(property="image_url", type="string"),
+     *                             @OA\Property(property="is_primary", type="boolean"),
+     *                             @OA\Property(property="sort_order", type="integer"),
+     *                             @OA\Property(property="created_at", type="string", format="date-time")
+     *                         )
+     *                     )
      *                 )
      *             )
      *         )
@@ -166,7 +301,7 @@ class ProductController extends Controller
      */
     public function getNewProduct() {
         $limit = request()->input('limit', 10);
-        $data = Product::orderBy('created_at', 'desc')->limit($limit)->get();
+        $data = Product::orderBy('created_at', 'desc')->with(['product_images'])->limit($limit)->get();
 
         return response()->json([
             'message' => 'Lấy sản phẩm mới thành công',
@@ -193,11 +328,46 @@ class ProductController extends Controller
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
+     *         name="category_id",
+     *         in="query",
+     *         required=false,
+     *         description="Lọc theo ID danh mục",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
+     *         name="status",
+     *         in="query",
+     *         required=false,
+     *         description="Lọc theo trạng thái sản phẩm (active, inactive)",
+     *         @OA\Schema(type="string", enum={"active", "inactive"})
+     *     ),
+     *     @OA\Parameter(
+     *         name="min_price",
+     *         in="query",
+     *         required=false,
+     *         description="Lọc theo giá tối thiểu",
+     *         @OA\Schema(type="number")
+     *     ),
+     *     @OA\Parameter(
+     *         name="max_price",
+     *         in="query",
+     *         required=false,
+     *         description="Lọc theo giá tối đa",
+     *         @OA\Schema(type="number")
+     *     ),
+     *     @OA\Parameter(
      *         name="limit",
      *         in="query",
      *         required=false,
      *         description="Số lượng sản phẩm trên một trang (mặc định: 10)",
      *         @OA\Schema(type="integer", default=10)
+     *     ),
+     *     @OA\Parameter(
+     *         name="page",
+     *         in="query",
+     *         required=false,
+     *         description="Số trang",
+     *         @OA\Schema(type="integer", default=1)
      *     ),
      *     @OA\Parameter(
      *         name="sort",
@@ -211,23 +381,74 @@ class ProductController extends Controller
      *         response=200,
      *         description="Thành công",
      *         @OA\JsonContent(
+     *             @OA\Property(property="current_page", type="integer"),
      *             @OA\Property(property="data", type="array", 
      *                 @OA\Items(
      *                     type="object",
      *                     @OA\Property(property="id", type="integer"),
+     *                     @OA\Property(property="sku", type="string"),
      *                     @OA\Property(property="name", type="string"),
+     *                     @OA\Property(property="slug", type="string"),
      *                     @OA\Property(property="description", type="string"),
      *                     @OA\Property(property="category_id", type="integer"),
-     *                     @OA\Property(property="supplier_id", type="integer"),
-     *                     @OA\Property(property="status", type="integer"),
+     *                     @OA\Property(property="base_price", type="number", format="float"),
+     *                     @OA\Property(property="base_original_price", type="number", format="float"),
+     *                     @OA\Property(property="status", type="string"),
+     *                     @OA\Property(
+     *                         property="specifications",
+     *                         type="object",
+     *                         description="Thông số kỹ thuật của sản phẩm",
+     *                         example={"processor":"Intel Core i9 13900K","graphics":"NVIDIA RTX 4080","display":"17.3\" QHD 240Hz","memory":"32GB DDR5"}
+     *                     ),
+     *                     @OA\Property(
+     *                         property="features", 
+     *                         type="array", 
+     *                         description="Tính năng nổi bật của sản phẩm",
+     *                         @OA\Items(type="string"),
+     *                         example={"RGB Keyboard", "Thunderbolt 4", "Wi-Fi 6E"}
+     *                     ),
+     *                     @OA\Property(
+     *                         property="meta_data", 
+     *                         type="object", 
+     *                         nullable=true,
+     *                         description="Dữ liệu bổ sung của sản phẩm"
+     *                     ),
      *                     @OA\Property(property="created_at", type="string", format="date-time"),
-     *                     @OA\Property(property="updated_at", type="string", format="date-time")
+     *                     @OA\Property(property="updated_at", type="string", format="date-time"),
+     *                     @OA\Property(
+     *                         property="product_images",
+     *                         type="array",
+     *                         @OA\Items(
+     *                             type="object",
+     *                             @OA\Property(property="id", type="integer"),
+     *                             @OA\Property(property="product_id", type="integer"),
+     *                             @OA\Property(property="variant_id", type="integer", nullable=true),
+     *                             @OA\Property(property="image_url", type="string"),
+     *                             @OA\Property(property="is_primary", type="boolean"),
+     *                             @OA\Property(property="sort_order", type="integer"),
+     *                             @OA\Property(property="created_at", type="string", format="date-time")
+     *                         )
+     *                     )
      *                 )
      *             ),
-     *             @OA\Property(property="current_page", type="integer"),
-     *             @OA\Property(property="total", type="integer"),
+     *             @OA\Property(property="first_page_url", type="string"),
+     *             @OA\Property(property="from", type="integer"),
+     *             @OA\Property(property="last_page", type="integer"),
+     *             @OA\Property(property="last_page_url", type="string"),
+     *             @OA\Property(property="links", type="array", 
+     *                 @OA\Items(
+     *                     type="object",
+     *                     @OA\Property(property="url", type="string", nullable=true),
+     *                     @OA\Property(property="label", type="string"),
+     *                     @OA\Property(property="active", type="boolean")
+     *                 )
+     *             ),
+     *             @OA\Property(property="next_page_url", type="string", nullable=true),
+     *             @OA\Property(property="path", type="string"),
      *             @OA\Property(property="per_page", type="integer"),
-     *             @OA\Property(property="last_page", type="integer")
+     *             @OA\Property(property="prev_page_url", type="string", nullable=true),
+     *             @OA\Property(property="to", type="integer"),
+     *             @OA\Property(property="total", type="integer")
      *         )
      *     )
      * )
@@ -237,14 +458,34 @@ class ProductController extends Controller
         $query = $request->input('query');
         $limit = $request->input('limit', 10);
         $sort = $request->input('sort', 'created_at_desc');
+        $min_price = $request->input('min_price');
+        $max_price = $request->input('max_price');
+
+        // take the rest of the filters
+        $filters = $request->except(['query', 'limit', 'sort']);
+        $filters = array_filter($filters, function ($value) {
+            return !is_null($value) && $value !== '';
+        });
 
         $products = Product::query();
+
+        $products->with(['product_images']);
 
         if ($query) {
             $products->where(function ($q) use ($query) {
                 $q->where('name', 'like', "%$query%");
             });
         }
+        
+        // apply filters
+        foreach ($filters as $key => $value) {
+            if (is_array($value)) {
+                $products->whereIn($key, $value);
+            } else {
+                $products->where($key, $value);
+            }
+        }
+
 
         switch ($sort) {
             case 'price_asc':

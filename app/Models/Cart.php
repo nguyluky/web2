@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $product_variant_id
  * @property int $amount
  * 
- * @property Product $product
+ * @property ProductVariant $product_variant
  * @property Profile $profile
  *
  * @package App\Models
@@ -23,7 +23,7 @@ use Illuminate\Database\Eloquent\Model;
 class Cart extends Model
 {
 	protected $table = 'cart';
-	public $incrementing = true;
+	public $incrementing = false;
 	public $timestamps = false;
 
 	protected $casts = [
@@ -33,14 +33,13 @@ class Cart extends Model
 	];
 
 	protected $fillable = [
-		'profile_id', 'product_variant_id', 'amount'
+		'amount'
 	];
 
-	public function productVariant()
+	public function product_variant()
 	{
-		return $this->belongsTo(ProductVariant::class, 'product_variant_id');
+		return $this->belongsTo(ProductVariant::class);
 	}
-	
 
 	public function profile()
 	{

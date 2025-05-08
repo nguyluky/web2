@@ -18,9 +18,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $rating
  * @property string|null $comment
  * @property string|null $status
+ * @property array|null $meta_data
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property array|null $meta_data
  * 
  * @property Product $product
  * @property Account|null $account
@@ -30,10 +30,8 @@ use Illuminate\Database\Eloquent\Model;
 class ProductReview extends Model
 {
 	protected $table = 'product_reviews';
-	public $incrementing = false;
 
 	protected $casts = [
-		'id' => 'int',
 		'product_id' => 'int',
 		'user_id' => 'int',
 		'rating' => 'int',

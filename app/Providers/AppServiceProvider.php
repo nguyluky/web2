@@ -3,6 +3,9 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Routing\Router;
+use Dedoc\Scramble\Scramble;
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -11,7 +14,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        Scramble::ignoreDefaultRoutes();
     }
 
     /**
@@ -19,6 +22,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Scramble::configure()
+            ->expose(
+                ui: fn (Router $router, $action) => $router
+                    ->get('docs/v1/api', $action),
+                document: fn (Router $router, $action) => $router
+                    ->get('docs/v1/openapi.json', $action),
+            );
     }
 }

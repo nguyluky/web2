@@ -8,10 +8,8 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class Account
@@ -23,22 +21,19 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property string $status
  * @property Carbon $created
  * @property Carbon $updated
+ * @property string|null $deleted_at
  * 
- * @property Collection|Order[] $orders
+ * @property Collection|Import[] $imports
  * @property Collection|ProductReview[] $product_reviews
  * @property Profile|null $profile
  *
  * @package App\Models
  */
-class Account extends Authenticatable implements JWTSubject
+class Account extends Model
 {
-    use SoftDeletes, HasFactory ;
+	use SoftDeletes;
 	protected $table = 'account';
-	public $incrementing = true;
-    const CREATED_AT = 'created';
-    const UPDATED_AT = 'updated';
-	public $timestamps = true;
-
+	public $timestamps = false;
 
 	protected $casts = [
 		'rule' => 'int',
@@ -55,26 +50,18 @@ class Account extends Authenticatable implements JWTSubject
 		'password',
 		'rule',
 		'status',
+		'created',
+		'updated'
 	];
-
-    public function getJWTIdentifier()
-    {
-        return $this->getKey();
-    }
-
-    public function getJWTCustomClaims()
-    {
-        return [];
-    }
 
 	public function rule()
 	{
 		return $this->belongsTo(Rule::class, 'rule');
 	}
 
-	public function orders()
+	public function imports()
 	{
-		return $this->hasMany(Order::class, 'employee_id');
+		return $this->hasMany(Import::class, 'employee_id');
 	}
 
 	public function product_reviews()

@@ -11,16 +11,17 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Profile
- *
+ * 
  * @property int $id
  * @property string|null $fullname
  * @property string $phone_number
  * @property string|null $email
  * @property string|null $avatar
- *
- * @property Profile $profile
+ * 
+ * @property Account $account
  * @property Collection|Address[] $addresses
  * @property Collection|Cart[] $carts
+ * @property Collection|Order[] $orders
  *
  * @package App\Models
  */
@@ -36,19 +37,9 @@ class Profile extends Model
 		'avatar'
 	];
 
-	protected $appends = ['avatar_url'];
-
-	public function getAvatarUrlAttribute()
-	{
-		if ($this->avatar) {
-			return asset('storage/' . $this->avatar);
-		}
-		return null;
-	}
-
 	public function account()
 	{
-		return $this->belongsTo(Profile::class, 'id');
+		return $this->belongsTo(Account::class, 'id');
 	}
 
 	public function addresses()
@@ -59,5 +50,10 @@ class Profile extends Model
 	public function carts()
 	{
 		return $this->hasMany(Cart::class);
+	}
+
+	public function orders()
+	{
+		return $this->hasMany(Order::class);
 	}
 }

@@ -18,43 +18,8 @@ use OpenApi\Annotations as OA;
  *     description="API Endpoints xác thực người dùng"
  * )
  */
-class AccountController extends Controller {
-    /**
-     * @OA\Post(
-     *     path="/api/auth/register",
-     *     operationId="register",
-     *     tags={"Authentication"},
-     *     summary="Đăng ký tài khoản mới",
-     *     @OA\RequestBody(
-     *         required=true,
-     *         @OA\JsonContent(
-     *             required={"username", "password", "email", "fullname", "phone_number"},
-     *             @OA\Property(property="username", type="string", example="johndoe"),
-     *             @OA\Property(property="password", type="string", format="password", example="password123"),
-     *             @OA\Property(property="email", type="string", format="email", example="john@example.com"),
-     *             @OA\Property(property="fullname", type="string", example="John Doe"),
-     *             @OA\Property(property="phone_number", type="string", example="0123456789")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="Đăng ký thành công",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="access_token", type="string"),
-     *             @OA\Property(property="token_type", type="string", example="bearer"),
-     *             @OA\Property(property="expires_in", type="integer")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=422,
-     *         description="Dữ liệu không hợp lệ",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string"),
-     *             @OA\Property(property="errors", type="object")
-     *         )
-     *     )
-     * )
-     */
+class AccountController extends Controller
+{
     public function register(Request $request)
     {
         $validate = $request->validate([
@@ -97,52 +62,6 @@ class AccountController extends Controller {
 
     }
 
-    /**
-     * @OA\Post(
-     *     path="/api/auth/login",
-     *     operationId="login",
-     *     tags={"Authentication"},
-     *     summary="Đăng nhập",
-     *     @OA\RequestBody(
-     *         required=true,
-     *         @OA\JsonContent(
-     *             required={"username", "password"},
-     *             @OA\Property(property="username", type="string", example="johndoe"),
-     *             @OA\Property(property="password", type="string", format="password", example="password123")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="Đăng nhập thành công",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="access_token", type="string"),
-     *             @OA\Property(property="token_type", type="string", example="bearer"),
-     *             @OA\Property(property="expires_in", type="integer")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=401,
-     *         description="Mật khẩu không đúng",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="wrong password")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=403,
-     *         description="Tài khoản không active",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="user is not active")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=404,
-     *         description="Không tìm thấy người dùng",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="not found user")
-     *         )
-     *     )
-     * )
-     */
     public function login(Request $request)
     {
         $validate = $request->validate([
@@ -171,7 +90,8 @@ class AccountController extends Controller {
         ]);
     }
 
-    public function getById() {
+    public function getById()
+    {
         $user = auth()->user();
         // dd($user);
         // if (!$user) {
@@ -182,25 +102,9 @@ class AccountController extends Controller {
         return response()->json(['data' => $profile], 200);
     }
 
-    // public function update(Request $request) {
 
-
-
-    //     $validate = $request->validate([
-    //         // 'id' => 'required|integer|exists:profile,id',
-    //         'fullname' => 'required|string|max:256',
-    //         'phone_number' => 'required|string|max:10|unique:profile,phone_number,' . $request->id . ',id', // unique for phone_number, except record for id = $request->id
-    //         'email' => 'required|string|max:45|unique:profile,email,' . $request->id . ',id' // unique for email, except record for id = $request->id
-    //     ]);
-    //     $user = Profile::where('id', $validate['id'])->first();
-    //     $user->fullname = $validate['fullname'];
-    //     $user->phone_number = $validate['phone_number'];
-    //     $user->email = $validate['email'];
-    //     $user->save();
-    //     return response()->json(['user' => $user], 201);
-    // }
-
-    public function changePassword(Request $request) {
+    public function changePassword(Request $request)
+    {
         $validate = $request->validate([
             'username' => 'required|string|max:256|exists:account,username',
             'old_password' => 'required|string|min:8|max:256',
@@ -216,10 +120,11 @@ class AccountController extends Controller {
         $account->password = bcrypt($validate['new_password']);
         $account->save();
         return response()->json(['Update password' => $account], 201);
-   }
+    }
 
     // 4.6. Quên mật khẩu
-    public function forgetPassword(Request $request) {
+    public function forgetPassword(Request $request)
+    {
         $profile = null;
         if ($request->has('email')) {
             $validate = $request->validate([
@@ -251,7 +156,8 @@ class AccountController extends Controller {
     }
 
     // 4.7. Đặt lại mật kh
-    public function resetPassword(Request $request) {
+    public function resetPassword(Request $request)
+    {
         if (!$request->has('token')) {
             return response()->json(['Error' => 'Not found token'], 500);
         }

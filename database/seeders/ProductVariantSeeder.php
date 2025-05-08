@@ -21,7 +21,7 @@ class ProductVariantSeeder extends Seeder
             'original_price' => 3599.99,
             'stock' => 15,
             'status' => 'active',
-            'attributes' => json_encode([
+            'specifications' => json_encode([
                 'RAM' => '32GB',
                 'Storage' => '1TB SSD',
                 'Color' => 'Black'
@@ -38,7 +38,7 @@ class ProductVariantSeeder extends Seeder
             'original_price' => 4199.99,
             'stock' => 10,
             'status' => 'active',
-            'attributes' => json_encode([
+            'specifications' => json_encode([
                 'RAM' => '64GB',
                 'Storage' => '2TB SSD',
                 'Color' => 'Black'
@@ -56,7 +56,7 @@ class ProductVariantSeeder extends Seeder
             'original_price' => 2399.99,
             'stock' => 25,
             'status' => 'active',
-            'attributes' => json_encode([
+            'specifications' => json_encode([
                 'Processor' => 'i7',
                 'RAM' => '16GB',
                 'Storage' => '512GB SSD',
@@ -74,7 +74,7 @@ class ProductVariantSeeder extends Seeder
             'original_price' => 2999.99,
             'stock' => 15,
             'status' => 'active',
-            'attributes' => json_encode([
+            'specifications' => json_encode([
                 'Processor' => 'i9',
                 'RAM' => '32GB',
                 'Storage' => '1TB SSD',
@@ -93,7 +93,7 @@ class ProductVariantSeeder extends Seeder
             'original_price' => 1399.99,
             'stock' => 30,
             'status' => 'active',
-            'attributes' => json_encode([
+            'specifications' => json_encode([
                 'Storage' => '256GB',
                 'Color' => 'Black'
             ]),
@@ -109,7 +109,7 @@ class ProductVariantSeeder extends Seeder
             'original_price' => 1599.99,
             'stock' => 25,
             'status' => 'active',
-            'attributes' => json_encode([
+            'specifications' => json_encode([
                 'Storage' => '512GB',
                 'Color' => 'Silver'
             ]),
@@ -126,7 +126,7 @@ class ProductVariantSeeder extends Seeder
             'original_price' => 1499.99,
             'stock' => 35,
             'status' => 'active',
-            'attributes' => json_encode([
+            'specifications' => json_encode([
                 'Storage' => '256GB',
                 'Color' => 'Midnight'
             ]),
@@ -142,7 +142,7 @@ class ProductVariantSeeder extends Seeder
             'original_price' => 1799.99,
             'stock' => 20,
             'status' => 'active',
-            'attributes' => json_encode([
+            'specifications' => json_encode([
                 'Storage' => '512GB',
                 'Color' => 'Gold'
             ]),
@@ -159,7 +159,7 @@ class ProductVariantSeeder extends Seeder
             'original_price' => 219.99,
             'stock' => 50,
             'status' => 'active',
-            'attributes' => json_encode([
+            'specifications' => json_encode([
                 'Color' => 'White'
             ]),
             'created_at' => now(),
@@ -174,7 +174,7 @@ class ProductVariantSeeder extends Seeder
             'original_price' => 429.99,
             'stock' => 40,
             'status' => 'active',
-            'attributes' => json_encode([
+            'specifications' => json_encode([
                 'Color' => 'Black',
                 'Band' => 'Silicone'
             ]),
@@ -190,7 +190,7 @@ class ProductVariantSeeder extends Seeder
             'original_price' => 149.99,
             'stock' => 60,
             'status' => 'active',
-            'attributes' => json_encode([
+            'specifications' => json_encode([
                 'Color' => 'Black',
                 'Connection' => 'Wireless'
             ]),
@@ -207,7 +207,7 @@ class ProductVariantSeeder extends Seeder
             'original_price' => 2699.99,
             'stock' => 5,
             'status' => 'inactive',
-            'attributes' => json_encode([
+            'specifications' => json_encode([
                 'Graphics' => 'RTX 4070',
                 'RAM' => '16GB',
                 'Storage' => '1TB SSD',
