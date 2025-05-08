@@ -27,7 +27,8 @@ use Illuminate\Database\Eloquent\Model;
 class Order extends Model
 {
 	protected $table = 'order';
-	public $incrementing = false;
+    public $incrementing = false;
+    protected $keyType = 'int';
 	public $timestamps = false;
 
 	protected $casts = [
