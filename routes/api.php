@@ -92,7 +92,7 @@ Route::prefix('admin')->group(function () {
     });
 });
 
-// statistical 
+// statistical
 Route::prefix('admin')->controller(Statistical::class)->group(function () {
     Route::get('revenue-cost', 'revenueCost');
     Route::get('inventory', 'inventory');

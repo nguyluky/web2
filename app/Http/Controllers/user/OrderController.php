@@ -90,26 +90,31 @@ class OrderController extends Controller
             'products' => 'required|array',
         ]);
 
-        DB::transaction(function () use ($validated) {
-            $order_data = [
-                'profile_id' => $validated['profile_id'],
-                'status' => 'pending',
-                'payment_method' => $validated['payment_method'],
-                'created_at' => Carbon::now()
-            ];
-
-            $order = Order::create($order_data);
-
-            foreach($validated['products'] as $product) {
-                $order_detail = [
-                    'order_id' => $order->id,
-                    'product_variant_id' => $product['product_variant_id'],
-                    'serial' => rand(),
+        try {
+            $order = DB::transaction(function () use ($validated) {
+                $order_data = [
+                    'profile_id' => $validated['profile_id'],
+                    'status' => 'pending',
+                    'payment_method' => $validated['payment_method'],
+                    'created_at' => Carbon::now()
                 ];
-                OrderDetail::create($order_detail);
-            }
+
+                $order = Order::create($order_data);
+
+                foreach($validated['products'] as $product) {
+                    $order_detail = [
+                        'order_id' => $order->id,
+                        'product_variant_id' => $product['product_variant_id'],
+                        'serial' => rand(),
+                    ];
+                    OrderDetail::create($order_detail);
+                }
+                return $order;
+            });
             return response()->json(['Successfully create orders' => $order], 201);
-        });
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to create order'], 500);
+        }
     }
 
     /**
@@ -342,7 +347,7 @@ class OrderController extends Controller
         $limit = $request->query('limit', 10);
         $status = $request->query('status');
 
-        $query = Order::where('profile_od', $user->id);
+        $query = Order::where('profile_id', $user->id);
         if ($status) {
             $query->where('status', $status);
         }
