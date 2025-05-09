@@ -28,6 +28,8 @@ use Illuminate\Database\Eloquent\Model;
 class Order extends Model
 {
 	protected $table = 'order';
+    // public $incrementing = true;
+    // protected $keyType = 'bigint';
 	public $timestamps = false;
 
 	protected $casts = [

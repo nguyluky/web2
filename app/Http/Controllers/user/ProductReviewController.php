@@ -23,7 +23,6 @@ class ProductReviewController extends Controller
     public function addReviewById(Request $request)
     {
         $validated = $request->validate([
-            'id' => 'required|integer',
             'product_id' => 'required|integer',
             'user_id' => 'nullable|integer',
             'rating' => 'required|integer|min:1|max:5',

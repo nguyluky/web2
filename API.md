@@ -44,7 +44,7 @@
 **Parameters:** `page`, `limit`, `sort`  
 **Response:** Danh sách đánh giá và thống kê rating
 
-#### 2.2. Thêm đánh giá sản phẩm ✅  
+#### 2.2. Thêm đánh giá sản phẩm ✅ (tested) 
 
 **Endpoint:** `POST /api/products/:id/reviews`  
 **Request:** Rating, nội dung, hình ảnh  
@@ -80,7 +80,7 @@
 **Request:** Mã giảm giá  
 **Response:** Thông tin giỏ hàng đã áp dụng mã giảm giá
 
-#### 3.6. Tạo đơn hàng ✅ 
+#### 3.6. Tạo đơn hàng ✅ (tested) 
 
 **Endpoint:** `POST /api/orders`  
 **Request:** Thông tin giao hàng, phương thức thanh toán  
@@ -105,42 +105,42 @@
 
 ### 4. Tài khoản người dùng
 
-#### 4.1. Đăng ký tài khoản ✅
+#### 4.1. Đăng ký tài khoản ✅ (tested)
 
 **Endpoint:** `POST /api/auth/register`  
 **Request:** Thông tin người dùng  
 **Response:** Token và thông tin người dùng
 
-#### 4.2. Đăng nhập ✅
+#### 4.2. Đăng nhập ✅ (tested)
 
 **Endpoint:** `POST /api/auth/login`  
 **Request:** Email, mật khẩu  
 **Response:** Token và thông tin người dùng
 
-#### 4.3. Lấy thông tin người dùng ✅
+#### 4.3. Lấy thông tin người dùng ✅ (Tested)
 
 **Endpoint:** `GET /api/users/profile`  
 **Response:** Thông tin chi tiết người dùng
 
-#### 4.4. Cập nhật thông tin cá nhân ✅
+#### 4.4. Cập nhật thông tin cá nhân ✅ (tested)
 
 **Endpoint:** `PUT /api/users/profile`  
 **Request:** Thông tin cần cập nhật  
 **Response:** Thông tin người dùng đã cập nhật
 
-#### 4.5. Thay đổi mật khẩu ✅
+#### 4.5. Thay đổi mật khẩu ✅ (tested)
 
 **Endpoint:** `PUT /api/users/change-password`  
 **Request:** Mật khẩu cũ và mới  
 **Response:** Thông báo thành công
 
-#### 4.6. Quên mật khẩu ✅
+#### 4.6. Quên mật khẩu ✅ (tested)
 
 **Endpoint:** `POST /api/auth/forgot-password`  
 **Request:** Email  
 **Response:** Thông báo đã gửi email khôi phục
 
-#### 4.7. Đặt lại mật khẩu ✅
+#### 4.7. Đặt lại mật khẩu ✅ (tested)
 
 **Endpoint:** `POST /api/auth/reset-password`  
 **Request:** Token, mật khẩu mới  

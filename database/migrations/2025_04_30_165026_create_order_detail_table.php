@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('order_detail', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('order_id');
-            $table->unsignedBigInteger('product_variant_id');
+            $table->unsignedBigInteger('id')->autoIncrement(); // Change to bigint
+            $table->unsignedBigInteger('order_id'); // Change to bigint
+            $table->unsignedBigInteger('product_variant_id'); // Change to bigint
             $table->integer('serial');
             
             $table->foreign('order_id')->references('id')->on('order');

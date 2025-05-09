@@ -16,7 +16,7 @@ use App\Http\Controllers\admin\Categorys;
 use App\Http\Controllers\admin\Orders;
 use App\Http\Controllers\admin\Suppliers;
 use App\Http\Controllers\admin\Warrantys;
-use App\Http\Controllers\admin\Statistical;
+use App\Http\Controllers\admin\Statisticals;
 use App\Http\Controllers\admin\Accounts;
 use App\Http\Controllers\admin\Rules;
 use App\Http\Controllers\user\CategoryController;
@@ -92,7 +92,7 @@ Route::prefix('admin')->group(function () {
     });
 });
 
-// statistical 
+// statistical
 Route::prefix('admin')->controller(Statistical::class)->group(function () {
     Route::get('revenue-cost', 'revenueCost');
     Route::get('inventory', 'inventory');
@@ -101,17 +101,19 @@ Route::prefix('admin')->controller(Statistical::class)->group(function () {
     Route::get('revenue-by-categories', 'revenueByCategories');
 });
 
+// account
 Route::prefix('admin')->group(function () {
-    // account
     Route::controller(Accounts::class)->group(function () {
         Route::post('/accounts', 'create');
         Route::get('/accounts', 'getAll');
-        Route::get('/accounts/{id}', 'getById');
+        Route::get('/accounts/search', 'search');
         Route::put('/accounts/{id}', 'update');
         Route::delete('/accounts/{id}', 'delete');
     });
+});
 
-    // rule
+// rule
+Route::prefix('admin')->group(function () {
     Route::controller(Rules::class)->group(function () {
         Route::post('/rules', 'create');
         Route::get('/rules', 'getAll');
@@ -119,22 +121,27 @@ Route::prefix('admin')->group(function () {
         Route::put('/rules/{id}', 'update');
         Route::delete('/rules/{id}', 'delete');
     });
+});
 
-    // product variant
+// product variant
+Route::prefix('admin')->group(function () {
     Route::controller(ProductVariants::class)->group(function () {
         Route::get('/product-variants', 'getAll');
     });
+});
 
-    //prolife
+//prolife
+Route::prefix('admin')->group(function () {
     Route::controller(Profiles::class)->group(function () {
         Route::post('/users', 'create');
         Route::get('/users', 'getAll');
-        Route::get('/users/{id}', 'getById');
+        Route::get('/users/search', 'search');
         Route::put('/users/{id}', 'update');
         Route::delete('/users/{id}', 'delete');
     });
-
-    // import detail
+});
+// import detail
+Route::prefix('admin')->group(function () {
     Route::controller(ImportDetails::class)->group(function () {
         Route::post('/import-details', 'create');
         Route::get('/import-details', 'getAll');
@@ -187,7 +194,6 @@ Route::middleware(['auth:api'])->group(function () {
 
     Route::get('/users/profile', [ProfileController::class, 'getProfile']);
     Route::put('/users/profile', [ProfileController::class, 'updateProfile']);
-    Route::post('/users/profile/avatar', [ProfileController::class, 'uploadAvatar']);
 });
 
 
@@ -216,3 +222,10 @@ Route::get('/', function () {
         'status' => 200
     ]);
 });
+
+Route::prefix('admin')->group(function () {
+    Route::controller(Accounts::class)->group(function () {
+        Route::get('/check-username/{username}', 'checkUsername');
+    });
+});
+
