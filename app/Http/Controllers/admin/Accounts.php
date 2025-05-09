@@ -80,27 +80,39 @@ class Accounts extends Controller
     //8.4 Cập nhật tài khoản
     public function update(Request $request, $id)
     {
-        $account = Account::find($id);
-
-        // Kiểm tra xem tài khoản có tồn tại không
-        if (!$account) {
+        try {
+            $account = Account::findOrFail($id);
+            $validated = $request->validate([
+                'username' => 'required|string|max:256|unique:account,username,' . $id,
+                'password' => 'nullable|string|max:256',
+                'rule' => 'required|integer|exists:rule,id',
+                'status' => 'required|in:active,hidden',
+            ]);
+    
+            if (!empty($validated['password'])) {
+                $validated['password'] = bcrypt($validated['password']);
+            } else {
+                unset($validated['password']); // Không cập nhật mật khẩu nếu không nhập
+            }
+    
+            $account->update($validated);
+    
             return response()->json([
-                'message' => 'Không tìm thấy tài khoản'
-            ], 404);
+                'message' => 'Cập nhật tài khoản thành công',
+                'data' => $account
+            ], 200);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'error' => 'Validation failed',
+                'message' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            \Log::error('Lỗi cập nhật tài khoản: ' . $e->getMessage());
+            return response()->json([
+                'error' => 'Không thể cập nhật tài khoản',
+                'message' => $e->getMessage()
+            ], 500);
         }
-
-        $validated = $request->validate([
-            'username' => 'string|max:256',
-            'password' => 'string|max:256',
-            'rule' => 'integer|exists:rule,id',
-        ]);
-
-        $account->update($validated);
-
-        return response()->json([
-            'message' => 'Cập nhật tài khoản thành công',
-            'data' => $account
-        ]);
     }
     //8.5 Xóa tài khoản
     public function delete(Request $request, $id)

@@ -225,3 +225,4 @@ Route::prefix('admin')->group(function () {
         Route::get('/check-username/{username}', 'checkUsername');
     });
 });
+

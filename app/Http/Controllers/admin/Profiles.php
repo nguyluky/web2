@@ -69,4 +69,33 @@ class Profiles extends Controller
             'data' => $profile
         ]);
     }
+    public function update(Request $request, $id)
+{
+    try {
+        $user = Profile::findOrFail($id);
+        $validated = $request->validate([
+            'fullname' => 'required|string|max:256',
+            'phone_number' => 'required|string|size:10|unique:profile,phone_number,' . $id,
+            'email' => 'required|email|max:256|unique:profile,email,' . $id,
+        ]);
+
+        $user->update($validated);
+
+        return response()->json([
+            'message' => 'Cập nhật hồ sơ thành công',
+            'data' => $user
+        ], 200);
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        return response()->json([
+            'error' => 'Validation failed',
+            'message' => $e->errors()
+        ], 422);
+    } catch (\Exception $e) {
+        \Log::error('Lỗi cập nhật hồ sơ: ' . $e->getMessage());
+        return response()->json([
+            'error' => 'Không thể cập nhật hồ sơ',
+            'message' => $e->getMessage()
+        ], 500);
+    }
+}
 }
