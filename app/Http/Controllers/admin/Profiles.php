@@ -98,4 +98,37 @@ class Profiles extends Controller
         ], 500);
     }
 }
+        public function search(Request $request)
+        {
+            try {
+                $query = Profile::query();
+
+                // Tìm kiếm theo fullname
+                if ($request->has('fullname') && !empty($request->input('fullname'))) {
+                    $query->where('fullname', 'like', '%' . $request->input('fullname') . '%');
+                }
+
+                // Lọc theo status (nếu cần join với bảng account)
+                if ($request->has('status') && $request->input('status') !== 'all') {
+                    $query->join('account', 'profile.id', '=', 'account.id')
+                        ->where('account.status', $request->input('status'))
+                        ->select('profile.*'); // Chỉ lấy các cột từ profile
+                }
+
+                // Phân trang
+                $perPage = $request->input('per_page', 10); // Mặc định 10 bản ghi mỗi trang
+                $users = $query->paginate($perPage);
+
+                return response()->json([
+                    'message' => 'Tìm kiếm thành công',
+                    'data' => $users
+                ], 200);
+            } catch (\Exception $e) {
+                \Log::error('Lỗi khi tìm kiếm người dùng: ' . $e->getMessage());
+                return response()->json([
+                    'error' => 'Không thể tìm kiếm người dùng',
+                    'message' => $e->getMessage()
+                ], 500);
+            }
+        }
 }

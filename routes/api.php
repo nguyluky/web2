@@ -106,7 +106,7 @@ Route::prefix('admin')->group(function () {
     Route::controller(Accounts::class)->group(function () {
         Route::post('/accounts', 'create');
         Route::get('/accounts', 'getAll');
-        Route::get('/accounts/{id}', 'getById');
+        Route::get('/accounts/search', 'search');
         Route::put('/accounts/{id}', 'update');
         Route::delete('/accounts/{id}', 'delete');
     });
@@ -135,7 +135,7 @@ Route::prefix('admin')->group(function () {
     Route::controller(Profiles::class)->group(function () {
         Route::post('/users', 'create');
         Route::get('/users', 'getAll');
-        Route::get('/users/{id}', 'getById');
+        Route::get('/users/search', 'search');
         Route::put('/users/{id}', 'update');
         Route::delete('/users/{id}', 'delete');
     });
