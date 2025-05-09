@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('order', function (Blueprint $table) {
-            $table->id();
+            $table->unsignedBigInteger('id')->autoIncrement(); // Change to bigint
             $table->unsignedBigInteger('profile_id');
             $table->string('status');
             $table->timestamp('created_at');

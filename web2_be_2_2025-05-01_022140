@@ -1,0 +1,897 @@
+/*M!999999\- enable the sandbox mode */ 
+-- MariaDB dump 10.19-11.7.2-MariaDB, for Linux (x86_64)
+--
+-- Host: 127.0.0.1    Database: web2_be_2
+-- ------------------------------------------------------
+-- Server version	9.3.0
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*M!100616 SET @OLD_NOTE_VERBOSITY=@@NOTE_VERBOSITY, NOTE_VERBOSITY=0 */;
+
+use web2;
+--
+-- Table structure for table `account`
+--
+
+DROP TABLE IF EXISTS `account`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `account` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `username` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `rule` bigint unsigned DEFAULT NULL,
+  `status` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created` datetime NOT NULL,
+  `updated` datetime NOT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `account_rule_foreign` (`rule`),
+  CONSTRAINT `account_rule_foreign` FOREIGN KEY (`rule`) REFERENCES `rule` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `account`
+--
+
+/*!40000 ALTER TABLE `account` DISABLE KEYS */;
+INSERT INTO `account` VALUES
+(1,'admin','$2y$12$H9.SmyuYdMdwQxVRQeZW/Oi/umdvyqc/uuGAi/3DzgNyPDYhJWSR.',1,'active','2025-04-30 18:51:54','2025-04-30 18:51:54',NULL),
+(2,'manager','$2y$12$CC.4b7SjTYjbPGb9eyijL.QCJgKAtE.gMIW0Nb5dym2o7QZFNtsRK',2,'active','2025-04-30 18:51:55','2025-04-30 18:51:55',NULL),
+(3,'employee1','$2y$12$C/YHBnZgE9tkvPV0f7cjf.61TuUwTxNwuN8nGOGLk06iXtJUFVkoW',3,'active','2025-04-30 18:51:56','2025-04-30 18:51:56',NULL),
+(4,'customer1','$2y$12$50bK6RB9KBm8PTXnw2lKJueOyRS3IBhAb7C/ywmizsHKncJq8Rzsy',4,'active','2025-04-30 18:51:56','2025-04-30 18:51:56',NULL),
+(5,'customer2','$2y$12$GVIflR0YinJy3Xtqo4nB2OpHEEA7khD294pv55tflPyDcohpE1PMa',4,'active','2025-04-30 18:51:56','2025-04-30 18:51:56',NULL),
+(6,'customer3','$2y$12$dwbvUPCnFgW6JqTklyutnulmb6CAT6DnuVqpRw.mOS/2p3xCtPpsm',4,'active','2025-04-30 18:51:56','2025-04-30 18:51:56',NULL),
+(7,'customer4','$2y$12$tnJrke/.1ObW1QUwLUwKrugLg8FhmuQF6kNJDY9GvL8fo.CUJ2MYm',4,'active','2025-04-30 18:51:57','2025-04-30 18:51:57',NULL),
+(8,'customer5','$2y$12$6942NbXyxw2UxsRbaFaGSObbxYeFq0RWX7bETwa3eubcAf11uG16y',4,'active','2025-04-30 18:51:57','2025-04-30 18:51:57',NULL),
+(9,'customer6','$2y$12$SiY98lev6TUBnb1EM7fL.es1QMspyNPowUAcNG8nmwXXOc1P3BRkK',4,'active','2025-04-30 18:51:57','2025-04-30 18:51:57',NULL),
+(10,'customer7','$2y$12$/a15NIsxnCAtZIJEuQGs9eVu9.sfTLfr3xb5vbyIVf2wWV8lVPFim',4,'active','2025-04-30 18:51:57','2025-04-30 18:51:57',NULL),
+(11,'customer8','$2y$12$mkahQcPxY1t/EZCsaWlNkOgJuT0YeWdj3HzJNjaGjiDhvzfq81Z9G',4,'active','2025-04-30 18:51:58','2025-04-30 18:51:58',NULL),
+(12,'customer9','$2y$12$WtAn/TDXbgovg9LBU7xkJ./iUbvgiUyMdjBoEaisyPNwcP.AzFCNm',4,'active','2025-04-30 18:51:58','2025-04-30 18:51:58',NULL),
+(13,'customer10','$2y$12$9lgAF9BcT5EHUq1HQ2x8l.q8hdXSMiDWh1SKMrH93Ib0KmIURdxDu',4,'active','2025-04-30 18:51:58','2025-04-30 18:51:58',NULL);
+/*!40000 ALTER TABLE `account` ENABLE KEYS */;
+
+--
+-- Table structure for table `address`
+--
+
+DROP TABLE IF EXISTS `address`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `address` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `profile_id` bigint unsigned NOT NULL,
+  `phone_number` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `street` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ward` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `district` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `city` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `address_profile_id_foreign` (`profile_id`),
+  CONSTRAINT `address_profile_id_foreign` FOREIGN KEY (`profile_id`) REFERENCES `profile` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `address`
+--
+
+/*!40000 ALTER TABLE `address` DISABLE KEYS */;
+INSERT INTO `address` VALUES
+(1,1,'098765431','Employee Street 1','Ward 1','District 1','City 1'),
+(2,2,'098765432','Employee Street 2','Ward 2','District 2','City 2'),
+(3,3,'098765433','Employee Street 3','Ward 3','District 3','City 3'),
+(4,4,'098765444','Customer Street 1','Ward 10','District 3','City 3'),
+(5,5,'098765445','Customer Street 2','Ward 2','District 3','City 2'),
+(6,6,'098765446','Customer Street 3','Ward 4','District 5','City 3'),
+(7,7,'098765447','Customer Street 4','Ward 4','District 1','City 1'),
+(8,8,'098765448','Customer Street 5','Ward 1','District 1','City 3'),
+(9,9,'098765449','Customer Street 6','Ward 2','District 1','City 1'),
+(10,10,'098765450','Customer Street 7','Ward 2','District 5','City 3'),
+(11,11,'098765451','Customer Street 8','Ward 9','District 3','City 2'),
+(12,12,'098765452','Customer Street 9','Ward 2','District 3','City 3'),
+(13,13,'098765453','Customer Street 10','Ward 6','District 5','City 2'),
+(26,6,'098765466','Secondary Street 3','Ward 8','District 3','City 3'),
+(29,9,'098765469','Secondary Street 6','Ward 3','District 2','City 2'),
+(32,12,'098765472','Secondary Street 9','Ward 7','District 5','City 2');
+/*!40000 ALTER TABLE `address` ENABLE KEYS */;
+
+--
+-- Table structure for table `cache`
+--
+
+DROP TABLE IF EXISTS `cache`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `cache` (
+  `key` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `value` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `expiration` int NOT NULL,
+  PRIMARY KEY (`key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `cache`
+--
+
+/*!40000 ALTER TABLE `cache` DISABLE KEYS */;
+/*!40000 ALTER TABLE `cache` ENABLE KEYS */;
+
+--
+-- Table structure for table `cache_locks`
+--
+
+DROP TABLE IF EXISTS `cache_locks`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `cache_locks` (
+  `key` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `owner` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `expiration` int NOT NULL,
+  PRIMARY KEY (`key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `cache_locks`
+--
+
+/*!40000 ALTER TABLE `cache_locks` DISABLE KEYS */;
+/*!40000 ALTER TABLE `cache_locks` ENABLE KEYS */;
+
+--
+-- Table structure for table `cart`
+--
+
+DROP TABLE IF EXISTS `cart`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `cart` (
+  `profile_id` bigint unsigned NOT NULL,
+  `product_variant_id` bigint unsigned NOT NULL,
+  `amount` int NOT NULL,
+  PRIMARY KEY (`profile_id`,`product_variant_id`),
+  KEY `cart_product_variant_id_foreign` (`product_variant_id`),
+  CONSTRAINT `cart_product_variant_id_foreign` FOREIGN KEY (`product_variant_id`) REFERENCES `product_variants` (`id`),
+  CONSTRAINT `cart_profile_id_foreign` FOREIGN KEY (`profile_id`) REFERENCES `profile` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `cart`
+--
+
+/*!40000 ALTER TABLE `cart` DISABLE KEYS */;
+INSERT INTO `cart` VALUES
+(11,1,1),
+(11,9,2),
+(12,5,1),
+(12,10,1),
+(13,3,1);
+/*!40000 ALTER TABLE `cart` ENABLE KEYS */;
+
+--
+-- Table structure for table `categories`
+--
+
+DROP TABLE IF EXISTS `categories`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `categories` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `slug` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `parent_id` bigint unsigned DEFAULT NULL,
+  `require_fields` json DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `categories_parent_id_foreign` (`parent_id`),
+  CONSTRAINT `categories_parent_id_foreign` FOREIGN KEY (`parent_id`) REFERENCES `categories` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `categories`
+--
+
+/*!40000 ALTER TABLE `categories` DISABLE KEYS */;
+INSERT INTO `categories` VALUES
+(1,'Laptops','laptops','active',NULL,NULL,'2025-04-30 18:51:40','2025-04-30 18:51:40'),
+(2,'Smartphones','smartphones','active',NULL,NULL,'2025-04-30 18:51:40','2025-04-30 18:51:40'),
+(3,'Accessories','accessories','active',NULL,NULL,'2025-04-30 18:51:40','2025-04-30 18:51:40'),
+(4,'Gaming Laptops','gaming-laptops','active',1,NULL,'2025-04-30 18:51:40','2025-04-30 18:51:40'),
+(5,'Business Laptops','business-laptops','active',1,NULL,'2025-04-30 18:51:40','2025-04-30 18:51:40'),
+(6,'Android Phones','android-phones','active',2,NULL,'2025-04-30 18:51:40','2025-04-30 18:51:40'),
+(7,'iOS Phones','ios-phones','active',2,NULL,'2025-04-30 18:51:40','2025-04-30 18:51:40');
+/*!40000 ALTER TABLE `categories` ENABLE KEYS */;
+
+--
+-- Table structure for table `function`
+--
+
+DROP TABLE IF EXISTS `function`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `function` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `function`
+--
+
+/*!40000 ALTER TABLE `function` DISABLE KEYS */;
+INSERT INTO `function` VALUES
+(1,'dashboard'),
+(2,'user_management'),
+(3,'product_management'),
+(4,'category_management'),
+(5,'order_management'),
+(6,'inventory_management'),
+(7,'supplier_management'),
+(8,'import_management'),
+(9,'system_settings'),
+(10,'shopping_cart'),
+(11,'order_history'),
+(12,'product_review'),
+(13,'manage_profile'),
+(14,'sales_report'),
+(15,'inventory_report');
+/*!40000 ALTER TABLE `function` ENABLE KEYS */;
+
+--
+-- Table structure for table `import`
+--
+
+DROP TABLE IF EXISTS `import`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `import` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `suppiler_id` bigint unsigned NOT NULL,
+  `employee_id` bigint unsigned DEFAULT NULL,
+  `status` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `import_suppiler_id_foreign` (`suppiler_id`),
+  KEY `import_employee_id_foreign` (`employee_id`),
+  CONSTRAINT `import_employee_id_foreign` FOREIGN KEY (`employee_id`) REFERENCES `account` (`id`),
+  CONSTRAINT `import_suppiler_id_foreign` FOREIGN KEY (`suppiler_id`) REFERENCES `supplier` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `import`
+--
+
+/*!40000 ALTER TABLE `import` DISABLE KEYS */;
+INSERT INTO `import` VALUES
+(1,1,3,'completed','2025-03-01 19:05:11'),
+(2,2,2,'completed','2025-03-16 19:05:11'),
+(3,3,3,'completed','2025-03-31 19:05:11'),
+(4,4,2,'processing','2025-04-25 19:05:11'),
+(5,1,3,'pending','2025-04-28 19:05:11'),
+(6,5,2,'cancelled','2025-04-15 19:05:11');
+/*!40000 ALTER TABLE `import` ENABLE KEYS */;
+
+--
+-- Table structure for table `import_detail`
+--
+
+DROP TABLE IF EXISTS `import_detail`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `import_detail` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `import_id` bigint unsigned NOT NULL,
+  `product_id` bigint unsigned NOT NULL,
+  `import_price` int NOT NULL,
+  `amount` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `import_detail_import_id_foreign` (`import_id`),
+  KEY `import_detail_product_id_foreign` (`product_id`),
+  CONSTRAINT `import_detail_import_id_foreign` FOREIGN KEY (`import_id`) REFERENCES `import` (`id`),
+  CONSTRAINT `import_detail_product_id_foreign` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `import_detail`
+--
+
+/*!40000 ALTER TABLE `import_detail` DISABLE KEYS */;
+INSERT INTO `import_detail` VALUES
+(1,1,1,2800000,20),
+(2,1,2,1800000,30),
+(3,2,3,1000000,40),
+(4,2,4,1100000,45),
+(5,3,5,150000,60),
+(6,3,6,300000,50),
+(7,3,7,95000,70),
+(8,4,1,2750000,10),
+(9,4,3,980000,15),
+(10,5,4,1080000,20),
+(11,6,8,2100000,10);
+/*!40000 ALTER TABLE `import_detail` ENABLE KEYS */;
+
+--
+-- Table structure for table `jobs`
+--
+
+DROP TABLE IF EXISTS `jobs`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `jobs` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `queue` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `attempts` tinyint unsigned NOT NULL,
+  `reserved_at` int unsigned DEFAULT NULL,
+  `available_at` int unsigned NOT NULL,
+  `created_at` int unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `jobs_queue_index` (`queue`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `jobs`
+--
+
+/*!40000 ALTER TABLE `jobs` DISABLE KEYS */;
+/*!40000 ALTER TABLE `jobs` ENABLE KEYS */;
+
+--
+-- Table structure for table `migrations`
+--
+
+DROP TABLE IF EXISTS `migrations`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `migrations` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `batch` int NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `migrations`
+--
+
+/*!40000 ALTER TABLE `migrations` DISABLE KEYS */;
+INSERT INTO `migrations` VALUES
+(1,'2025_04_30_164941_create_rule_table',1),
+(2,'2025_04_30_164958_create_account_table',1),
+(3,'2025_04_30_165009_create_profile_table',1),
+(4,'2025_04_30_165025_create_address_table',1),
+(5,'2025_04_30_165025_create_category_table',1),
+(6,'2025_04_30_165025_create_order_table',1),
+(7,'2025_04_30_165025_create_product_table',1),
+(8,'2025_04_30_165025_create_product_variants_table',1),
+(9,'2025_04_30_165025_create_supplier_table',1),
+(10,'2025_04_30_165026_create_cart_table',1),
+(11,'2025_04_30_165026_create_order_detail_table',1),
+(12,'2025_04_30_165026_create_product_image_table',1),
+(13,'2025_04_30_165026_create_product_review_table',1),
+(14,'2025_04_30_165027_create_function_table',1),
+(15,'2025_04_30_165027_create_import_table',1),
+(16,'2025_04_30_165027_create_rule_function_table',1),
+(17,'2025_04_30_165027_create_warranty_table',1),
+(18,'2025_04_30_165028_create_import_detail_table',1),
+(19,'2025_04_30_173010_create_jobs_table',1),
+(20,'2025_04_30_174949_create_sessions_table',1),
+(21,'2025_04_30_175733_create_cache_table',1);
+/*!40000 ALTER TABLE `migrations` ENABLE KEYS */;
+
+drop table if exists `payment`;
+create table `payment` (
+    `id` int unsigned not null,
+    `description` varchar(255) not null,
+    primary key (`id`)
+);
+
+insert into `payment` values
+(1,'cash'),
+(2,'bank_transfer');
+--
+-- Table structure for table `order`
+--
+
+DROP TABLE IF EXISTS `order`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `order` (
+  `id` int unsigned NOT NULL,
+  `profile_id` bigint unsigned NOT NULL,
+  `status` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NOT NULL,
+  `payment_method` int unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `order_profile_id_foreign` (`profile_id`),
+  CONSTRAINT `order_profile_id_foreign` FOREIGN KEY (`profile_id`) REFERENCES `profile` (`id`),
+  key `order_payment_foreign` (`payment_method`),
+  CONSTRAINT `order_payment_foreign` FOREIGN KEY (`payment_method`) REFERENCES `payment` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `order`
+--
+
+/*!40000 ALTER TABLE `order` DISABLE KEYS */;
+INSERT INTO `order` VALUES
+(1,4,'completed','2025-03-31 19:03:20',1),
+(2,5,'completed','2025-04-05 19:03:20',2),
+(3,6,'completed','2025-04-10 19:03:20',2),
+(4,7,'processing','2025-04-25 19:03:20',1),
+(5,8,'processing','2025-04-27 19:03:20',2),
+(6,9,'pending','2025-04-29 19:03:20',2),
+(7,10,'cancelled','2025-04-15 19:03:20',1);
+/*!40000 ALTER TABLE `order` ENABLE KEYS */;
+
+--
+-- Table structure for table `order_detail`
+--
+
+DROP TABLE IF EXISTS `order_detail`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `order_detail` (
+  `id` int unsigned NOT NULL,
+  `order_id` int unsigned NOT NULL,
+  `product_variant_id` bigint unsigned NOT NULL,
+  `serial` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `order_detail_order_id_foreign` (`order_id`),
+  KEY `order_detail_product_variant_id_foreign` (`product_variant_id`),
+  CONSTRAINT `order_detail_order_id_foreign` FOREIGN KEY (`order_id`) REFERENCES `order` (`id`),
+  CONSTRAINT `order_detail_product_variant_id_foreign` FOREIGN KEY (`product_variant_id`) REFERENCES `product_variants` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `order_detail`
+--
+
+/*!40000 ALTER TABLE `order_detail` DISABLE KEYS */;
+INSERT INTO `order_detail` VALUES
+(1,1,1,1001),
+(2,1,11,5001),
+(3,2,3,2001),
+(4,3,7,4001),
+(5,3,9,6001),
+(6,3,10,7001),
+(7,4,5,3001),
+(8,5,2,1002),
+(9,6,4,2002),
+(10,7,8,4002);
+/*!40000 ALTER TABLE `order_detail` ENABLE KEYS */;
+
+--
+-- Table structure for table `product`
+--
+
+DROP TABLE IF EXISTS `product`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `product` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `sku` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `slug` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` text COLLATE utf8mb4_unicode_ci,
+  `category_id` bigint unsigned DEFAULT NULL,
+  `base_price` decimal(10,2) NOT NULL,
+  `base_original_price` decimal(10,2) DEFAULT NULL,
+  `status` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `specifications` json DEFAULT NULL,
+  `features` json DEFAULT NULL,
+  `meta_data` json DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `product_category_id_foreign` (`category_id`),
+  CONSTRAINT `product_category_id_foreign` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `product`
+--
+
+/*!40000 ALTER TABLE `product` DISABLE KEYS */;
+INSERT INTO `product` VALUES
+(1,'GP-X1','Gaming Pro X1','gaming-pro-x1','High-performance gaming laptop with RTX 4080 graphics',4,3199.99,3499.99,'active','\"{\\\"processor\\\":\\\"Intel Core i9 13900K\\\",\\\"graphics\\\":\\\"NVIDIA RTX 4080\\\",\\\"display\\\":\\\"17.3\\\\\\\" QHD 240Hz\\\",\\\"memory\\\":\\\"32GB DDR5\\\"}\"','\"[\\\"RGB Keyboard\\\",\\\"Thunderbolt 4\\\",\\\"Wi-Fi 6E\\\"]\"',NULL,'2025-03-31 18:58:42','2025-03-31 18:58:42'),
+(2,'BE-B5','Business Elite B5','business-elite-b5','Professional laptop for business users with enhanced security features',5,1999.99,2199.99,'active','\"{\\\"processor\\\":\\\"Intel Core i7 1270P\\\",\\\"graphics\\\":\\\"Intel Iris Xe\\\",\\\"display\\\":\\\"14\\\\\\\" FHD IPS\\\",\\\"memory\\\":\\\"16GB DDR5\\\"}\"','\"[\\\"Fingerprint Reader\\\",\\\"TPM 2.0\\\",\\\"Spill-resistant Keyboard\\\"]\"',NULL,'2025-04-02 18:58:42','2025-04-02 18:58:42'),
+(3,'GUS25','Galaxy Ultra S25','galaxy-ultra-s25','Latest flagship Android smartphone with 200MP camera',6,1199.99,1299.99,'active','\"{\\\"processor\\\":\\\"Snapdragon 8 Gen 3\\\",\\\"display\\\":\\\"6.8\\\\\\\" Dynamic AMOLED\\\",\\\"camera\\\":\\\"200MP + 50MP + 12MP\\\",\\\"battery\\\":\\\"5000mAh\\\"}\"','\"[\\\"S Pen Support\\\",\\\"IP68 Water Resistance\\\",\\\"45W Fast Charging\\\"]\"',NULL,'2025-04-10 18:58:42','2025-04-10 18:58:42'),
+(4,'IP16P','iPhone 16 Pro','iphone-16-pro','The most advanced iPhone ever with A18 bionic chip',7,1299.99,1399.99,'active','\"{\\\"processor\\\":\\\"A18 Bionic\\\",\\\"display\\\":\\\"6.1\\\\\\\" Super Retina XDR\\\",\\\"camera\\\":\\\"48MP + 12MP + 12MP\\\",\\\"battery\\\":\\\"Up to 23 hours video playback\\\"}\"','\"[\\\"Dynamic Island\\\",\\\"Always-On Display\\\",\\\"ProMotion Technology\\\"]\"',NULL,'2025-04-15 18:58:42','2025-04-15 18:58:42'),
+(5,'PWE','Pro Wireless Earbuds','pro-wireless-earbuds','Premium wireless earbuds with noise cancellation',3,179.99,199.99,'active','\"{\\\"battery\\\":\\\"Up to 8 hours\\\",\\\"connectivity\\\":\\\"Bluetooth 5.3\\\",\\\"driver\\\":\\\"11mm dynamic driver\\\"}\"','\"[\\\"Active Noise Cancellation\\\",\\\"Transparency Mode\\\",\\\"IPX4 Water Resistance\\\"]\"',NULL,'2025-04-20 18:58:42','2025-04-20 18:58:42'),
+(6,'SWS5','Smart Watch Series 5','smart-watch-series-5','Advanced smartwatch with health monitoring features',3,349.99,399.99,'active','\"{\\\"display\\\":\\\"1.4\\\\\\\" AMOLED\\\",\\\"sensors\\\":\\\"Heart rate, SpO2, ECG\\\",\\\"battery\\\":\\\"Up to 2 days\\\"}\"','\"[\\\"Sleep Tracking\\\",\\\"GPS\\\",\\\"5ATM Water Resistance\\\"]\"',NULL,'2025-04-25 18:58:42','2025-04-25 18:58:42'),
+(7,'GMP','Gaming Mouse Pro','gaming-mouse-pro','25,000 DPI gaming mouse with RGB lighting',3,99.99,129.99,'active','\"{\\\"sensor\\\":\\\"25,000 DPI optical\\\",\\\"buttons\\\":\\\"8 programmable buttons\\\",\\\"weight\\\":\\\"89g\\\"}\"','\"[\\\"RGB Lighting\\\",\\\"Onboard Memory\\\",\\\"PTFE Feet\\\"]\"',NULL,'2025-04-27 18:58:42','2025-04-27 18:58:42'),
+(8,'GSG7','Gaming Stealth G7','gaming-stealth-g7','Ultra-thin gaming laptop with powerful performance',4,2399.99,2599.99,'inactive','\"{\\\"processor\\\":\\\"AMD Ryzen 9 7900X\\\",\\\"graphics\\\":\\\"NVIDIA RTX 4070\\\",\\\"display\\\":\\\"15.6\\\\\\\" QHD 165Hz\\\",\\\"memory\\\":\\\"16GB DDR5\\\"}\"','\"[\\\"Slim Design\\\",\\\"Per-key RGB\\\",\\\"Advanced Cooling System\\\"]\"',NULL,'2025-03-01 18:58:42','2025-03-01 18:58:42');
+/*!40000 ALTER TABLE `product` ENABLE KEYS */;
+
+--
+-- Table structure for table `product_images`
+--
+
+DROP TABLE IF EXISTS `product_images`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `product_images` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `product_id` bigint unsigned NOT NULL,
+  `variant_id` bigint unsigned DEFAULT NULL,
+  `image_url` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `is_primary` tinyint(1) DEFAULT NULL,
+  `sort_order` int DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `product_images_product_id_foreign` (`product_id`),
+  KEY `product_images_variant_id_foreign` (`variant_id`),
+  CONSTRAINT `product_images_product_id_foreign` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`),
+  CONSTRAINT `product_images_variant_id_foreign` FOREIGN KEY (`variant_id`) REFERENCES `product_variants` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `product_images`
+--
+
+/*!40000 ALTER TABLE `product_images` DISABLE KEYS */;
+INSERT INTO `product_images` VALUES
+(1,1,NULL,'products/gaming_pro_x1_1.jpg',1,1,'2025-04-30 19:02:20'),
+(2,1,NULL,'products/gaming_pro_x1_2.jpg',0,2,'2025-04-30 19:02:20'),
+(3,2,NULL,'products/business_elite_b5_1.jpg',1,1,'2025-04-30 19:02:20'),
+(4,2,NULL,'products/business_elite_b5_2.jpg',0,2,'2025-04-30 19:02:20'),
+(5,3,NULL,'products/galaxy_ultra_s25_1.jpg',1,1,'2025-04-30 19:02:20'),
+(6,3,NULL,'products/galaxy_ultra_s25_2.jpg',0,2,'2025-04-30 19:02:20'),
+(7,4,NULL,'products/iphone_16_pro_1.jpg',1,1,'2025-04-30 19:02:20'),
+(8,4,NULL,'products/iphone_16_pro_2.jpg',0,2,'2025-04-30 19:02:20'),
+(9,5,NULL,'products/pro_wireless_earbuds_1.jpg',1,1,'2025-04-30 19:02:20'),
+(10,6,NULL,'products/smart_watch_series_5_1.jpg',1,1,'2025-04-30 19:02:20'),
+(11,7,NULL,'products/gaming_mouse_pro_1.jpg',1,1,'2025-04-30 19:02:20'),
+(12,8,NULL,'products/gaming_stealth_g7_1.jpg',1,1,'2025-04-30 19:02:20'),
+(13,3,5,'products/galaxy_ultra_s25_black.jpg',0,3,'2025-04-30 19:02:20'),
+(14,3,6,'products/galaxy_ultra_s25_silver.jpg',0,4,'2025-04-30 19:02:20');
+/*!40000 ALTER TABLE `product_images` ENABLE KEYS */;
+
+--
+-- Table structure for table `product_reviews`
+--
+
+DROP TABLE IF EXISTS `product_reviews`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `product_reviews` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `product_id` bigint unsigned NOT NULL,
+  `user_id` bigint unsigned DEFAULT NULL,
+  `rating` int NOT NULL,
+  `comment` text COLLATE utf8mb4_unicode_ci,
+  `status` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `meta_data` json DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `product_reviews_product_id_foreign` (`product_id`),
+  KEY `product_reviews_user_id_foreign` (`user_id`),
+  CONSTRAINT `product_reviews_product_id_foreign` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`),
+  CONSTRAINT `product_reviews_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `account` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `product_reviews`
+--
+
+/*!40000 ALTER TABLE `product_reviews` DISABLE KEYS */;
+INSERT INTO `product_reviews` VALUES
+(1,1,4,5,'This laptop exceeds all my gaming expectations. Graphics are incredible and games run smoothly even on high settings.','approved',NULL,'2025-04-02 19:17:32','2025-04-02 19:17:32'),
+(2,1,5,4,'Great performance but the laptop tends to get quite hot during extended gaming sessions.','approved',NULL,'2025-04-07 19:17:32','2025-04-07 19:17:32'),
+(3,2,5,5,'Battery life is exceptional and performance is smooth. Security features give me peace of mind.','approved',NULL,'2025-04-08 19:17:32','2025-04-08 19:17:32'),
+(4,3,6,5,'The 200MP camera is incredible. Photo quality is top-notch even in low light conditions.','approved',NULL,'2025-04-12 19:17:32','2025-04-12 19:17:32'),
+(5,4,6,5,'iOS runs flawlessly and the build quality is exceptional as always. Camera system is best in class.','approved',NULL,'2025-04-15 19:17:32','2025-04-15 19:17:32'),
+(6,4,7,4,'Overall great phone but battery life is slightly disappointing for the premium price.','approved',NULL,'2025-04-20 19:17:32','2025-04-20 19:17:32'),
+(7,5,8,5,'These earbuds have incredible sound quality and the noise cancellation works very well.','approved',NULL,'2025-04-22 19:17:32','2025-04-22 19:17:32'),
+(8,6,9,5,'The health tracking features are accurate and the battery lasts for days.','approved',NULL,'2025-04-25 19:17:32','2025-04-25 19:17:32'),
+(9,7,10,4,'This gaming mouse is extremely responsive and fits perfectly in my hand. RGB lighting is customizable.','approved',NULL,'2025-04-27 19:17:32','2025-04-27 19:17:32'),
+(10,2,7,3,'Good laptop but I expected better battery life for the price.','pending',NULL,'2025-04-29 19:17:32','2025-04-29 19:17:32');
+/*!40000 ALTER TABLE `product_reviews` ENABLE KEYS */;
+
+--
+-- Table structure for table `product_variants`
+--
+
+DROP TABLE IF EXISTS `product_variants`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `product_variants` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `product_id` bigint unsigned NOT NULL,
+  `sku` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `original_price` decimal(10,2) DEFAULT NULL,
+  `stock` int DEFAULT NULL,
+  `status` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `attributes` json NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `product_variants_product_id_foreign` (`product_id`),
+  CONSTRAINT `product_variants_product_id_foreign` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `product_variants`
+--
+
+/*!40000 ALTER TABLE `product_variants` DISABLE KEYS */;
+INSERT INTO `product_variants` VALUES
+(1,1,'GP-X1-4080-32-1TB',3299.99,3599.99,15,'active','\"{\\\"RAM\\\":\\\"32GB\\\",\\\"Storage\\\":\\\"1TB SSD\\\",\\\"Color\\\":\\\"Black\\\"}\"','2025-04-30 19:00:24','2025-04-30 19:00:24'),
+(2,1,'GP-X1-4080-64-2TB',3899.99,4199.99,10,'active','\"{\\\"RAM\\\":\\\"64GB\\\",\\\"Storage\\\":\\\"2TB SSD\\\",\\\"Color\\\":\\\"Black\\\"}\"','2025-04-30 19:00:24','2025-04-30 19:00:24'),
+(3,2,'BE-B5-i7-16-512',2199.99,2399.99,25,'active','\"{\\\"Processor\\\":\\\"i7\\\",\\\"RAM\\\":\\\"16GB\\\",\\\"Storage\\\":\\\"512GB SSD\\\",\\\"Color\\\":\\\"Silver\\\"}\"','2025-04-30 19:00:24','2025-04-30 19:00:24'),
+(4,2,'BE-B5-i9-32-1TB',2799.99,2999.99,15,'active','\"{\\\"Processor\\\":\\\"i9\\\",\\\"RAM\\\":\\\"32GB\\\",\\\"Storage\\\":\\\"1TB SSD\\\",\\\"Color\\\":\\\"Gray\\\"}\"','2025-04-30 19:00:24','2025-04-30 19:00:24'),
+(5,3,'GUS25-256-BLK',1299.99,1399.99,30,'active','\"{\\\"Storage\\\":\\\"256GB\\\",\\\"Color\\\":\\\"Black\\\"}\"','2025-04-30 19:00:24','2025-04-30 19:00:24'),
+(6,3,'GUS25-512-SLV',1499.99,1599.99,25,'active','\"{\\\"Storage\\\":\\\"512GB\\\",\\\"Color\\\":\\\"Silver\\\"}\"','2025-04-30 19:00:24','2025-04-30 19:00:24'),
+(7,4,'IP16P-256-MID',1399.99,1499.99,35,'active','\"{\\\"Storage\\\":\\\"256GB\\\",\\\"Color\\\":\\\"Midnight\\\"}\"','2025-04-30 19:00:24','2025-04-30 19:00:24'),
+(8,4,'IP16P-512-GLD',1699.99,1799.99,20,'active','\"{\\\"Storage\\\":\\\"512GB\\\",\\\"Color\\\":\\\"Gold\\\"}\"','2025-04-30 19:00:24','2025-04-30 19:00:24'),
+(9,5,'PWE-WHT',199.99,219.99,50,'active','\"{\\\"Color\\\":\\\"White\\\"}\"','2025-04-30 19:00:24','2025-04-30 19:00:24'),
+(10,6,'SWS5-BLK',399.99,429.99,40,'active','\"{\\\"Color\\\":\\\"Black\\\",\\\"Band\\\":\\\"Silicone\\\"}\"','2025-04-30 19:00:24','2025-04-30 19:00:24'),
+(11,7,'GMP-RGB',129.99,149.99,60,'active','\"{\\\"Color\\\":\\\"Black\\\",\\\"Connection\\\":\\\"Wireless\\\"}\"','2025-04-30 19:00:24','2025-04-30 19:00:24'),
+(12,8,'GSG7-4070-16-1TB',2499.99,2699.99,5,'inactive','\"{\\\"Graphics\\\":\\\"RTX 4070\\\",\\\"RAM\\\":\\\"16GB\\\",\\\"Storage\\\":\\\"1TB SSD\\\",\\\"Color\\\":\\\"Black\\\"}\"','2025-04-30 19:00:24','2025-04-30 19:00:24');
+/*!40000 ALTER TABLE `product_variants` ENABLE KEYS */;
+
+--
+-- Table structure for table `profile`
+--
+
+DROP TABLE IF EXISTS `profile`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `profile` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `fullname` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `phone_number` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `avatar` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `profile_id_foreign` FOREIGN KEY (`id`) REFERENCES `account` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `profile`
+--
+
+/*!40000 ALTER TABLE `profile` DISABLE KEYS */;
+INSERT INTO `profile` VALUES
+(1,'Admin User','0987654321','admin@example.com',NULL),
+(2,'Manager User','0987654322','manager@example.com',NULL),
+(3,'Employee One','0987654323','employee1@example.com',NULL),
+(4,'Customer 1','0987654324','customer1@example.com',NULL),
+(5,'Customer 2','0987654325','customer2@example.com',NULL),
+(6,'Customer 3','0987654326','customer3@example.com',NULL),
+(7,'Customer 4','0987654327','customer4@example.com',NULL),
+(8,'Customer 5','0987654328','customer5@example.com',NULL),
+(9,'Customer 6','0987654329','customer6@example.com',NULL),
+(10,'Customer 7','0987654330','customer7@example.com',NULL),
+(11,'Customer 8','0987654331','customer8@example.com',NULL),
+(12,'Customer 9','0987654332','customer9@example.com',NULL),
+(13,'Customer 10','0987654333','customer10@example.com',NULL);
+/*!40000 ALTER TABLE `profile` ENABLE KEYS */;
+
+--
+-- Table structure for table `rule`
+--
+
+DROP TABLE IF EXISTS `rule`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `rule` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` int DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `rule`
+--
+
+/*!40000 ALTER TABLE `rule` DISABLE KEYS */;
+INSERT INTO `rule` VALUES
+(1,'Admin',1),
+(2,'Manager',1),
+(3,'Employee',1),
+(4,'Customer',1);
+/*!40000 ALTER TABLE `rule` ENABLE KEYS */;
+
+--
+-- Table structure for table `rule_function`
+--
+
+DROP TABLE IF EXISTS `rule_function`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `rule_function` (
+  `rule_id` bigint unsigned NOT NULL,
+  `function_id` bigint unsigned NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`rule_id`,`function_id`),
+  KEY `rule_function_function_id_foreign` (`function_id`),
+  CONSTRAINT `rule_function_function_id_foreign` FOREIGN KEY (`function_id`) REFERENCES `function` (`id`),
+  CONSTRAINT `rule_function_rule_id_foreign` FOREIGN KEY (`rule_id`) REFERENCES `rule` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `rule_function`
+--
+
+/*!40000 ALTER TABLE `rule_function` DISABLE KEYS */;
+INSERT INTO `rule_function` VALUES
+(1,1,'Admin permission for function #1'),
+(1,2,'Admin permission for function #2'),
+(1,3,'Admin permission for function #3'),
+(1,4,'Admin permission for function #4'),
+(1,5,'Admin permission for function #5'),
+(1,6,'Admin permission for function #6'),
+(1,7,'Admin permission for function #7'),
+(1,8,'Admin permission for function #8'),
+(1,9,'Admin permission for function #9'),
+(1,10,'Admin permission for function #10'),
+(1,11,'Admin permission for function #11'),
+(1,12,'Admin permission for function #12'),
+(1,13,'Admin permission for function #13'),
+(1,14,'Admin permission for function #14'),
+(1,15,'Admin permission for function #15'),
+(2,1,'Manager permission for function #1'),
+(2,2,'Manager permission for function #2'),
+(2,3,'Manager permission for function #3'),
+(2,4,'Manager permission for function #4'),
+(2,5,'Manager permission for function #5'),
+(2,6,'Manager permission for function #6'),
+(2,7,'Manager permission for function #7'),
+(2,8,'Manager permission for function #8'),
+(2,14,'Manager permission for sales report'),
+(2,15,'Manager permission for inventory report'),
+(3,1,'Employee permission for dashboard'),
+(3,5,'Employee permission for order management'),
+(3,6,'Employee permission for inventory management'),
+(3,8,'Employee permission for import management'),
+(4,10,'Customer permission for shopping cart'),
+(4,11,'Customer permission for order history'),
+(4,12,'Customer permission for product review'),
+(4,13,'Customer permission for profile management');
+/*!40000 ALTER TABLE `rule_function` ENABLE KEYS */;
+
+--
+-- Table structure for table `sessions`
+--
+
+DROP TABLE IF EXISTS `sessions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sessions` (
+  `id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `user_id` bigint unsigned DEFAULT NULL,
+  `ip_address` varchar(45) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `user_agent` text COLLATE utf8mb4_unicode_ci,
+  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `last_activity` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `sessions_user_id_index` (`user_id`),
+  KEY `sessions_last_activity_index` (`last_activity`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `sessions`
+--
+
+/*!40000 ALTER TABLE `sessions` DISABLE KEYS */;
+/*!40000 ALTER TABLE `sessions` ENABLE KEYS */;
+
+--
+-- Table structure for table `supplier`
+--
+
+DROP TABLE IF EXISTS `supplier`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `supplier` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tax` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `contact_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `phone_number` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `supplier`
+--
+
+/*!40000 ALTER TABLE `supplier` DISABLE KEYS */;
+INSERT INTO `supplier` VALUES
+(1,'Tech Solutions Inc.','1234567890','John Smith','0123456789','contact@techsolutions.com','active','2025-04-30 18:56:42'),
+(2,'Global Electronics','2345678901','Jane Doe','0987654321','contact@globalelectronics.com','active','2025-04-30 18:56:42'),
+(3,'Digital World','3456789012','Tom Wilson','0123498765','contact@digitalworld.com','active','2025-04-30 18:56:42'),
+(4,'Smart Gadgets Co.','4567890123','Alice Brown','0123789456','contact@smartgadgets.com','active','2025-04-30 18:56:42'),
+(5,'Future Tech','5678901234','Robert Johnson','0456789123','contact@futuretech.com','inactive','2025-03-30 18:56:42');
+/*!40000 ALTER TABLE `supplier` ENABLE KEYS */;
+
+--
+-- Table structure for table `warranty`
+--
+
+DROP TABLE IF EXISTS `warranty`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `warranty` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `product_id` int unsigned NOT NULL,
+  `supplier_id` bigint unsigned NOT NULL,
+  `issue_date` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `expiration_date` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `note` text COLLATE utf8mb4_unicode_ci,
+  PRIMARY KEY (`id`),
+  KEY `warranty_product_id_foreign` (`product_id`),
+  KEY `warranty_supplier_id_foreign` (`supplier_id`),
+  CONSTRAINT `warranty_product_id_foreign` FOREIGN KEY (`product_id`) REFERENCES `order_detail` (`id`),
+  CONSTRAINT `warranty_supplier_id_foreign` FOREIGN KEY (`supplier_id`) REFERENCES `supplier` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `warranty`
+--
+
+/*!40000 ALTER TABLE `warranty` DISABLE KEYS */;
+INSERT INTO `warranty` VALUES
+(1,1,1,'2025-03-31','2026-03-31','active','Standard 12-month warranty for gaming laptop'),
+(2,3,2,'2025-04-05','2027-04-05','active','Extended 24-month warranty for business laptop'),
+(3,4,3,'2025-04-10','2026-04-10','active','Premium 12-month warranty for smartphone'),
+(4,6,4,'2025-04-10','2025-10-10','active','Standard 6-month warranty for smartwatch'),
+(5,2,1,'2023-04-30','2023-07-30','expired','Standard 3-month warranty for gaming accessories');
+/*!40000 ALTER TABLE `warranty` ENABLE KEYS */;
+
+--
+-- Dumping routines for database 'web2_be_2'
+--
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*M!100616 SET NOTE_VERBOSITY=@OLD_NOTE_VERBOSITY */;
+
+-- Dump completed on 2025-05-01  2:21:48
