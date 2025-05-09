@@ -21,8 +21,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Payment extends Model
 {
-    public $incrementing = false;
-    protected $keyType = 'int';
+    // public $incrementing = false;
+    // protected $keyType = 'int';
 	protected $table = 'payment';
 	public $timestamps = false;
 

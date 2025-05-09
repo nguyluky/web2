@@ -26,8 +26,8 @@ use Illuminate\Database\Eloquent\Model;
 class OrderDetail extends Model
 {
 	protected $table = 'order_detail';
-    public $incrementing = true;
-    protected $keyType = 'bigint';
+    // public $incrementing = true;
+    // protected $keyType = 'bigint';
 	public $timestamps = false;
 
 	protected $casts = [

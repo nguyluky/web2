@@ -95,22 +95,20 @@ class OrderController extends Controller
                 'profile_id' => $validated['profile_id'],
                 'status' => 'pending',
                 'payment_method' => $validated['payment_method'],
-                'created_at' => Carbon::now(),
-                'id' => Order::max('id') + 1,
+                'created_at' => Carbon::now()
             ];
 
             $order = Order::create($order_data);
 
             foreach($validated['products'] as $product) {
                 $order_detail = [
-                    'id' => OrderDetail::max('id') + 1,
                     'order_id' => $order->id,
                     'product_variant_id' => $product['product_variant_id'],
                     'serial' => rand(),
                 ];
                 OrderDetail::create($order_detail);
             }
-            return response()->json(['order' => $order], 201);
+            return response()->json(['Successfully create orders' => $order], 201);
         });
     }
 
