@@ -44,7 +44,7 @@
 **Parameters:** `page`, `limit`, `sort`  
 **Response:** Danh sách đánh giá và thống kê rating
 
-#### 2.2. Thêm đánh giá sản phẩm ✅  
+#### 2.2. Thêm đánh giá sản phẩm ✅ (tested) 
 
 **Endpoint:** `POST /api/products/:id/reviews`  
 **Request:** Rating, nội dung, hình ảnh  
