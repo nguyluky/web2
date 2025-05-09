@@ -27,18 +27,36 @@ class Accounts extends Controller
     //8.2 Tạo tài khoản
     public function create(Request $request)
     {
-        $validated = $request->validate([
-            'username' => 'required|string|max:256', 
-            'password' => 'required|string|max:256', 
-            'rule' => 'required|integer|exists:rule,id',
-        ]);
-
-        $account = Account::create($validated);
-
-        return response()->json([
-            'message' => 'Tạo tài khoản thành công',
-            'data' => $account
-        ], 201);
+        try {
+            $validated = $request->validate([
+                'username' => 'required|string|max:256|unique:account,username',
+                'password' => 'required|string|max:256',
+                'rule' => 'required|integer|exists:rule,id',
+                'status' => 'required|in:active,hidden',
+            ]);
+    
+            $validated['password'] = bcrypt($validated['password']);
+            $validated['created'] = now(); // Gán giá trị hiện tại cho created
+            $validated['updated'] = now(); // Gán giá trị hiện tại cho updated
+    
+            $account = Account::create($validated);
+    
+            return response()->json([
+                'message' => 'Tạo tài khoản thành công',
+                'data' => $account
+            ], 201);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'error' => 'Validation failed',
+                'message' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            \Log::error('Lỗi tạo tài khoản: ' . $e->getMessage());
+            return response()->json([
+                'error' => 'Không thể tạo tài khoản',
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
 
     //8.3 lấy thông tin tài khoản theo id
@@ -102,4 +120,10 @@ class Accounts extends Controller
             'message' => 'Xóa tài khoản thành công'
         ]);
     }
+    //8.6 Kiểm tra tài khoản đã tồn tại hay chưa
+            public function checkUsername($username)
+        {
+            $exists = Account::where('username', $username)->exists();
+            return response()->json(['exists' => $exists]);
+        }
 }
