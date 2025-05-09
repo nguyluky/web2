@@ -11,16 +11,18 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Payment
- * 
+ *
  * @property int $id
  * @property string $description
- * 
+ *
  * @property Collection|Order[] $orders
  *
  * @package App\Models
  */
 class Payment extends Model
 {
+    // public $incrementing = false;
+    // protected $keyType = 'int';
 	protected $table = 'payment';
 	public $timestamps = false;
 

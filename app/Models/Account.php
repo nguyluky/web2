@@ -8,8 +8,9 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable; // Import Authenticatable
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
 /**
  * Class Account
@@ -29,7 +30,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  *
  * @package App\Models
  */
-class Account extends Model
+class Account extends Authenticatable implements JWTSubject
 {
 	use SoftDeletes;
 	protected $table = 'account';
@@ -72,5 +73,16 @@ class Account extends Model
 	public function profile()
 	{
 		return $this->hasOne(Profile::class, 'id');
+	}
+
+	// Add the required methods for JWTSubject
+	public function getJWTIdentifier()
+	{
+		return $this->getKey(); // Return the primary key of the user
+	}
+
+	public function getJWTCustomClaims()
+	{
+		return []; // Add any custom claims if needed
 	}
 }
