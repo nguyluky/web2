@@ -148,7 +148,7 @@ Route::prefix('admin')->group(function () {
 Route::controller(ProductController::class)->group(function () {
     Route::get('/products/search', 'searchProduct');
     Route::get('/products/new', 'getNewProduct');
-    Route::get('/products/{id}', 'getById');
+    Route::get('/products/{id}', 'getById')->where('id', '[0-9]+');
     Route::get('/categories/{id}/products', 'getByCategory');
     // Route::get('/products', 'getAll');
 });
@@ -206,6 +206,8 @@ Route::controller(AccountController::class)->group(function () {
 Route::controller(CategoryController::class)->group(function () {
     Route::get('/categories', 'getAll');
     Route::get('/categories/{id}/filter', 'getFilter');
+    Route::get('/categories/{id}', 'getById');
+    // Route::get('/categories/{id}/products', 'getProductsByCategory');
 });
 
 Route::get('/', function () {
