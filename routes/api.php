@@ -138,6 +138,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/users/search', 'search');
         Route::put('/users/{id}', 'update');
         Route::delete('/users/{id}', 'delete');
+        Route::get('/check-email/{email}', 'checkEmail');
     });
 });
 // import detail
@@ -227,5 +228,6 @@ Route::prefix('admin')->group(function () {
     Route::controller(Accounts::class)->group(function () {
         Route::get('/check-username/{username}', 'checkUsername');
     });
+
 });
 
