@@ -131,4 +131,11 @@ class Profiles extends Controller
                 ], 500);
             }
         }
+
+        // Kiểm tra email đã tồn tại hay chưa
+        public function checkEmail($email)
+        {
+            $exists = Profile::where('email', $email)->exists();
+            return response()->json(['exists' => $exists]);
+        }
 }

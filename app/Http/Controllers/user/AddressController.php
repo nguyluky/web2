@@ -15,12 +15,24 @@ class AddressController extends Controller {
         }
 
         $validated = $request->validate([
-            'phone_number' => 'required|string|max:255',
-            'street' => 'required|string|max:255',
-            'district' => 'required|string|max:255',
-            'ward' => 'required|string|max:255',
-            'city' => 'required|string|max:255',
+            'phone_number' => ['required', 'string', 'regex:/^(02|03|05|07|08|09)\d{8}$/'],
+            'street' => ['required', 'string', 'regex:/^[\pL\s\d\-.,]+$/u', 'max:255'],
+            'district' => ['required', 'string', 'regex:/^[\pL\s\d\-.,]+$/u', 'max:255'],
+            'ward' => ['required', 'string', 'regex:/^[\pL\s\d\-.,]+$/u', 'max:255'],
+            'city' => ['required', 'string', 'regex:/^[\pL\s\d\-.,]+$/u', 'max:255']
         ]);
+
+        $existingAddress = Address::where('profile_id', $user->id)
+            ->where('phone_number', $validated['phone_number'])
+            ->where('street', $validated['street'])
+            ->where('district', $validated['district'])
+            ->where('ward', $validated['ward'])
+            ->where('city', $validated['city'])
+            ->first();
+
+        if ($existingAddress) {
+            return response()->json(['error' => 'Address already exists'], 400);
+        }
 
         $address = Address::create([
             'profile_id' => $user->id,
@@ -65,12 +77,24 @@ class AddressController extends Controller {
         }
 
         $validated = $request->validate([
-            'phone_number' => 'required|string|max:255',
-            'street' => 'required|string|max:255',
-            'district' => 'required|string|max:255',
-            'ward' => 'required|string|max:255',
-            'city' => 'required|string|max:255',
+            'phone_number' => ['required', 'string', 'regex:/^(02|03|05|07|08|09)\d{8}$/'],
+            'street' => ['required', 'string', 'regex:/^[\pL\s\d\-.,]+$/u', 'max:255'],
+            'district' => ['required', 'string', 'regex:/^[\pL\s\d\-.,]+$/u', 'max:255'],
+            'ward' => ['required', 'string', 'regex:/^[\pL\s\d\-.,]+$/u', 'max:255'],
+            'city' => ['required', 'string', 'regex:/^[\pL\s\d\-.,]+$/u', 'max:255']
         ]);
+
+        $existingAddress = Address::where('profile_id', $user->id)
+            ->where('phone_number', $validated['phone_number'])
+            ->where('street', $validated['street'])
+            ->where('district', $validated['district'])
+            ->where('ward', $validated['ward'])
+            ->where('city', $validated['city'])
+            ->first();
+
+        if ($existingAddress) {
+            return response()->json(['error' => 'Address already exists'], 400);
+        }
 
         $address->update($validated);
         return response()->json($address, 200);

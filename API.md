@@ -52,24 +52,24 @@
 
 ### 3. Giỏ hàng & Thanh toán
 
-#### 3.1. Thêm sản phẩm vào giỏ hàng (not tested yet)
+#### 3.1. Thêm sản phẩm vào giỏ hàng ✅ (tested)
 
 **Endpoint:** `POST /api/cart`  
 **Request:** ID sản phẩm, số lượng, biến thể  
 **Response:** Thông tin giỏ hàng cập nhật
 
-#### 3.2. Lấy thông tin giỏ hàng ⚠️ - Nghi ngờ bị sai ở phần tham số truyền vào
+#### 3.2. Lấy thông tin giỏ hàng ✅ (tested)
 
 **Endpoint:** `GET /api/cart`  
 **Response:** Chi tiết giỏ hàng hiện tại
 
-#### 3.3. Cập nhật sản phẩm trong giỏ hàng ⚠️ - Nghi ngờ bị sai ở phần tham số truyền vào
+#### 3.3. Cập nhật sản phẩm trong giỏ hàng ✅  (tested)
 
 **Endpoint:** `PUT /api/cart/:itemId`  
 **Request:** Số lượng mới  
 **Response:** Thông tin giỏ hàng cập nhật
 
-#### 3.4. Xóa sản phẩm khỏi giỏ hàng ⚠️ - Nghi ngờ bị sai ở phần tham số truyền vào
+#### 3.4. Xóa sản phẩm khỏi giỏ hàng ✅  (tested)
 
 **Endpoint:** `DELETE /api/cart/:itemId`  
 **Response:** Thông tin giỏ hàng cập nhật
@@ -150,16 +150,16 @@
 
 #### 5.1. Lấy danh sách đơn hàng của người dùng ✅
 
-**Endpoint:** `GET /api/users/orders`  
+**Endpoint:** `GET /api/user/orders`  
 **Parameters:** `page`, `limit`, [status](vscode-file://vscode-app/opt/visual-studio-code/resources/app/out/vs/code/electron-sandbox/workbench/workbench.html)  
 **Response:** Danh sách đơn hàng
 
-#### 5.2. Lấy chi tiết đơn hàng ✅
+#### 5.2. Lấy chi tiết đơn hàng ✅ (tested)
 
 **Endpoint:** `GET /api/orders/:id`  
 **Response:** Chi tiết đơn hàng
 
-#### 5.3. Hủy đơn hàng ✅
+#### 5.3. Hủy đơn hàng ✅ (tested)
 
 **Endpoint:** `PUT /api/orders/:id/cancel`  
 **Request:** Lý do hủy  
@@ -181,24 +181,24 @@
 
 ### 7. Địa chỉ giao hàng
 
-#### 7.1. Thêm địa chỉ mới
+#### 7.1. Thêm địa chỉ mới ✅ (tested)
 
 **Endpoint:** `POST /api/users/addresses`  
 **Request:** Thông tin địa chỉ  
 **Response:** Địa chỉ đã thêm
 
-#### 7.2. Lấy danh sách địa chỉ
+#### 7.2. Lấy danh sách địa chỉ ✅ (tested)
 
 **Endpoint:** `GET /api/users/addresses`  
 **Response:** Danh sách địa chỉ của người dùng
 
-#### 7.3. Cập nhật địa chỉ
+#### 7.3. Cập nhật địa chỉ ✅ (tested)
 
 **Endpoint:** `PUT /api/users/addresses/:id`  
 **Request:** Thông tin cần cập nhật  
 **Response:** Địa chỉ đã cập nhật
 
-#### 7.4. Xóa địa chỉ
+#### 7.4. Xóa địa chỉ ✅ (tested)
 
 **Endpoint:** `DELETE /api/users/addresses/:id`  
 **Response:** Thông báo thành công

@@ -64,7 +64,9 @@ Route::prefix('admin')->group(function () {
     Route::controller(Suppliers::class)->group(function () {
         Route::post('/suppliers', 'create');
         Route::get('/suppliers', 'getAll');
+        Route::get('/suppliers/search', 'search');
         Route::get('/suppliers/{id}', 'getById');
+        Route::get('/suppliers/check/{data}', 'checkData');
         Route::put('/suppliers/{id}', 'update');
         Route::delete('/suppliers/{id}', 'delete');
     });
@@ -117,9 +119,9 @@ Route::prefix('admin')->group(function () {
     Route::controller(Rules::class)->group(function () {
         Route::post('/rules', 'create');
         Route::get('/rules', 'getAll');
-        Route::get('/rules/{id}', 'getById');
         Route::put('/rules/{id}', 'update');
         Route::delete('/rules/{id}', 'delete');
+        Route::get('/rules/search', 'search');
     });
 });
 
@@ -138,6 +140,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/users/search', 'search');
         Route::put('/users/{id}', 'update');
         Route::delete('/users/{id}', 'delete');
+        Route::get('/check-email/{email}', 'checkEmail');
     });
 });
 // import detail
@@ -179,7 +182,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::controller(OrderController::class)->group(function () {
         // order
         Route::post('/orders', 'createOrders');
-        Route::get('/user/orders', 'getUserOrders');
+        Route::get('/users/orders', 'getUserOrders');
         Route::get('/orders/{id}', 'getOrderDetail');
         Route::put('/orders/{id}/cancel', 'cancelOrder');
     });
@@ -227,5 +230,6 @@ Route::prefix('admin')->group(function () {
     Route::controller(Accounts::class)->group(function () {
         Route::get('/check-username/{username}', 'checkUsername');
     });
+
 });
 
