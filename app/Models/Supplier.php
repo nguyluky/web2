@@ -38,7 +38,8 @@ class Supplier extends Model
 		'contact_name',
 		'phone_number',
 		'email',
-		'status'
+		'status',
+		'created_at'
 	];
 
 	public function imports()

@@ -64,7 +64,9 @@ Route::prefix('admin')->group(function () {
     Route::controller(Suppliers::class)->group(function () {
         Route::post('/suppliers', 'create');
         Route::get('/suppliers', 'getAll');
+        Route::get('/suppliers/search', 'search');
         Route::get('/suppliers/{id}', 'getById');
+        Route::get('/suppliers/check/{data}', 'checkData');
         Route::put('/suppliers/{id}', 'update');
         Route::delete('/suppliers/{id}', 'delete');
     });
