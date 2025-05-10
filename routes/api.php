@@ -42,7 +42,7 @@ Route::prefix('admin')->group(function () {
     Route::controller(Categorys::class)->group(function () {
         Route::post('/categories', 'create');
         Route::get('/categories', 'getAll');
-        Route::get('/categories/{id}', 'getById');
+        Route::get('/categories/search', 'search');
         Route::put('/categories/{id}', 'update');
         Route::delete('/categories/{id}', 'delete');
     });

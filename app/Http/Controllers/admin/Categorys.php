@@ -5,6 +5,7 @@ namespace App\Http\Controllers\admin;
 use Illuminate\Routing\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class Categorys extends Controller
 {
@@ -13,6 +14,7 @@ class Categorys extends Controller
     {
         $limit = $request->query('limit', 10);
         $query = Category::query();
+        $query->where('parent_id', NULL);
         $categorys = $query->paginate($limit);
         return response()->json([
             'message' => 'Lấy danh sách thành công',
@@ -20,37 +22,64 @@ class Categorys extends Controller
             'limit' => $limit
         ]);
     }
+
+
     //2.2 . Thêm danh mục sản phẩm
     public function create(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:45', 
-        ]);
+        try {
+            $validated = $request->validate([
+                'name' => 'required|string|max:45|unique:categories,name',
+                'status' => 'required|in:active,hidden',
+            ]);
 
-        $category = Category::create($validated);
+            $validated['parent_id'] = NULL;
+            $validated['slug'] = Str::slug($validated['name']); // Tạo slug
+            $validated['require_fields'] = NULL;
 
-        return response()->json([
-            'message' => 'Tạo thành công',
-            'data' => $category
-        ], 201);
-    }
+            $category = Category::create($validated);
 
-    public function getById(Request $request, $id)
-    {
-
-        $category = Category::find($id);
-
-        // Kiểm tra xem sản phẩm có tồn tại không
-        if (!$category) {
             return response()->json([
-                'message' => 'Không tìm thấy'
-            ], 404);
+                'message' => 'Tạo danh mục thành công',
+                'data' => $category
+            ], 201);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'error' => 'Validation failed',
+                'message' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            \Log::error('Lỗi tạo danh mục: ' . $e->getMessage());
+            return response()->json([
+                'error' => 'Không thể tạo danh mục',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+    //2.2.1. Tìm kiếm danh mục sản phẩm
+    public function search(Request $request)
+    {
+        $query = Category::query();
+
+        // Tìm kiếm theo tên danh mục
+        if ($request->has('name') && !empty($request->input('name'))) {
+            $query->where('name', 'like', '%' . $request->input('name') . '%');
         }
 
+        $query->where('parent_id', NULL);
+
+        if ($request->has('status') && $request->input('status') !== 'all') {
+            $query->where('status', $request->input('status'));
+        }
+
+        // Phân trang
+        $perPage = $request->input('per_page', 10); // Mặc định 10 bản ghi mỗi trang
+        $categorys = $query->paginate($perPage);
+
         return response()->json([
-            'message' => 'Lấy thành công',
-            'data' => $category
-        ]);
+            'message' => 'Tìm kiếm thành công',
+            'data' => $categorys
+        ], 200);
     }
     //2.3. Cập nhật danh mục sản phẩm
     public function update(Request $request, $id)
@@ -66,6 +95,7 @@ class Categorys extends Controller
 
         $validated = $request->validate([
             'name' => 'required|string|max:45', 
+            'status' => 'required|in:active,hidden',
         ]);
 
         $category->update($validated);

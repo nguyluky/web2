@@ -45,6 +45,8 @@ class Category extends Model
 		'require_fields'
 	];
 
+	public $timestamps = true; // Sử dụng created_at và updated_at
+
 	public function category()
 	{
 		return $this->belongsTo(Category::class, 'parent_id');
