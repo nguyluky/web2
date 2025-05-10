@@ -117,9 +117,9 @@ Route::prefix('admin')->group(function () {
     Route::controller(Rules::class)->group(function () {
         Route::post('/rules', 'create');
         Route::get('/rules', 'getAll');
-        Route::get('/rules/{id}', 'getById');
         Route::put('/rules/{id}', 'update');
         Route::delete('/rules/{id}', 'delete');
+        Route::get('/rules/search', 'search');
     });
 });
 
