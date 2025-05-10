@@ -5,6 +5,7 @@ namespace App\Http\Controllers\user;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Models\Category;
 use OpenApi\Annotations as OA;
 
 class ProductController extends Controller
@@ -59,12 +60,12 @@ class ProductController extends Controller
         $query = $request->input('query');
         $limit = $request->input('limit', 10);
         $sort = $request->input('sort', 'created_at_desc');
-        $cagory_id = $request->input('category_id');
+        $category_id = $request->input('category');
         $min_price = $request->input('min_price');
         $max_price = $request->input('max_price');
 
         // take the rest of the filters
-        $filters_raw = $request->except(['query', 'limit', 'sort', 'min_price', 'max_price']);
+        $filters_raw = $request->except(['query', 'limit', 'sort', 'min_price', 'max_price', 'category']);
         $filters = array_filter($filters_raw, function ($value) {
             return !is_null($value) && $value !== '';
         });
@@ -79,6 +80,17 @@ class ProductController extends Controller
         
         if ($query) {
             $productsQuery->where('name', 'like', "%$query%");
+        }
+
+        \Log::info("Filters: $category_id");
+
+        // Apply category filter
+        // get pruducts by category id and subcategory id
+        if ($category_id) {
+            $subcategories = Category::where('parent_id', $category_id)->pluck('id')->toArray();
+            $categoryIds = array_merge([$category_id], $subcategories);
+
+            $productsQuery->whereIn('category_id', $categoryIds);
         }
         
         // Fetch all potential products first (before applying specification filters)
@@ -127,46 +139,39 @@ class ProductController extends Controller
             }
             
             // Now create a new query with only the matching product IDs
-            $query = Product::whereIn('id', $matchingProductIds);
-        } else {
-            // If no specification filters, just use the original query
-            $query = $productsQuery;
-        }
-        
+            $productsQuery = $productsQuery->whereIn('id', $matchingProductIds);
+        }        
+
         // Apply price filters
         if ($min_price) {
-            $query->where('base_price', '>=', $min_price);
+            $productsQuery->where('base_price', '>=', $min_price);
         }
 
-        // Apply category filter
-        if ($cagory_id) {
-            $query->where('category_id', $cagory_id);
-        }
         
         if ($max_price) {
-            $query->where('base_price', '<=', $max_price);
+            $productsQuery->where('base_price', '<=', $max_price);
         }
         
         // Apply sorting
         switch ($sort) {
             case 'price_asc':
-                $query->orderBy('base_price', 'asc');
+                $productsQuery->orderBy('base_price', 'asc');
                 break;
             case 'price_desc':
-                $query->orderBy('base_price', 'desc');
+                $productsQuery->orderBy('base_price', 'desc');
                 break;
             case 'created_at_asc':
-                $query->orderBy('created_at', 'asc');
+                $productsQuery->orderBy('created_at', 'asc');
                 break;
             default:
-                $query->orderBy('created_at', 'desc');
+                $productsQuery->orderBy('created_at', 'desc');
         }
         
-        // Make sure we load relationships
-        $query->with(['product_images', 'product_variants']);
+        // // Make sure we load relationships
+        $productsQuery->with(['product_images', 'product_variants']);
         
         // Paginate results
-        $results = $query->paginate($limit);
+        $results = $productsQuery->paginate($limit);
         $results->appends($request->all());
         
         return response()->json($results);
