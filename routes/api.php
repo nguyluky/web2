@@ -16,7 +16,7 @@ use App\Http\Controllers\admin\Categorys;
 use App\Http\Controllers\admin\Orders;
 use App\Http\Controllers\admin\Suppliers;
 use App\Http\Controllers\admin\Warrantys;
-use App\Http\Controllers\admin\Statisticals;
+use App\Http\Controllers\admin\Statistical;
 use App\Http\Controllers\admin\Accounts;
 use App\Http\Controllers\admin\Rules;
 use App\Http\Controllers\user\CategoryController;
@@ -64,7 +64,9 @@ Route::prefix('admin')->group(function () {
     Route::controller(Suppliers::class)->group(function () {
         Route::post('/suppliers', 'create');
         Route::get('/suppliers', 'getAll');
+        Route::get('/suppliers/search', 'search');
         Route::get('/suppliers/{id}', 'getById');
+        Route::get('/suppliers/check/{data}', 'checkData');
         Route::put('/suppliers/{id}', 'update');
         Route::delete('/suppliers/{id}', 'delete');
     });
@@ -180,7 +182,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::controller(OrderController::class)->group(function () {
         // order
         Route::post('/orders', 'createOrders');
-        Route::get('/user/orders', 'getUserOrders');
+        Route::get('/users/orders', 'getUserOrders');
         Route::get('/orders/{id}', 'getOrderDetail');
         Route::put('/orders/{id}/cancel', 'cancelOrder');
     });

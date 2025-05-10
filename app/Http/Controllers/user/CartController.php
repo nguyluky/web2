@@ -76,19 +76,22 @@ class CartController extends Controller
 
         $validated['profile_id'] = $user->profile->id;
 
-        $cart = Cart::where('profile_id', $user->profile->id)
-                    ->where('product_variant_id', $request->product_variant_id)
+        $cart = Cart::where('profile_id', $validated['profile_id'])
+                    ->where('product_variant_id', $validated['product_variant_id'])
                     ->first();
 
         if (!$cart) {
             $cart = Cart::create($validated);
         } else {
-
-            Cart::where('profile_id', $user->profile->id)
-                ->where('product_variant_id', $request->product_variant_id)
-                ->update(['amount' => $cart->amount + $request->amount]);
+            Cart::where('profile_id', $validated['profile_id'])
+            ->where('product_variant_id', $validated['product_variant_id'])
+            ->update(['amount' => $cart->amount + $validated['amount']]);
         }
 
+        // Return the updated or newly created cart
+        $cart = Cart::where('profile_id', $validated['profile_id'])
+                    ->where('product_variant_id', $validated['product_variant_id'])
+                    ->first();
         return response()->json(['cart' => $cart], 201);
         // return response()->json(['cart' => "hello"], 201);
     }
@@ -154,7 +157,7 @@ class CartController extends Controller
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
-        $cart = Cart::with(['productVariant.product'])->where('profile_id', $user->profile->id)->get();
+        $cart = Cart::with(['product_variant.product'])->where('profile_id', $user->profile->id)->get();
 
         return response()->json(['carts' => $cart]);
     }

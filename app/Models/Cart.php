@@ -33,6 +33,8 @@ class Cart extends Model
 	];
 
 	protected $fillable = [
+		'product_variant_id',
+		'profile_id',
 		'amount'
 	];
 

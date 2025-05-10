@@ -71,10 +71,14 @@ class Suppliers extends Controller
             'email' => 'required|string|email|max:45', // Email, phải đúng định dạng email
             'status' => 'required|in:active,inactive', // Giả sử các giá trị ENUM
         ]);
-
+        $validated['created_at'] = now();
+        
         // Tạo nhà cung cấp mới
         $supplier = Supplier::create($validated);
-
+        return response()->json([
+            'message' => 'Test',
+            'data' => $validated
+        ], 201);
         return response()->json([
             'message' => 'Tạo nhà cung cấp thành công',
             'data' => $supplier
@@ -117,8 +121,8 @@ class Suppliers extends Controller
             'name' => 'required|string|max:45', // Tên nhà cung cấp, tối đa 45 ký tự
             'tax' => 'required|string|max:45', // Mã số thuế, tối đa 45 ký tự
             'contact_name' => 'required|string|max:45', // Tên người liên hệ, tối đa 45 ký tự
-            'phone_number' => 'required|string|max:45|regex:/^[0-9\+]+$/u', // Số điện thoại, chỉ chứa số và dấu +
-            'email' => 'required|string|email|max:45', // Email, phải đúng định dạng email
+            'phone_number' => 'required|string|max:45|regex:/^[0-9\+]+$/|unique:supplier,phone_number,' . $id, // Số điện thoại, chỉ chứa số và dấu +
+            'email' => 'required|string|email|max:45|unique:supplier,email,' . $id, // Email, phải đúng định dạng email
             'status' => 'required|in:active,inactive', // Giả sử các giá trị ENUM
         ]);
 
@@ -151,4 +155,42 @@ class Suppliers extends Controller
         ]);
     }
 
+    public function search(Request $request)
+    {
+        try {
+            $query = Supplier::query();
+            // Tìm kiếm theo name, phone_number, email, created_at
+            if ($request->filled('keyword')){
+                $keyword = $request->input('keyword');
+                $query->where(function ($q) use ($keyword) {
+                    $q->where('name', 'like', "%$keyword%")
+                      ->orWhere('phone_number', 'like', "%$keyword%")
+                      ->orWhere('email', 'like', "%$keyword%")
+                      ->orWhere('created_at', 'like', "%$keyword%");
+                    });
+            }
+            // Phân trang
+            $perPage = $request->input('per_page', 10); // Mặc định 10 bản ghi mỗi trang
+            $suppliers = $query->paginate($perPage);
+            return response()->json([
+                'message' => 'Tìm kiếm thành công',
+                'data' => $suppliers
+            ], 200);
+        } catch (\Exception $e) {
+            \Log::error('Lỗi khi tìm kiếm nhà cung cấp: ' . $e->getMessage());
+            return response()->json([
+                'error' => 'Không thể tìm kiếm nhà cung cấp',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function checkData($data)
+    {
+        $existsByEmail = Supplier::where('email', $data)->exists();
+        $existsByPhone = Supplier::where('phone_number', $data)->exists();
+        if ($existsByEmail || $existsByPhone) 
+            return response()->json(['exists' => true]);
+        return response()->json(['exists' => false]);
+    }
 }
