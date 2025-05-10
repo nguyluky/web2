@@ -117,9 +117,9 @@ Route::prefix('admin')->group(function () {
     Route::controller(Rules::class)->group(function () {
         Route::post('/rules', 'create');
         Route::get('/rules', 'getAll');
-        Route::get('/rules/{id}', 'getById');
         Route::put('/rules/{id}', 'update');
         Route::delete('/rules/{id}', 'delete');
+        Route::get('/rules/search', 'search');
     });
 });
 
@@ -138,6 +138,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/users/search', 'search');
         Route::put('/users/{id}', 'update');
         Route::delete('/users/{id}', 'delete');
+        Route::get('/check-email/{email}', 'checkEmail');
     });
 });
 // import detail
@@ -155,7 +156,7 @@ Route::prefix('admin')->group(function () {
 Route::controller(ProductController::class)->group(function () {
     Route::get('/products/search', 'searchProduct');
     Route::get('/products/new', 'getNewProduct');
-    Route::get('/products/{id}', 'getById');
+    Route::get('/products/{id}', 'getById')->where('id', '[0-9]+');
     Route::get('/categories/{id}/products', 'getByCategory');
     // Route::get('/products', 'getAll');
 });
@@ -211,6 +212,9 @@ Route::controller(AccountController::class)->group(function () {
 // category
 Route::controller(CategoryController::class)->group(function () {
     Route::get('/categories', 'getAll');
+    Route::get('/categories/{id}/filter', 'getFilter');
+    Route::get('/categories/{id}', 'getById');
+    // Route::get('/categories/{id}/products', 'getProductsByCategory');
 });
 
 Route::get('/', function () {
@@ -224,5 +228,6 @@ Route::prefix('admin')->group(function () {
     Route::controller(Accounts::class)->group(function () {
         Route::get('/check-username/{username}', 'checkUsername');
     });
+
 });
 
