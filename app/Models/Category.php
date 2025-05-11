@@ -42,7 +42,10 @@ class Category extends Model
 		'slug',
 		'status',
 		'parent_id',
-		'require_fields'
+		'require_fields',
+        'description',
+        'small_image',
+        'large_image'
 	];
 
 	public $timestamps = true; // Sử dụng created_at và updated_at

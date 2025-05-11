@@ -63,9 +63,10 @@ class ProductController extends Controller
         $category_id = $request->input('category');
         $min_price = $request->input('min_price');
         $max_price = $request->input('max_price');
+        $page = $request->input('page', 1);
 
         // take the rest of the filters
-        $filters_raw = $request->except(['query', 'limit', 'sort', 'min_price', 'max_price', 'category']);
+        $filters_raw = $request->except(['query', 'limit', 'sort', 'min_price', 'max_price', 'category', 'page']);
         $filters = array_filter($filters_raw, function ($value) {
             return !is_null($value) && $value !== '';
         });
@@ -171,7 +172,7 @@ class ProductController extends Controller
         $productsQuery->with(['product_images', 'product_variants']);
         
         // Paginate results
-        $results = $productsQuery->paginate($limit);
+        $results = $productsQuery->paginate($limit, ['*'], 'page', $page);
         $results->appends($request->all());
         
         return response()->json($results);
