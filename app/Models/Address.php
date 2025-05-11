@@ -14,10 +14,12 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property int $profile_id
  * @property string $phone_number
+ * @property string $email
+ * @property string $name
  * @property string|null $street
  * @property string|null $ward
  * @property string|null $district
- * @property string|null $city
+ * @property string|null $cit
  * 
  * @property Profile $profile
  *
@@ -35,6 +37,8 @@ class Address extends Model
 	protected $fillable = [
 		'profile_id',
 		'phone_number',
+        'email',
+        'name',
 		'street',
 		'ward',
 		'district',

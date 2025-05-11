@@ -18,6 +18,9 @@ return new class extends Migration
             $table->string('status')->nullable();
             $table->unsignedBigInteger('parent_id')->nullable();
             $table->json('require_fields')->nullable();
+            $table->text('description')->nullable();
+            $table->string('small_image')->nullable();
+            $table->string('large_image')->nullable();
             $table->timestamps();
             
             $table->foreign('parent_id')->references('id')->on('categories');
