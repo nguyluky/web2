@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $profile_id
  * @property string $status
  * @property Carbon $created_at
- * @property int $payment_method
+ * @property string $payment_method
  * 
  * @property Payment $payment
  * @property Profile $profile
@@ -34,7 +34,7 @@ class Order extends Model
 
 	protected $casts = [
 		'profile_id' => 'int',
-		'payment_method' => 'int'
+		'payment_method' => 'string'
 	];
 
 	protected $fillable = [
