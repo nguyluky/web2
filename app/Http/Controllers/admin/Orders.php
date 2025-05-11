@@ -22,12 +22,18 @@ class Orders extends Controller
         $date_start = $request->query('date_start');
         $date_end = $request->query('date_end');
         $limit = $request->query('limit', 10);
-        
+    
         $query = Order::query();
+    
+        // Tìm kiếm
         if ($search) {
-            $query->where('id', 'like', '%' . $search . '%')
-                ->orWhere('payment_method', 'like', '%' . $search . '%');
+            $query->where(function ($q) use ($search) {
+                $q->where('id', 'like', '%' . $search . '%')
+                  ->orWhere('payment_method', 'like', '%' . $search . '%');
+            });
         }
+    
+        // Lọc theo các trường
         if ($account_id) {
             $query->where('account_id', $account_id);
         }
@@ -37,32 +43,38 @@ class Orders extends Controller
         if ($status) {
             $query->where('status', $status);
         }
+    
+        // Xử lý lọc theo ngày
         if ($date_start && $date_end) {
-            $query->whereBetween('created_at', [$date_start, $date_end]);
+            if ($date_start === $date_end) {
+                // Lọc đúng trong 1 ngày
+                $query->whereBetween('created_at', [
+                    $date_start . ' 00:00:00',
+                    $date_end . ' 23:59:59'
+                ]);
+            } else {
+                // Khoảng nhiều ngày
+                $query->whereBetween('created_at', [
+                    $date_start . ' 00:00:00',
+                    $date_end . ' 23:59:59'
+                ]);
+            }
+        } elseif ($date_start && !$date_end) {
+            $query->where('created_at', '>=', $date_start . ' 00:00:00');
+        } elseif (!$date_start && $date_end) {
+            $query->where('created_at', '<=', $date_end . ' 23:59:59');
         }
-        if ($date_start && !$date_end) {
-            $query->where('created_at', '>=', $date_start);
-        }
-        if (!$date_start && $date_end) {
-            $query->where('created_at', '<=', $date_end);
-        }
-
+    
+        // Phân trang và trả về kết quả
         $orders = $query->paginate($limit);
-        $orders->appends([
-            'search' => $search,
-            'account_id' => $account_id,
-            'employee_id' => $employee_id,
-            'status' => $status,
-            'date_start' => $date_start,
-            'date_end' => $date_end,
-            'limit' => $limit
-        ]);
-
+        $orders->appends($request->all());
+    
         return response()->json([
             'message' => 'Lấy danh sách đơn hàng thành công',
             'data' => $orders
         ]);
     }
+    
 
     public function getById(Request $request, $id)
     {
