@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\ImportDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Routing\Controller;
 
-class StatisticsController extends Controller
+class Statistical extends Controller
 {
     protected function getDateFormat($type, $column, $asAlias = true)
     {

@@ -15,11 +15,13 @@ return new class extends Migration
             $table->unsignedBigInteger('id')->autoIncrement(); // Change to bigint
             $table->unsignedBigInteger('profile_id');
             $table->string('status');
-            $table->timestamp('created_at');
             $table->unsignedBigInteger('payment_method');
+            $table->unsignedBigInteger('address_id');
+            $table->timestamps();
 
             $table->foreign('profile_id')->references('id')->on('profile');
-            $table->foreign('payment_method')->references('id')->on('payment');
+            // $table->foreign('payment_method')->references('id')->on('payment');
+            $table->foreign('address_id')->references('id')->on('address');
         });
     }
 
