@@ -183,6 +183,32 @@ class Warrantys extends Controller
             if ($request->has('status') && $request->input('status') !== 'all') {
                     $query->where('status', $request->input('status'));
             }
+            // Lọc theo khoảng thời gian
+            if ($request->filled('date_start') && $request->filled('date_end')) {
+                $start = $request->input('date_start');
+                $end = $request->input('date_end');
+            
+                $query->where(function ($q) use ($start, $end) {
+                    $q->whereBetween('issue_date', [$start, $end])
+                      ->orWhereBetween('expiration_date', [$start, $end]);
+                });
+            
+            } elseif ($request->filled('date_start')) {
+                $start = $request->input('date_start');
+            
+                $query->where(function ($q) use ($start) {
+                    $q->where('issue_date', '>=', $start)
+                      ->orWhere('expiration_date', '>=', $start);
+                });
+            
+            } elseif ($request->filled('date_end')) {
+                $end = $request->input('date_end');
+            
+                $query->where(function ($q) use ($end) {
+                    $q->where('issue_date', '<=', $end)
+                      ->orWhere('expiration_date', '<=', $end);
+                });
+            }
             // Phân trang
             $perPage = $request->input('per_page', 10); // Mặc định 10 bản ghi mỗi trang
             $warranties = $query->paginate($perPage);
