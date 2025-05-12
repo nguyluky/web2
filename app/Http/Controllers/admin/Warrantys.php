@@ -128,12 +128,9 @@ class Warrantys extends Controller
 
         // Validate dữ liệu đầu vào
         $validated = $request->validate([
-            'account_id' => 'sometimes|required|integer|exists:accounts,id',
-            'product_id' => 'sometimes|required|integer|exists:products,id', 
-            'supplier_id' => 'sometimes|required|integer|exists:suppliers,id', 
-            'issue_date' => 'sometimes|required|date_format:Y-m-d',
-            'expiration_date' => 'sometimes|required|date_format:Y-m-d|after_or_equal:issue_date',
-            'status' => 'sometimes|required|in:pending,approved,rejected',
+            'issue_date' => 'sometimes|date_format:Y-m-d',
+            'expiration_date' => 'sometimes|date_format:Y-m-d|after_or_equal:issue_date',
+            'status' => 'sometimes|in:active,expired',
             'note' => 'nullable|string',
         ]);
 
@@ -164,5 +161,41 @@ class Warrantys extends Controller
         return response()->json([
             'message' => 'Xóa bảo hành thành công'
         ]);
+    }
+
+    public function search(Request $request)
+    {
+        try {
+            $query = Warranty::query();
+            if ($request->filled('keyword')) {
+                $keyword = $request->input('keyword');
+            
+                $query->where(function ($q) use ($keyword) {
+                    $q->whereHas('order_detail', function ($q1) use ($keyword) {
+                        $q1->where('serial', 'like', "%$keyword%");
+                    })
+                    ->orWhereHas('order_detail.product_variant.product', function ($q2) use ($keyword) {
+                        $q2->where('name', 'like', "%$keyword%");
+                    });
+                });
+            }
+            // Lọc theo status
+            if ($request->has('status') && $request->input('status') !== 'all') {
+                    $query->where('status', $request->input('status'));
+            }
+            // Phân trang
+            $perPage = $request->input('per_page', 10); // Mặc định 10 bản ghi mỗi trang
+            $warranties = $query->paginate($perPage);
+            return response()->json([
+                'message' => 'Tìm kiếm thành công',
+                'data' => $warranties
+            ], 200);
+        } catch (\Exception $e) {
+            \Log::error('Lỗi khi tìm kiếm bảo hành: ' . $e->getMessage());
+            return response()->json([
+                'error' => 'Không thể tìm kiếm bảo hành',
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
 }
