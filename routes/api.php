@@ -22,6 +22,7 @@ use App\Http\Controllers\admin\Accounts;
 use App\Http\Controllers\admin\Rules;
 use App\Http\Controllers\user\CategoryController;
 use App\Http\Controllers\user\ProfileController;
+
 use OpenApi\Annotations as OA;
 
 // products
@@ -167,7 +168,7 @@ Route::prefix('admin')->group(function () {
 Route::controller(ProductController::class)->group(function () {
     Route::get('/products/search', 'searchProduct');
     Route::get('/products/new', 'getNewProduct');
-    Route::get('/products/{id}', 'getById')->where('id', '[0-9]+');
+    Route::get('/products/{id}', 'getById');
     Route::get('/categories/{id}/products', 'getByCategory');
     // Route::get('/products', 'getAll');
 });

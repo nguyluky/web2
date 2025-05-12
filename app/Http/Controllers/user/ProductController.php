@@ -15,7 +15,10 @@ class ProductController extends Controller
 
         // get product by id including variants and images and category and reviews, sell count, and user reviews
         $product = Product::with(['product_variants', 'product_images'])
-            ->where('id', $id)
+            ->where(function($query) use ($id) {
+                $query->where('id', $id)
+                      ->orWhere('slug', $id);
+            })
             ->with(['category'])
             ->with(['product_reviews'])
             ->with(['product_reviews.account.profile'])

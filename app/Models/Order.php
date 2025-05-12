@@ -17,9 +17,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $profile_id
  * @property string $status
  * @property Carbon $created_at
- * @property int $payment_method
+ * @property string $payment_method
+ * @property int $address_id
  * 
- * @property Payment $payment
  * @property Profile $profile
  * @property Collection|OrderDetail[] $order_details
  *
@@ -30,23 +30,25 @@ class Order extends Model
 	protected $table = 'order';
     // public $incrementing = true;
     // protected $keyType = 'bigint';
-	public $timestamps = false;
+	// public $timestamps = false;
 
 	protected $casts = [
 		'profile_id' => 'int',
-		'payment_method' => 'int'
+		'payment_method' => 'string',
+        'address_id' => 'int'
 	];
 
 	protected $fillable = [
 		'profile_id',
 		'status',
-		'payment_method'
+		'payment_method',
+        'address_id'
 	];
 
-	public function payment()
-	{
-		return $this->belongsTo(Payment::class, 'payment_method');
-	}
+	// public function payment()
+	// {
+	// 	return $this->belongsTo(Payment::class, 'payment_method');
+	// }
 
 	public function profile()
 	{
@@ -57,4 +59,10 @@ class Order extends Model
 	{
 		return $this->hasMany(OrderDetail::class);
 	}
+
+    public function address()
+    {
+        return $this->belongsTo(Address::class, 'address_id');
+    }
+    
 }

@@ -19,7 +19,9 @@ class AddressController extends Controller {
             'street' => ['required', 'string', 'regex:/^[\pL\s\d\-.,]+$/u', 'max:255'],
             'district' => ['required', 'string', 'regex:/^[\pL\s\d\-.,]+$/u', 'max:255'],
             'ward' => ['required', 'string', 'regex:/^[\pL\s\d\-.,]+$/u', 'max:255'],
-            'city' => ['required', 'string', 'regex:/^[\pL\s\d\-.,]+$/u', 'max:255']
+            'city' => ['required', 'string', 'regex:/^[\pL\s\d\-.,]+$/u', 'max:255'],
+            'name' => ['required', 'string', 'regex:/^[\pL\s\d\-.,]+$/u', 'max:255'],
+            'email' => ['required', 'email', 'max:255']
         ]);
 
         $existingAddress = Address::where('profile_id', $user->id)
@@ -40,7 +42,9 @@ class AddressController extends Controller {
             'street' => $validated['street'],
             'district' => $validated['district'],
             'ward' => $validated['ward'],
-            'city' => $validated['city']
+            'city' => $validated['city'],
+            'name' => $validated['name'],
+            'email' => $validated['email'],
         ]);
 
         return response()->json($address, 201);
