@@ -11,13 +11,10 @@ class ProductVariants extends Controller
 
     public function getAll(Request $request)
     {
-        $limit = $request->query('limit', 10);
-        $query = ProductVariant::query();
-        $product_variants = $query->paginate($limit);
+        $query = ProductVariant::query()->get();
         return response()->json([
             'message' => 'Lấy danh sách thành công',
-            'data' => $product_variants,
-            'limit' => $limit
+            'data' => $query
         ]);
     }
 }

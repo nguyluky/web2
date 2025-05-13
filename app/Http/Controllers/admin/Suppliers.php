@@ -169,6 +169,10 @@ class Suppliers extends Controller
                       ->orWhere('created_at', 'like', "%$keyword%");
                     });
             }
+            // Lọc theo status
+            if ($request->has('status') && $request->input('status') !== 'all') {
+                    $query->where('status', $request->input('status'));
+            }
             // Phân trang
             $perPage = $request->input('per_page', 10); // Mặc định 10 bản ghi mỗi trang
             $suppliers = $query->paginate($perPage);
