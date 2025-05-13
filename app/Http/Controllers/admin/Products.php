@@ -627,24 +627,26 @@ class Products extends Controller
         ]);
     }
 
-        public function search(Request $request)
+    public function search(Request $request)
     {
         try {
             $query = Product::query();
+
             if ($request->filled('keyword')) {
                 $keyword = $request->input('keyword');
             
                 $query->where(function ($q) use ($keyword) {
                     $q->where('name', 'like', "%$keyword%")
-                      ->orWhere('base_original', 'like', "%$keyword%")
-                    ->orWhereHas('category', function ($q1) use ($keyword) {
-                        $q1->where('name', 'like', "%$keyword%");
-                    })
-                    ->orWhereHas('product_variant', function ($q2) use ($keyword) {
-                        $q2->where('stock', 'like', "%$keyword%");
-                    });
+                      ->orWhere('base_original_price', 'like', "%$keyword%")
+                      ->orWhereHas('product_variants', function ($q2) use ($keyword) {
+                          $q2->whereRaw("CAST(stock AS CHAR) LIKE ?", ["%$keyword%"]);
+                      })
+                      ->orWhereHas('category', function ($q3) use ($keyword) {
+                          $q3->where('name', 'like', "%$keyword%");
+                      });
                 });
             }
+
             // Lọc theo status
             if ($request->has('status') && $request->input('status') !== 'all') {
                     $query->where('status', $request->input('status'));
