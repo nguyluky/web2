@@ -627,4 +627,57 @@ class Products extends Controller
         ]);
     }
 
+        public function search(Request $request)
+    {
+        try {
+            $query = Product::query();
+            if ($request->filled('keyword')) {
+                $keyword = $request->input('keyword');
+            
+                $query->where(function ($q) use ($keyword) {
+                    $q->where('name', 'like', "%$keyword%")
+                      ->orWhere('base_original', 'like', "%$keyword%")
+                    ->orWhereHas('category', function ($q1) use ($keyword) {
+                        $q1->where('name', 'like', "%$keyword%");
+                    })
+                    ->orWhereHas('product_variant', function ($q2) use ($keyword) {
+                        $q2->where('stock', 'like', "%$keyword%");
+                    });
+                });
+            }
+            // Lọc theo status
+            if ($request->has('status') && $request->input('status') !== 'all') {
+                    $query->where('status', $request->input('status'));
+            }
+            // Lọc theo khoảng thời gian
+            if ($request->filled('date_start') && $request->filled('date_end')) {
+                $start = $request->input('date_start');
+                $end = $request->input('date_end');
+            
+                $query->whereBetween('created_at', [$start, $end]);
+            
+            } elseif ($request->filled('date_start')) {
+                $start = $request->input('date_start');
+                $query->where('created_at', '>=', $start);
+            
+            } elseif ($request->filled('date_end')) {
+                $end = $request->input('date_end');
+                $query->where('created_at', '<=', $end);
+            }
+
+            // Phân trang
+            $perPage = $request->input('per_page', 10); // Mặc định 10 bản ghi mỗi trang
+            $warranties = $query->paginate($perPage);
+            return response()->json([
+                'message' => 'Tìm kiếm thành công',
+                'data' => $warranties
+            ], 200);
+        } catch (\Exception $e) {
+            \Log::error('Lỗi khi tìm kiếm sản phẩm: ' . $e->getMessage());
+            return response()->json([
+                'error' => 'Không thể tìm kiếm sản phẩm',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
 }
