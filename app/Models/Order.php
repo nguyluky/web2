@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $status
  * @property Carbon $created_at
  * @property string $payment_method
+ * @property int $address_id
  * 
  * @property Payment $payment
  * @property Profile $profile
