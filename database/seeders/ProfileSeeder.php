@@ -40,14 +40,14 @@ class ProfileSeeder extends Seeder
         ]);
 
         // Customer profiles
-        for ($i = 4; $i <= 13; $i++) {
-            Profile::create([
-                'id' => $i, // Same as account_id
-                'fullname' => 'Customer ' . ($i - 3),
-                'phone_number' => '09876543' . str_pad($i + 20, 2, '0', STR_PAD_LEFT),
-                'email' => 'customer' . ($i - 3) . '@example.com',
-                'avatar' => null
-            ]);
-        }
+       for ($i = 4; $i <= 13; $i++) {
+           Profile::create([
+               'id' => $i, // Same as account_id
+               'fullname' => 'Customer ' . ($i - 3),
+               'phone_number' => '09876543' . str_pad($i + 20, 2, '0', STR_PAD_LEFT),
+               'email' => 'customer' . ($i - 3) . '@example.com',
+               'avatar' => null
+           ]);
+       }
     }
 }

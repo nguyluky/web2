@@ -250,36 +250,58 @@ class OrderController extends Controller
      *     )
      * )
      */
-    public function buyNow(Request $request) {
-        $validated = $request->validate([
-            'profile_id' => 'required|integer|exists:profile,id',
-            'products.*.product_variant_id' => 'required|integer|exists:product_variants,id',
-            'payment_method' => 'required|integer|exists:payment,id',
-            'products' => 'required|array',
-        ]);
+    // public function buyNow(Request $request) {
+    //      $user = auth()->user();
+    //      if (!$user) {
+    //          return response()->json(['error' => 'Unauthorized'], 401);
+    //      }
 
-        DB::transaction(function () use ($validated) {
-            $order_data = [
-                'profile_id' => $validated['profile_id'],
-                'status' => 'pending',
-                'payment_method' => $validated['payment_method'],
-                'created_at' => Carbon::now(),
-                'id' => Order::max('id') + 1,
-            ];
+    //      $validated = $request->validate([
+    //         'profile_id' => 'required|integer|exists:profile,id',
+    //         'products.*.product_variant_id' => 'required|integer|exists:product_variants,id',
+    //         'payment_method' => 'required|integer|exists:payment,id',
+    //         'products' => 'required|array',
+    //      ]);
+    //     
+            // if ($validated['payment_method'] == 1) {
+            //     return response()->json(['message' => 'User choose to pay in cash'], 200);
+            // }
 
-            $order = Order::create($order_data);
+    //     $order = DB::transaction(function () use ($validated) {
+    //         $order_data = [
+    //             'profile_id' => $validated['profile_id'],
+    //             'status' => 'pending',
+    //             'payment_method' => $validated['payment_method'],
+    //             'created_at' => Carbon::now()
+    //         ];
 
-            foreach($validated['products'] as $product) {
-                OrderDetail::create([
-                    'order_id' => $order->id,
-                    'product_variant_id' => $product['product_variant_id'],
-                    'serial' => rand(),
-                ]);
-            }
-            return response()->json(['order' => $order], 201);
-        });
-    }
+    //         $order = Order::create($order_data);
 
+    //         foreach($validated['products'] as $product) {
+    //             OrderDetail::create([
+    //                 'order_id' => $order->id,
+    //                 'product_variant_id' => $product['product_variant_id'],
+    //                 'serial' => rand(),
+    //             ]);
+    //         }
+            
+    //         return $order;
+    //     });
+
+    //     // Generate payment URL (this would depend on your payment gateway)
+    //     $paymentUrl = $this->generatePaymentUrl($order);
+        
+    //     return response()->json([
+    //         'order' => $order,
+    //         'payment_url' => $paymentUrl
+    //     ], 201);
+    // }
+
+    // // This method would need to be implemented based on your payment provider
+    // private function generatePaymentUrl($order) {
+    //     // Example implementation
+    //     return url("/payment/process/{$order->id}");
+    // }
     /**
      * @OA\Get(
      *     path="/api/user/orders",

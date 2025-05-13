@@ -18,7 +18,7 @@
 **Endpoint:** `GET /api/categories`  
 **Response:** Danh sách các danh mục sản phẩm
 
-#### 1.4. Lấy sản phẩm nổi bật
+#### 1.4. Lấy sản phẩm nổi bật (Removed)
 
 **Endpoint:** `GET /api/products/featured`  
 **Parameters:** `limit`  
@@ -97,7 +97,7 @@
 **Request:** Sản phẩm, địa chỉ giao hàng  
 **Response:** Chi phí vận chuyển, thời gian dự kiến
 
-#### 3.9. Mua ngay sản phẩm
+#### 3.9. Mua ngay sản phẩm  ✅ 
 
 **Endpoint:** `POST /api/checkout/buy-now`  
 **Request:** Thông tin sản phẩm, số lượng, biến thể  
@@ -148,7 +148,7 @@
 
 ### 5. Quản lý đơn hàng
 
-#### 5.1. Lấy danh sách đơn hàng của người dùng ✅
+#### 5.1. Lấy danh sách đơn hàng của người dùng ✅ (tested)
 
 **Endpoint:** `GET /api/user/orders`  
 **Parameters:** `page`, `limit`, [status](vscode-file://vscode-app/opt/visual-studio-code/resources/app/out/vs/code/electron-sandbox/workbench/workbench.html)  

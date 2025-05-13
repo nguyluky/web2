@@ -182,9 +182,10 @@ Route::middleware(['auth:api'])->group(function () {
     Route::controller(OrderController::class)->group(function () {
         // order
         Route::post('/orders', 'createOrders');
-        Route::get('/users/orders', 'getUserOrders');
+        Route::get('/user/orders', 'getUserOrders');
         Route::get('/orders/{id}', 'getOrderDetail');
         Route::put('/orders/{id}/cancel', 'cancelOrder');
+        Route::post('/checkout/buy-now', 'buyNow');
     });
 
     Route::controller(AddressController::class)->group(function () {
