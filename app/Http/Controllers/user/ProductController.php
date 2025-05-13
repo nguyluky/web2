@@ -15,7 +15,10 @@ class ProductController extends Controller
 
         // get product by id including variants and images and category and reviews, sell count, and user reviews
         $product = Product::with(['product_variants', 'product_images'])
-            ->where('id', $id)
+            ->where(function($query) use ($id) {
+                $query->where('id', $id)
+                      ->orWhere('slug', $id);
+            })
             ->with(['category'])
             ->with(['product_reviews'])
             ->with(['product_reviews.account.profile'])
@@ -63,9 +66,10 @@ class ProductController extends Controller
         $category_id = $request->input('category');
         $min_price = $request->input('min_price');
         $max_price = $request->input('max_price');
+        $page = $request->input('page', 1);
 
         // take the rest of the filters
-        $filters_raw = $request->except(['query', 'limit', 'sort', 'min_price', 'max_price', 'category']);
+        $filters_raw = $request->except(['query', 'limit', 'sort', 'min_price', 'max_price', 'category', 'page']);
         $filters = array_filter($filters_raw, function ($value) {
             return !is_null($value) && $value !== '';
         });
@@ -171,7 +175,7 @@ class ProductController extends Controller
         $productsQuery->with(['product_images', 'product_variants']);
         
         // Paginate results
-        $results = $productsQuery->paginate($limit);
+        $results = $productsQuery->paginate($limit, ['*'], 'page', $page);
         $results->appends($request->all());
         
         return response()->json($results);

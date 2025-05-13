@@ -20,9 +20,9 @@ class Imports extends Controller
 
         $query = Import::query();
         if ($search) {
-            $query->where('id', 'like', '%' . $search . '%')
-                ->orWhere('supplier_id', 'like', '%' . $search . '%')
-                ->orWhere('employee_id', 'like', '%' . $search . '%');     
+            $query->where(function ($q) use ($search) {
+                $q->where('id', 'like', '%' . $search . '%');
+            });
         }
         if ($supplier_id) {
             $query->where('supplier_id', $supplier_id);
@@ -30,17 +30,25 @@ class Imports extends Controller
         if ($employee_id) {
             $query->where('employee_id', $employee_id);
         }
-        // if ($status) {
-        //     $query->where('status', $status);
-        // }
+        // Xử lý lọc theo ngày
         if ($date_start && $date_end) {
-            $query->whereBetween('created_at', [$date_start, $date_end]);
-        }
-        if ($date_start && !$date_end) {
-            $query->where('created_at', '>=', $date_start);
-        }
-        if (!$date_start && $date_end) {
-            $query->where('created_at', '<=', $date_end);
+            if ($date_start === $date_end) {
+                // Lọc đúng trong 1 ngày
+                $query->whereBetween('created_at', [
+                    $date_start . ' 00:00:00',
+                    $date_end . ' 23:59:59'
+                ]);
+            } else {
+                // Khoảng nhiều ngày
+                $query->whereBetween('created_at', [
+                    $date_start . ' 00:00:00',
+                    $date_end . ' 23:59:59'
+                ]);
+            }
+        } elseif ($date_start && !$date_end) {
+            $query->where('created_at', '>=', $date_start . ' 00:00:00');
+        } elseif (!$date_start && $date_end) {
+            $query->where('created_at', '<=', $date_end . ' 23:59:59');
         }
 
         $imports = $query->paginate($limit);
@@ -97,7 +105,8 @@ class Imports extends Controller
         ]);
     }
 
-    //5.4. Cập nhật trạng thái phiếu nhập hàng
+
+    // 5.4. Cập nhật trạng thái phiếu nhập hàng giống với đơn hàng
     public function updateStatus(Request $request, $id)
     {
         // Tìm phiếu nhập hàng theo ID
@@ -111,11 +120,7 @@ class Imports extends Controller
         }
 
         // Cập nhật trạng thái phiếu nhập hàng
-        $validated = $request->validate([
-            'status' => 'required|in:pending,completed,cancelled', // Giả sử các giá trị trạng thái
-        ]);
-
-        $import->update($validated);
+        $import->update($request->only('status'));
 
         return response()->json([
             'message' => 'Cập nhật trạng thái phiếu nhập hàng thành công',

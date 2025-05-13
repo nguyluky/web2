@@ -14,6 +14,7 @@ use App\Http\Controllers\admin\Profiles;
 use App\Http\Controllers\admin\ImportDetails;
 use App\Http\Controllers\admin\Categorys;
 use App\Http\Controllers\admin\Orders;
+use App\Http\Controllers\admin\OrderDetails;
 use App\Http\Controllers\admin\Suppliers;
 use App\Http\Controllers\admin\Warrantys;
 use App\Http\Controllers\admin\Statistical;
@@ -21,6 +22,7 @@ use App\Http\Controllers\admin\Accounts;
 use App\Http\Controllers\admin\Rules;
 use App\Http\Controllers\user\CategoryController;
 use App\Http\Controllers\user\ProfileController;
+
 use OpenApi\Annotations as OA;
 
 // products
@@ -59,6 +61,13 @@ Route::prefix('admin')->group(function () {
     });
 });
 
+// orderDetails
+Route::prefix('admin')->group(function () {
+    Route::controller(OrderDetails::class)->group(function () {
+        Route::get('/order/detail', 'getAll');
+    });
+});
+
 // suppliers
 Route::prefix('admin')->group(function () {
     Route::controller(Suppliers::class)->group(function () {
@@ -88,6 +97,7 @@ Route::prefix('admin')->group(function () {
     Route::controller(Warrantys::class)->group(function () {
         Route::post('/warrantys', 'create');
         Route::get('/warrantys', 'getAll');
+        Route::get('/warrantys/search', 'search');
         Route::get('/warrantys/{id}', 'getById');
         Route::put('/warrantys/{id}', 'update');
         Route::delete('/warrantys/{id}', 'delete');
@@ -158,7 +168,7 @@ Route::prefix('admin')->group(function () {
 Route::controller(ProductController::class)->group(function () {
     Route::get('/products/search', 'searchProduct');
     Route::get('/products/new', 'getNewProduct');
-    Route::get('/products/{id}', 'getById')->where('id', '[0-9]+');
+    Route::get('/products/{id}', 'getById');
     Route::get('/categories/{id}/products', 'getByCategory');
     // Route::get('/products', 'getAll');
 });
