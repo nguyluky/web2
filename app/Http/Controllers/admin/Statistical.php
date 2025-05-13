@@ -1,110 +1,160 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\admin;
 
-use App\Http\Controllers\Controller;
+use Illuminate\Routing\Controller;
 use App\Models\Order;
-use App\Models\ImportDetail;
+use App\Models\OrderDetail;
+use App\Models\Profile;
+use App\Models\Account;
+use App\Models\ProductVariant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class StatisticsController extends Controller
+class Statistical extends Controller
 {
-    protected function getDateFormat($type, $column, $asAlias = true)
+    public function topCustomersByDateRange(Request $request)
     {
-        switch ($type) {
-            case 'year':
-                return $asAlias
-                    ? DB::raw("DATE_FORMAT($column, '%m') as period")
-                    : 'period';
-            case 'month':
-                return $asAlias
-                    ? DB::raw("DATE_FORMAT($column, '%d/%m') as period")
-                    : 'period';
-            case 'day':
-                return $asAlias
-                    ? DB::raw("DATE_FORMAT($column, '%H:00') as period")
-                    : 'period';
-            default:
-                throw new \Exception('Loại thống kê không hợp lệ');
-        }
-    }
-
-    protected function getPeriods($type, $year, $month = 1)
-    {
-        switch ($type) {
-            case 'year':
-                return [
-                    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-                    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-                ];
-            case 'month':
-                $days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
-                return array_map(fn($day) => sprintf("%02d/%02d", $day, $month), range(1, $days));
-            case 'day':
-                return array_map(fn($hour) => sprintf("%02d:00", $hour), range(0, 23));
-            default:
-                return [];
-        }
-    }
-
-    public function revenueCost(Request $request)
-    {
-        $year = $request->query('year', now()->year);
-        $type = $request->query('type', 'month');
-        $month = $request->query('month', 1); // Thêm tham số month
-        $day = $request->query('day', 1);     // Thêm tham số day
-
-        // Validate parameters
+        // Validate input
         $request->validate([
-            'year' => 'integer|min:2000|max:' . now()->year,
-            'type' => 'in:year,month,day',
-            'month' => 'integer|min:1|max:12',
-            'day' => 'integer|min:1|max:31',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+            'sort' => 'in:asc,desc',
         ]);
 
-        // Base query for revenue (from Order)
-        $revenueQuery = Order::select(
-            DB::raw('SUM(amount) as thu'),
-            $this->getDateFormat($type, 'created_at')
+        // Get query parameters
+        $startDate = $request->query('start_date');
+        $endDate = $request->query('end_date');
+        $sortOrder = $request->query('sort', 'desc');
+
+        // Adjust end_date to include the full day
+        $endDate = date('Y-m-d 23:59:59', strtotime($endDate));
+
+        // Query to get top 5 customers with their orders
+        $customers = Order::select(
+            'profile.id as profile_id',
+            'profile.fullname as customer_name',
+            DB::raw('SUM(product_variants.price) as total_purchase')
         )
-            ->whereYear('created_at', $year);
+            ->join('order_detail', 'order.id', '=', 'order_detail.order_id')
+            ->join('product_variants', 'order_detail.product_variant_id', '=', 'product_variants.id')
+            ->join('account', 'order.account_id', '=', 'account.id')
+            ->leftJoin('profile', 'profile.id', '=', 'account.id')
+            ->where('order.status', 'completed')
+            ->whereBetween('order.created_at', [$startDate, $endDate])
+            ->groupBy('profile.id', 'profile.fullname')
+            ->orderBy('total_purchase', $sortOrder)
+            ->limit(5)
+            ->get();
 
-        // Base query for cost (from ImportDetail)
-        $costQuery = ImportDetail::select(
-            DB::raw('SUM(import_price * amount) as chi'),
-            $this->getDateFormat($type, 'created_at')
-        )
-            ->whereYear('created_at', $year);
+        // Map results to include orders for each customer
+        $customerData = $customers->map(function ($customer) use ($startDate, $endDate) {
+            // Get orders for this customer
+            $orders = Order::select(
+                'order.id as order_id',
+                'order.created_at',
+                DB::raw('SUM(product_variants.price) as order_total')
+            )
+                ->join('order_detail', 'order.id', '=', 'order_detail.order_id')
+                ->join('product_variants', 'order_detail.product_variant_id', '=', 'product_variants.id')
+                ->where('order.account_id', $customer->profile_id)
+                ->where('order.status', 'completed')
+                ->whereBetween('order.created_at', [$startDate, $endDate])
+                ->groupBy('order.id', 'order.created_at')
+                ->get()
+                ->map(function ($order) {
+                    return [
+                        'order_id' => $order->order_id,
+                        'created_at' => $order->created_at, // Sửa lỗi: Trả trực tiếp chuỗi created_at
+                        'order_total' => (float) $order->order_total,
+                    ];
+                });
 
-        // Áp dụng bộ lọc tháng và ngày nếu cần
-        if ($type === 'month' || $type === 'day') {
-            $revenueQuery->whereMonth('created_at', $month);
-            $costQuery->whereMonth('created_at', $month);
-        }
-        if ($type === 'day') {
-            $revenueQuery->whereDay('created_at', $day);
-            $costQuery->whereDay('created_at', $day);
-        }
-
-        $revenueQuery->groupBy($this->getDateFormat($type, 'created_at'));
-        $costQuery->groupBy($this->getDateFormat($type, 'created_at'));
-
-        // Execute queries
-        $revenues = $revenueQuery->get()->keyBy($this->getDateFormat($type, 'created_at', false));
-        $costs = $costQuery->get()->keyBy($this->getDateFormat($type, 'created_at', false));
-
-        // Combine results
-        $data = [];
-        $periods = $this->getPeriods($type, $year, $month);
-        foreach ($periods as $period) {
-            $data[] = [
-                'name' => $period,
-                'thu' => isset($revenues[$period]) ? (float)$revenues[$period]->thu : 0,
-                'chi' => isset($costs[$period]) ? (float)$costs[$period]->chi : 0,
+            return [
+                'customer_id' => $customer->profile_id,
+                'customer_name' => $customer->customer_name ?? 'Unknown',
+                'total_purchase' => (float) $customer->total_purchase ?? 0,
+                'orders' => $orders,
             ];
-        }
+        });
 
-        return response()->json($data);
+        return response()->json($customerData);
     }
+    
+    public function getOrdersByCustomer(Request $request)
+{
+    $request->validate([
+        'account_id' => 'required|integer',
+        'start_date' => 'required|date_format:Y-m-d',
+        'end_date' => 'required|date_format:Y-m-d|after_or_equal:start_date',
+    ]);
+
+    $accountId = $request->query('account_id');
+    $startDate = $request->query('start_date');
+    $endDate = date('Y-m-d 23:59:59', strtotime($request->query('end_date')));
+
+    $orders = Order::select(
+        'order.id',
+        'order.created_at',
+        DB::raw('SUM(product_variants.price) as total_price')
+    )
+        ->join('order_detail', 'order.id', '=', 'order_detail.order_id')
+        ->join('product_variants', 'order_detail.product_variant_id', '=', 'product_variants.id')
+        ->where('order.account_id', $accountId)
+        ->where('order.status', 'completed')
+        ->whereBetween('order.created_at', [$startDate, $endDate])
+        ->groupBy('order.id', 'order.created_at')
+        ->get();
+
+    return response()->json([
+        'status' => 'success',
+        'data' => $orders->map(function ($order) {
+            return [
+                'order_id' => $order->id,
+                'created_at' => $order->created_at->format('Y-m-d H:i:s'),
+                'total_price' => (float) $order->total_price,
+            ];
+        }),
+        'message' => $orders->isEmpty() ? 'No orders found' : null
+    ]);
+}
+
+public function getOrderDetails(Request $request)
+{
+    $request->validate([
+        'order_id' => 'required|integer|exists:order,id',
+    ]);
+
+    $orderId = $request->query('order_id');
+
+    $orderDetails = OrderDetail::select(
+        'order_detail.id',
+        'product.name as product_name',
+        'product_variants.price',
+        'product_variants.attributes'
+    )
+        ->join('product_variants', 'order_detail.product_variant_id', '=', 'product_variants.id')
+        ->join('product', 'product_variants.product_id', '=', 'product.id')
+        ->where('order_detail.order_id', $orderId)
+        ->get();
+
+    return response()->json([
+        'status' => 'completed',
+        'data' => $orderDetails->map(function ($detail) {
+            $attributes = is_string($detail->attributes) ? json_decode($detail->attributes, true) : [];
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                $attributes = [];
+            }
+
+            return [
+                'detail_id' => $detail->id,
+                'product_name' => $detail->product_name,
+                'price' => (float) ($detail->price ?? 0),
+                'attributes' => $attributes,
+            ];
+        }),
+        'message' => $orderDetails->isEmpty() ? 'No order details found' : null
+    ]);
+}
+
 }

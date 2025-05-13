@@ -33,7 +33,9 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 class Account extends Authenticatable implements JWTSubject
 {
 	use SoftDeletes;
+	
 	protected $table = 'account';
+	protected $primaryKey = 'id';
 	public $timestamps = false;
 
 	protected $casts = [
@@ -85,4 +87,9 @@ class Account extends Authenticatable implements JWTSubject
 	{
 		return []; // Add any custom claims if needed
 	}
+
+	public function orders()
+    {
+        return $this->hasMany(Order::class, 'account_id', 'id');
+    }
 }

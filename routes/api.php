@@ -21,9 +21,17 @@ use App\Http\Controllers\admin\Accounts;
 use App\Http\Controllers\admin\Rules;
 use App\Http\Controllers\user\CategoryController;
 use App\Http\Controllers\user\ProfileController;
+use App\Http\Controllers\admin\OrderDetails;
 
 use OpenApi\Annotations as OA;
 
+//order
+Route::prefix('admin')->group(function () {
+    Route::controller(OrderDetails::class)->group(function () {
+        Route::get('/OrderDetails', 'getAll');
+
+    });
+});
 // products
 Route::prefix('admin')->group(function () {
     Route::controller(Products::class)->group(function () {
@@ -94,14 +102,14 @@ Route::prefix('admin')->group(function () {
     });
 });
 
-// statistical
-Route::prefix('admin')->controller(Statistical::class)->group(function () {
-    Route::get('revenue-cost', 'revenueCost');
-    Route::get('inventory', 'inventory');
-    Route::get('dashboard', 'dashboard');
-    Route::get('revenue-by-products', 'revenueByProducts');
-    Route::get('revenue-by-categories', 'revenueByCategories');
-});
+
+
+
+// use App\Http\Controllers\Admin\Statistical;
+
+Route::get('/admin/top-customers', [Statistical::class, 'topCustomersByDateRange']);
+Route::get('/admin/customer-orders', [Statistical::class, 'getOrdersByCustomer']);
+Route::get('/admin/order-details', [Statistical::class, 'getOrderDetails']);
 
 // account
 Route::prefix('admin')->group(function () {
@@ -179,13 +187,13 @@ Route::middleware(['auth:api'])->group(function () {
         Route::delete('/cart/{variant_id}', 'deleteCart');
     });
 
-    Route::controller(OrderController::class)->group(function () {
-        // order
-        Route::post('/orders', 'createOrders');
-        Route::get('/users/orders', 'getUserOrders');
-        Route::get('/orders/{id}', 'getOrderDetail');
-        Route::put('/orders/{id}/cancel', 'cancelOrder');
-    });
+    // Route::controller(OrderController::class)->group(function () {
+    //     // order
+    //     Route::post('/orders', 'createOrders');
+    //     Route::get('/users/orders', 'getUserOrders');
+    //     Route::get('/orders/{id}', 'getOrderDetail');
+    //     Route::put('/orders/{id}/cancel', 'cancelOrder');
+    // });
 
     Route::controller(AddressController::class)->group(function () {
         // address
