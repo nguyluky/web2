@@ -20,6 +20,7 @@ use App\Http\Controllers\admin\Warrantys;
 use App\Http\Controllers\admin\Statistical;
 use App\Http\Controllers\admin\Accounts;
 use App\Http\Controllers\admin\Rules;
+use App\Http\Controllers\admin\ProductImages;
 use App\Http\Controllers\user\CategoryController;
 use App\Http\Controllers\user\ProfileController;
 
@@ -40,10 +41,21 @@ Route::prefix('admin')->group(function () {
         Route::get('/products/search', 'search');
         Route::get('/products/{id}', 'getById');
         Route::put('/products/{id}', 'update');
-        Route::delete('/products/{id}', 'delete');
+        // Route::delete('/products/{id}', 'delete');
         Route::post('/products/{id}', 'addStatus');
-        Route::put('/products/{id}', 'updateStatus');
         Route::delete('/products/{id}', 'updateStatus');
+    });
+});
+
+// product images
+Route::prefix('admin')->group(function () {
+    Route::controller(ProductImages::class)->group(function () {
+        Route::get('/product-images', 'getAll');
+        Route::get('/product-images/search', 'search');
+        Route::get('/product-images/{id}', 'getById');
+        Route::post('/product-images', 'create');
+        Route::put('/product-images/{id}', 'update');
+        Route::delete('/product-images/{id}', 'delete');
     });
 });
 
@@ -147,6 +159,10 @@ Route::prefix('admin')->group(function () {
 Route::prefix('admin')->group(function () {
     Route::controller(ProductVariants::class)->group(function () {
         Route::get('/product-variants', 'getAll');
+        Route::get('/product-variants/{id}', 'getById');
+        Route::post('/product-variants', 'create');
+        Route::put('/product-variants/{id}', 'update');
+        Route::delete('/product-variants/{id}', 'delete');
     });
 });
 
