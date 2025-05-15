@@ -10,11 +10,12 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
+
 /**
  * Class Import
  * 
  * @property int $id
- * @property int $suppiler_id
+ * @property int $supplier_id
  * @property int|null $employee_id
  * @property string|null $status
  * @property Carbon|null $created_at
@@ -31,15 +32,11 @@ class Import extends Model
 	public $timestamps = false;
 
 	protected $casts = [
-		'suppiler_id' => 'int',
+		'supplier_id' => 'int',
 		'employee_id' => 'int'
 	];
 
-	protected $fillable = [
-		'suppiler_id',
-		'employee_id',
-		'status'
-	];
+protected $fillable = ['supplier_id', 'employee_id', 'status', 'created_at'];
 
 	public function account()
 	{
@@ -48,11 +45,16 @@ class Import extends Model
 
 	public function supplier()
 	{
-		return $this->belongsTo(Supplier::class, 'suppiler_id');
+		return $this->belongsTo(Supplier::class, 'supplier_id');
 	}
 
 	public function import_details()
 	{
 		return $this->hasMany(ImportDetail::class);
 	}
+
+	public function importDetails()
+    {
+        return $this->hasMany(ImportDetail::class, 'import_id');
+    }
 }

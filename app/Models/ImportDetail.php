@@ -18,7 +18,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $amount
  * 
  * @property Import $import
- * @property Product $product
+ * @property ProductVariant $product
+ * 
  *
  * @package App\Models
  */
@@ -29,14 +30,14 @@ class ImportDetail extends Model
 
 	protected $casts = [
 		'import_id' => 'int',
-		'product_id' => 'int',
+		'product_variant_id' => 'int',
 		'import_price' => 'int',
 		'amount' => 'int'
 	];
 
 	protected $fillable = [
 		'import_id',
-		'product_id',
+		'product_variant_id',
 		'import_price',
 		'amount'
 	];
@@ -48,6 +49,6 @@ class ImportDetail extends Model
 
 	public function product()
 	{
-		return $this->belongsTo(Product::class);
+		return $this->belongsTo(ProductVariant::class);
 	}
 }

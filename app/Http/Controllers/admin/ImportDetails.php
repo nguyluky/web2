@@ -11,18 +11,16 @@ class ImportDetails extends Controller
     /**
      * Lấy danh sách tất cả chi tiết nhập hàng
      */
+
     public function getAll(Request $request)
     {
-
-        $limit = $request->query('limit', 10);
-        $query = ImportDetail::query();
-        $import_details = $query->paginate($limit);
+        $query = ImportDetail::query()->get();
         return response()->json([
-            'message' => 'Lấy danh sách chi tiết nhập hàng thành công',
-            'data' => $import_details,
-            'limit' => $limit
+            'message' => 'Lấy danh sách thành công',
+            'data' => $query
         ]);
     }
+
 
     /**
      * Tạo một chi tiết nhập hàng mới
@@ -34,7 +32,6 @@ class ImportDetails extends Controller
             'import_id' => 'required|integer|exists:imports,id', // Kiểm tra import_id tồn tại trong bảng imports
             'product_id' => 'required|integer|exists:products,id', // Kiểm tra product_id tồn tại trong bảng products
             'import_price' => 'required|integer|min:0', // Giá nhập phải là số nguyên, không âm
-            'amount' => 'required|integer|min:1', // Số lượng phải là số nguyên, tối thiểu là 1
         ]);
 
         // Tạo chi tiết nhập hàng mới
