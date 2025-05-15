@@ -27,7 +27,7 @@ class Order extends Model
 	protected $table = 'order';
     // public $incrementing = true;
     // protected $keyType = 'bigint';
-	// public $timestamps = false;
+	public $timestamps = false;
 
 	protected $casts = [
 		'profile_id' => 'int',
