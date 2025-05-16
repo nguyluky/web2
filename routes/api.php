@@ -156,6 +156,7 @@ Route::prefix('admin')->group(function () {
 });
 
 // product variant
+
 Route::prefix('admin')->group(function () {
     Route::controller(ProductVariants::class)->group(function () {
         Route::get('/product-variants', 'getAll');
@@ -163,6 +164,7 @@ Route::prefix('admin')->group(function () {
         Route::post('/product-variants', 'create');
         Route::put('/product-variants/{id}', 'update');
         Route::delete('/product-variants/{id}', 'delete');
+        Route::get('/product-variants/search', 'search');
     });
 });
 
