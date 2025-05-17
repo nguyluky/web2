@@ -39,6 +39,7 @@ Route::prefix('admin')->group(function () {
         Route::post('/products', 'create');
         Route::get('/products', 'getAll');
         Route::get('/products/search', 'search');
+        Route::get('/products/top', 'topProducts');
         Route::get('/products/{id}', 'getById');
         Route::put('/products/{id}', 'update');
         // Route::delete('/products/{id}', 'delete');
