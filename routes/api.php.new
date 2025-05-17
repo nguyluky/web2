@@ -26,24 +26,26 @@ use App\Http\Controllers\user\ProfileController;
 
 use OpenApi\Annotations as OA;
 
-//order
-Route::prefix('admin')->group(function () {
+// Admin routes - all protected with admin middleware
+Route::prefix('admin')->middleware('admin')->group(function () {
+    // Order details
     Route::controller(OrderDetails::class)->group(function () {
         Route::get('/OrderDetails', 'getAll');
-
+        Route::get('/order/detail', 'getAll');
     });
-    // products
+    
+    // Products
     Route::controller(Products::class)->group(function () {
         Route::post('/products', 'create');
         Route::get('/products', 'getAll');
         Route::get('/products/search', 'search');
         Route::get('/products/{id}', 'getById');
         Route::put('/products/{id}', 'update');
-        // Route::delete('/products/{id}', 'delete');
         Route::post('/products/{id}', 'addStatus');
         Route::delete('/products/{id}', 'updateStatus');
     });
-    // product-images
+    
+    // Product images
     Route::controller(ProductImages::class)->group(function () {
         Route::get('/product-images', 'getAll');
         Route::get('/product-images/search', 'search');
@@ -52,8 +54,8 @@ Route::prefix('admin')->group(function () {
         Route::put('/product-images/{id}', 'update');
         Route::delete('/product-images/{id}', 'delete');
     });
-
-    // categories
+    
+    // Categories
     Route::controller(Categorys::class)->group(function () {
         Route::post('/categories', 'create');
         Route::get('/categories', 'getAll');
@@ -61,8 +63,8 @@ Route::prefix('admin')->group(function () {
         Route::put('/categories/{id}', 'update');
         Route::delete('/categories/{id}', 'delete');
     });
-
-    // orders
+    
+    // Orders
     Route::controller(Orders::class)->group(function () {
         Route::get('/orders', 'getAll');
         Route::get('/orders/{id}', 'getById');
@@ -70,12 +72,8 @@ Route::prefix('admin')->group(function () {
         Route::delete('/orders/{id}', 'cancelOrder');
         Route::get('/orders/{id}/details', 'getOrderDetails');
     });
-    // orderDetails
-    Route::controller(OrderDetails::class)->group(function () {
-        Route::get('/order/detail', 'getAll');
-    });
-
-    // suppliers
+    
+    // Suppliers
     Route::controller(Suppliers::class)->group(function () {
         Route::post('/suppliers', 'create');
         Route::get('/suppliers', 'getAll');
@@ -85,8 +83,8 @@ Route::prefix('admin')->group(function () {
         Route::put('/suppliers/{id}', 'update');
         Route::delete('/suppliers/{id}', 'delete');
     });
-
-    // import
+    
+    // Imports
     Route::controller(Imports::class)->group(function () {
         Route::post('/imports', 'create');
         Route::get('/imports', 'getAll');
@@ -94,8 +92,8 @@ Route::prefix('admin')->group(function () {
         Route::put('/imports/{id}', 'updateStatus');
         Route::delete('/imports/{id}', 'cancelImport');
     });
-
-    //Warranty
+    
+    // Warranty
     Route::controller(Warrantys::class)->group(function () {
         Route::post('/warrantys', 'create');
         Route::get('/warrantys', 'getAll');
@@ -104,30 +102,25 @@ Route::prefix('admin')->group(function () {
         Route::put('/warrantys/{id}', 'update');
         Route::delete('/warrantys/{id}', 'delete');
     });
-
-    Route::get('/admin/top-customers', [Statistical::class, 'topCustomersByDateRange']);
-    Route::get('/admin/customer-orders', [Statistical::class, 'getOrdersByCustomer']);
-    Route::get('/admin/order-details', [Statistical::class, 'getOrderDetails']);
-});
-
-
-
-
-
-
-// account
-Route::prefix('admin')->group(function () {
+    
+    // Statistical
+    Route::controller(Statistical::class)->group(function () {
+        Route::get('/top-customers', 'topCustomersByDateRange');
+        Route::get('/customer-orders', 'getOrdersByCustomer');
+        Route::get('/order-details', 'getOrderDetails');
+    });
+    
+    // Account management
     Route::controller(Accounts::class)->group(function () {
         Route::post('/accounts', 'create');
         Route::get('/accounts', 'getAll');
         Route::get('/accounts/search', 'search');
         Route::put('/accounts/{id}', 'update');
         Route::delete('/accounts/{id}', 'delete');
+        Route::get('/check-username/{username}', 'checkUsername');
     });
-});
-
-// rule
-Route::prefix('admin')->group(function () {
+    
+    // Rule management
     Route::controller(Rules::class)->group(function () {
         Route::post('/rules', 'create');
         Route::get('/rules', 'getAll');
@@ -135,10 +128,8 @@ Route::prefix('admin')->group(function () {
         Route::delete('/rules/{id}', 'delete');
         Route::get('/rules/search', 'search');
     });
-});
-
-// product variant
-Route::prefix('admin')->group(function () {
+    
+    // Product variants
     Route::controller(ProductVariants::class)->group(function () {
         Route::get('/product-variants', 'getAll');
         Route::get('/product-variants/{id}', 'getById');
@@ -146,10 +137,8 @@ Route::prefix('admin')->group(function () {
         Route::put('/product-variants/{id}', 'update');
         Route::delete('/product-variants/{id}', 'delete');
     });
-});
-
-//prolife
-Route::prefix('admin')->group(function () {
+    
+    // Profile management
     Route::controller(Profiles::class)->group(function () {
         Route::post('/users', 'create');
         Route::get('/users', 'getAll');
@@ -158,9 +147,8 @@ Route::prefix('admin')->group(function () {
         Route::delete('/users/{id}', 'delete');
         Route::get('/check-email/{email}', 'checkEmail');
     });
-});
-// import detail
-Route::prefix('admin')->group(function () {
+    
+    // Import details
     Route::controller(ImportDetails::class)->group(function () {
         Route::post('/import-details', 'create');
         Route::get('/import-details', 'getAll');
@@ -170,24 +158,23 @@ Route::prefix('admin')->group(function () {
     });
 });
 
-// product
+// Public product routes
 Route::controller(ProductController::class)->group(function () {
     Route::get('/products/search', 'searchProduct');
     Route::get('/products/new', 'getNewProduct');
     Route::get('/products/{id}', 'getById');
     Route::get('/categories/{id}/products', 'getByCategory');
-    // Route::get('/products', 'getAll');
 });
 
-// review
+// Review routes
 Route::controller(ProductReviewController::class)->group(function () {
     Route::get('/products/{id}/reviews', 'getReviewsByProductId');
     Route::post('/products/{id}/reviews', 'addReviewById');
 });
 
-// cart
-Route::middleware(['auth:api'])->group(function () {
-
+// User authenticated routes
+Route::middleware(['user'])->group(function () {
+    // Cart routes
     Route::controller(CartController::class)->group(function () {
         Route::get('/cart', 'getAllCart');
         Route::post('/cart', 'addCart');
@@ -195,57 +182,39 @@ Route::middleware(['auth:api'])->group(function () {
         Route::delete('/cart/{variant_id}', 'deleteCart');
     });
 
-    // Route::controller(OrderController::class)->group(function () {
-    //     // order
-    //     Route::post('/orders', 'createOrders');
-    //     Route::get('/users/orders', 'getUserOrders');
-    //     Route::get('/orders/{id}', 'getOrderDetail');
-    //     Route::put('/orders/{id}/cancel', 'cancelOrder');
-    // });
-
+    // Address routes
     Route::controller(AddressController::class)->group(function () {
-        // address
         Route::post('/users/addresses', 'addAddress');
         Route::get('/users/addresses', 'getUserAddress');
         Route::put('/users/addresses/{id}', 'updateAddress');
         Route::delete('/users/addresses/{id}', 'deleteAddress');
     });
 
+    // User profile routes
     Route::get('/users/profile', [ProfileController::class, 'getProfile']);
     Route::put('/users/profile', [ProfileController::class, 'updateProfile']);
 });
 
-
-// account
+// Authentication routes (public)
 Route::controller(AccountController::class)->group(function () {
     Route::post('auth/register', 'register');
     Route::post('auth/login', 'login')->name('login');
     Route::put('/users/change-password', 'changePassword');
-    // khong biet chen do dung khong nhung ma lam dai ____
     Route::get('/users/forgot-password', 'forgetPassword');
-    // ___
     Route::put('/users/reset-password', 'resetPassword');
 });
 
-// category
+// Public category routes
 Route::controller(CategoryController::class)->group(function () {
     Route::get('/categories', 'getAll');
     Route::get('/categories/{id}/filter', 'getFilter');
     Route::get('/categories/{id}', 'getById');
-    // Route::get('/categories/{id}/products', 'getProductsByCategory');
 });
 
+// Welcome route
 Route::get('/', function () {
     return response()->json([
         'message' => 'Welcome to the API',
         'status' => 200
     ]);
 });
-
-Route::prefix('admin')->group(function () {
-    Route::controller(Accounts::class)->group(function () {
-        Route::get('/check-username/{username}', 'checkUsername');
-    });
-
-});
-

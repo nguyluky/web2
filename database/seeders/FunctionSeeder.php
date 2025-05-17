@@ -15,74 +15,87 @@ class FunctionSeeder extends Seeder
         // Dashboard
         Function_::create([
             'id' => 1,
-            'name' => 'dashboard'
+            'name' => 'dashboard',
+            'code' => 'dashboard'
         ]);
 
         // User management
         Function_::create([
             'id' => 2,
-            'name' => 'user_management'
+            'name' => 'user_management',
+            'code' => 'users'
         ]);
 
         // Product management
         Function_::create([
             'id' => 3,
-            'name' => 'product_management'
+            'name' => 'product_management',
+            'code' => 'products'
         ]);
 
         Function_::create([
             'id' => 4,
-            'name' => 'category_management'
+            'name' => 'category_management',
+            'code' => 'categories'
         ]);
 
         // Order management
         Function_::create([
             'id' => 5,
-            'name' => 'order_management'
+            'name' => 'order_management',
+            'code' => 'orders'
         ]);
 
         // Inventory management
         Function_::create([
             'id' => 6,
-            'name' => 'inventory_management'
+            'name' => 'inventory_management',
+            'code' => 'inventory'
         ]);
 
         Function_::create([
             'id' => 7,
-            'name' => 'supplier_management'
+            'name' => 'supplier_management',
+            'code' => 'suppliers'
         ]);
 
         // Import management
         Function_::create([
             'id' => 8,
-            'name' => 'import_management'
+            'name' => 'import_management',
+            'code' => 'imports'
         ]);
 
         // System settings
         Function_::create([
             'id' => 9,
-            'name' => 'system_settings'
+            'name' => 'system_settings',
+            'code' => 'settings'
         ]);
 
         // Customer functions
         Function_::create([
             'id' => 10,
-            'name' => 'shopping_cart'
+            'name' => 'shopping_cart',
+            'code' => 'cart'
         ]);
 
         Function_::create([
             'id' => 11,
-            'name' => 'order_history'
+            'name' => 'order_history',
+            'code' => 'my_orders'
         ]);
 
         Function_::create([
             'id' => 12,
-            'name' => 'product_review'
+            'name' => 'product_review',
+            'code' => 'reviews'
         ]);
 
         Function_::create([
             'id' => 13,
-            'name' => 'manage_profile'
+            'name' => 'manage_profile',
+            'code' => 'profile'
         ]);
 
         // Report functions

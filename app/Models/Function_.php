@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * 
  * @property int $id
  * @property string|null $name
+ * @property string|null $code
  * 
  * @property Collection|Rule[] $rules
  *
@@ -25,7 +26,8 @@ class Function_ extends Model
 	public $timestamps = false;
 
 	protected $fillable = [
-		'name'
+		'name',
+		'code'
 	];
 
 	public function rules()
