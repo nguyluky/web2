@@ -22,12 +22,13 @@ class ProductVariants extends Controller
     {
         $query = ProductVariant::query()->with('product');
 
-        // Lọc theo từ khóa
+        // Lọc theo từ khóa (tên sản phẩm hoặc thuộc tính)
         if ($keyword = $request->input('keyword')) {
+            $keyword = strtolower(trim($keyword));
             $query->where(function ($q) use ($keyword) {
                 $q->whereHas('product', function ($q) use ($keyword) {
-                    $q->where('name', 'like', "%{$keyword}%");
-                })->orWhere('attributes', 'like', "%{$keyword}%");
+                    $q->whereRaw('LOWER(name) LIKE ?', ["%{$keyword}%"]);
+                })->orWhereRaw('LOWER(CAST(attributes AS CHAR)) LIKE ?', ["%{$keyword}%"]);
             });
         }
 
@@ -44,9 +45,17 @@ class ProductVariants extends Controller
         }
 
         // Phân trang với limit 10
-        $perPage = 10;
+        $perPage = $request->input('per_page', 10);
         $page = $request->input('page', 1);
         $results = $query->paginate($perPage, ['*'], 'page', $page);
+
+        // Kiểm tra kết quả
+        if ($results->isEmpty() && $page == 1) {
+            return response()->json([
+                'message' => 'Không tìm thấy biến thể sản phẩm phù hợp',
+                'data' => $results
+            ], 200);
+        }
 
         return response()->json([
             'message' => 'Tìm kiếm biến thể sản phẩm thành công',
@@ -54,19 +63,19 @@ class ProductVariants extends Controller
         ]);
     }
 
-    public function getById($id)
-    {
-        $query = ProductVariant::query()->find($id);
-        if (!$query) {
-            return response()->json([
-                'message' => 'Không tìm thấy sản phẩm'
-            ], 404);
-        }
-        return response()->json([
-            'message' => 'Lấy thông tin thành công',
-            'data' => $query
-        ]);
-    }
+    // public function getById($id)
+    // {
+    //     $query = ProductVariant::query()->find($id);
+    //     if (!$query) {
+    //         return response()->json([
+    //             'message' => 'Không tìm thấy sản phẩm'
+    //         ], 404);
+    //     }
+    //     return response()->json([
+    //         'message' => 'Lấy thông tin thành công',
+    //         'data' => $query
+    //     ]);
+    // }
 
     public function create(Request $request)
     {

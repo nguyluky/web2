@@ -160,7 +160,7 @@ Route::prefix('admin')->group(function () {
 Route::prefix('admin')->group(function () {
     Route::controller(ProductVariants::class)->group(function () {
         Route::get('/product-variants', 'getAll');
-        Route::get('/product-variants/{id}', 'getById');
+        // Route::get('/product-variants/{id}', 'getById');
         Route::post('/product-variants', 'create');
         Route::put('/product-variants/{id}', 'update');
         Route::delete('/product-variants/{id}', 'delete');
