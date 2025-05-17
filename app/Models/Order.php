@@ -1,9 +1,5 @@
 <?php
 
-/**
- * Created by Reliese Model.
- */
-
 namespace App\Models;
 
 use Carbon\Carbon;
@@ -20,6 +16,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $payment_method
  * @property int $address_id
  * 
+ * @property Payment $payment
  * @property Profile $profile
  * @property Collection|OrderDetail[] $order_details
  *
@@ -30,7 +27,7 @@ class Order extends Model
 	protected $table = 'order';
     // public $incrementing = true;
     // protected $keyType = 'bigint';
-	// public $timestamps = false;
+	public $timestamps = false;
 
 	protected $casts = [
 		'profile_id' => 'int',
@@ -50,10 +47,11 @@ class Order extends Model
 	// 	return $this->belongsTo(Payment::class, 'payment_method');
 	// }
 
-	public function profile()
-	{
-		return $this->belongsTo(Profile::class);
-	}
+    public function profile()
+    {
+        // Liên kết qua account
+        return $this->hasOneThrough(Profile::class, Account::class, 'id', 'id', 'account_id', 'id');
+    }
 
 	public function order_details()
 	{

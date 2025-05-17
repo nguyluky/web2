@@ -22,6 +22,7 @@ class OrderController extends Controller
     {
         $validated = $request->validate([
             'products.*.product_variant_id' => 'required|integer|exists:product_variants,id',
+            'products.*.amount' => 'required|integer|min:1',
             'payment_method' => 'required|integer',
             'products' => 'required|array',
             'address_id' => 'required|integer|exists:address,id',
@@ -43,12 +44,15 @@ class OrderController extends Controller
             $order = Order::create($order_data);
 
             foreach ($validated['products'] as $product) {
-                $order_detail = [
-                    'order_id' => $order->id,
-                    'product_variant_id' => $product['product_variant_id'],
-                    'serial' => rand(),
-                ];
-                OrderDetail::create($order_detail);
+                for ($i = 0; $i < $product['amount']; $i++) {
+                    // Create a new order detail for each product variant
+                    $order_detail = [
+                        'order_id' => $order->id,
+                        'product_variant_id' => $product['product_variant_id'],
+                        'serial' => rand(),
+                    ];
+                    OrderDetail::create($order_detail);
+                }
             }
             return $order;
         });

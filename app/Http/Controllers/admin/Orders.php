@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\admin;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Routing\Controller;
 use App\Models\Order;
+use App\Models\OrderDetail;
+use App\Models\ProductVariant;
 use Illuminate\Http\Request;
 use OpenApi\Annotations as OA;
 
@@ -28,8 +31,12 @@ class Orders extends Controller
         // Tìm kiếm
         if ($search) {
             $query->where(function ($q) use ($search) {
-                $q->where('id', 'like', '%' . $search . '%')
-                  ->orWhere('payment_method', 'like', '%' . $search . '%');
+                $q->whereHas('profile', function ($q2) use ($search) {
+                    $q2->where('fullname', 'like', '%' . $search . '%')
+                       ->orWhere('email', 'like', '%' . $search . '%')
+                       ->orWhere('phone_number', 'like', '%' . $search . '%');
+                })
+                ->orWhere('payment_method', 'like', '%' . $search . '%');
             });
         }
     
@@ -135,56 +142,57 @@ class Orders extends Controller
 
 
     // update order 
-    public function updateStatus(Request $request, $id)
+    public function updateStatus(Request $request, $orderId)
     {
+        $request->validate([
+            'status' => 'required|string|in:pending,processing,completed,cancelled',
+        ]);
+
+        $order = Order::findOrFail($orderId);
+        $newStatus = $request->status;
+
+        // Không cho phép cập nhật nếu đơn hàng đã completed hoặc cancelled
+        if (in_array($order->status, ['completed', 'cancelled'])) {
+            return response()->json([
+                'error' => 'Cannot update status. Order is already completed or cancelled.'
+            ], 400);
+        }
+
+        DB::beginTransaction();
+
         try {
-            \Log::info('Received update status request', [
-                'order_id' => $id,
-                'status_input' => $request->status
-            ]);
-    
-            $order = Order::findOrFail($id);
-    
-            // Validate the status field
-            $request->validate([
-                'status' => 'required|in:pending,processing,completed,cancelled',
-            ]);
-    
-            // Update the order status
-            $order->status = $request->status;
-            $order->save();
-    
-            \Log::info('Order status updated successfully', [
-                'order_id' => $order->id,
-                'new_status' => $order->status
-            ]);
-    
-            return response()->json([
-                'message' => 'Status updated successfully',
-                'order' => $order,
-            ], 200);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            \Log::warning('Validation failed when updating order status', [
-                'order_id' => $id,
-                'errors' => $e->errors(),
-            ]);
-    
-            return response()->json([
-                'message' => 'Validation failed',
-                'errors' => $e->errors(),
-            ], 422);
+            // Nếu status mới là cancelled thì hoàn lại stock
+            if ($newStatus === 'cancelled') {
+                $orderDetails = OrderDetail::where('order_id', $orderId)->get();
+            
+                $productVariantCounts = [];
+            
+                foreach ($orderDetails as $detail) {
+                    $productId = $detail->product_variant_id;
+                    $productVariantCounts[$productId] = ($productVariantCounts[$productId] ?? 0) + 1;
+                }
+            
+                foreach ($productVariantCounts as $productId => $qty) {
+                    $variant = ProductVariant::findOrFail($productId);
+                    $newStock = $variant->stock + $qty;
+                
+                    // Dùng update() thay vì save()
+                    $variant->update(['stock' => $newStock]);
+                }
+            }
+
+            // Cập nhật trạng thái đơn hàng
+            $order->update(['status' => $newStatus]);
+
+            DB::commit();
+
+            return response()->json(['message' => 'Order status updated successfully.'], 200);
         } catch (\Exception $e) {
-            \Log::error('Failed to update order status', [
-                'order_id' => $id,
-                'error_message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-    
+            DB::rollBack();
             return response()->json([
-                'message' => 'Failed to update status',
-                'error' => $e->getMessage(),
+                'error' => 'Failed to update order status.',
+                'details' => $e->getMessage()
             ], 500);
         }
     }
-    
 }

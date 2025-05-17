@@ -20,23 +20,43 @@ use App\Http\Controllers\admin\Warrantys;
 use App\Http\Controllers\admin\Statistical;
 use App\Http\Controllers\admin\Accounts;
 use App\Http\Controllers\admin\Rules;
+use App\Http\Controllers\admin\ProductImages;
 use App\Http\Controllers\user\CategoryController;
 use App\Http\Controllers\user\ProfileController;
 
 use OpenApi\Annotations as OA;
 
+//order
+Route::prefix('admin')->group(function () {
+    Route::controller(OrderDetails::class)->group(function () {
+        Route::get('/OrderDetails', 'getAll');
+
+    });
+});
 // products
 Route::prefix('admin')->group(function () {
     Route::controller(Products::class)->group(function () {
         Route::post('/products', 'create');
         Route::get('/products', 'getAll');
         Route::get('/products/search', 'search');
+        Route::get('/products/top', 'topProducts');
         Route::get('/products/{id}', 'getById');
         Route::put('/products/{id}', 'update');
-        Route::delete('/products/{id}', 'delete');
+        // Route::delete('/products/{id}', 'delete');
         Route::post('/products/{id}', 'addStatus');
-        Route::put('/products/{id}', 'updateStatus');
         Route::delete('/products/{id}', 'updateStatus');
+    });
+});
+
+// product images
+Route::prefix('admin')->group(function () {
+    Route::controller(ProductImages::class)->group(function () {
+        Route::get('/product-images', 'getAll');
+        Route::get('/product-images/search', 'search');
+        Route::get('/product-images/{id}', 'getById');
+        Route::post('/product-images', 'create');
+        Route::put('/product-images/{id}', 'update');
+        Route::delete('/product-images/{id}', 'delete');
     });
 });
 
@@ -105,14 +125,14 @@ Route::prefix('admin')->group(function () {
     });
 });
 
-// statistical
-Route::prefix('admin')->controller(Statistical::class)->group(function () {
-    Route::get('revenue-cost', 'revenueCost');
-    Route::get('inventory', 'inventory');
-    Route::get('dashboard', 'dashboard');
-    Route::get('revenue-by-products', 'revenueByProducts');
-    Route::get('revenue-by-categories', 'revenueByCategories');
-});
+
+
+
+// use App\Http\Controllers\Admin\Statistical;
+
+Route::get('/admin/top-customers', [Statistical::class, 'topCustomersByDateRange']);
+Route::get('/admin/customer-orders', [Statistical::class, 'getOrdersByCustomer']);
+Route::get('/admin/order-details', [Statistical::class, 'getOrderDetails']);
 
 // account
 Route::prefix('admin')->group(function () {
@@ -137,9 +157,15 @@ Route::prefix('admin')->group(function () {
 });
 
 // product variant
+
 Route::prefix('admin')->group(function () {
     Route::controller(ProductVariants::class)->group(function () {
         Route::get('/product-variants', 'getAll');
+        // Route::get('/product-variants/{id}', 'getById');
+        Route::post('/product-variants', 'create');
+        Route::put('/product-variants/{id}', 'update');
+        Route::delete('/product-variants/{id}', 'delete');
+        Route::get('/product-variants/search', 'search');
     });
 });
 
@@ -190,14 +216,13 @@ Route::middleware(['auth:api'])->group(function () {
         Route::delete('/cart/{variant_id}', 'deleteCart');
     });
 
-    Route::controller(OrderController::class)->group(function () {
-        // order
-        Route::post('/orders', 'createOrders');
-        Route::get('/user/orders', 'getUserOrders');
-        Route::get('/orders/{id}', 'getOrderDetail');
-        Route::put('/orders/{id}/cancel', 'cancelOrder');
-        Route::post('/checkout/buy-now', 'buyNow');
-    });
+    // Route::controller(OrderController::class)->group(function () {
+    //     // order
+    //     Route::post('/orders', 'createOrders');
+    //     Route::get('/users/orders', 'getUserOrders');
+    //     Route::get('/orders/{id}', 'getOrderDetail');
+    //     Route::put('/orders/{id}/cancel', 'cancelOrder');
+    // });
 
     Route::controller(AddressController::class)->group(function () {
         // address

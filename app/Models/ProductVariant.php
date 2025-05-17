@@ -34,6 +34,7 @@ use Illuminate\Database\Eloquent\Model;
 class ProductVariant extends Model
 {
 	protected $table = 'product_variants';
+	protected $primaryKey = 'id';
 
 	protected $casts = [
 		'product_id' => 'int',
@@ -50,7 +51,8 @@ class ProductVariant extends Model
 		'original_price',
 		'stock',
 		'status',
-		'specifications'
+		'specifications',
+		'attributes'
 	];
 
 	public function product()
