@@ -37,6 +37,7 @@ Route::prefix('admin')->group(function () {
         Route::post('/products', 'create');
         Route::get('/products', 'getAll');
         Route::get('/products/search', 'search');
+        Route::get('/products/top', 'topProducts');
         Route::get('/products/{id}', 'getById');
         Route::put('/products/{id}', 'update');
         // Route::delete('/products/{id}', 'delete');
@@ -138,13 +139,15 @@ Route::prefix('admin')->group(function () {
 });
 
 // product variant
+
 Route::prefix('admin')->group(function () {
     Route::controller(ProductVariants::class)->group(function () {
         Route::get('/product-variants', 'getAll');
-        Route::get('/product-variants/{id}', 'getById');
+        // Route::get('/product-variants/{id}', 'getById');
         Route::post('/product-variants', 'create');
         Route::put('/product-variants/{id}', 'update');
         Route::delete('/product-variants/{id}', 'delete');
+        Route::get('/product-variants/search', 'search');
     });
 });
 
