@@ -216,13 +216,13 @@ Route::middleware(['auth:api'])->group(function () {
         Route::delete('/cart/{variant_id}', 'deleteCart');
     });
 
-    // Route::controller(OrderController::class)->group(function () {
-    //     // order
-    //     Route::post('/orders', 'createOrders');
-    //     Route::get('/users/orders', 'getUserOrders');
-    //     Route::get('/orders/{id}', 'getOrderDetail');
-    //     Route::put('/orders/{id}/cancel', 'cancelOrder');
-    // });
+     Route::controller(OrderController::class)->group(function () {
+         // order
+         Route::post('/orders', 'createOrders');
+         Route::get('/users/orders', 'getUserOrders');
+         Route::get('/orders/{id}', 'getOrderDetail');
+         Route::put('/orders/{id}/cancel', 'cancelOrder');
+     });
 
     Route::controller(AddressController::class)->group(function () {
         // address
