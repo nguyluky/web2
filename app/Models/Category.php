@@ -83,4 +83,9 @@ class Category extends Model
 		
 		return $array;
 	}
+		public function product()
+	{
+		return $this->hasMany(Product::class);
+	}
+
 }
