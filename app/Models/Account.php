@@ -92,4 +92,9 @@ class Account extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(Order::class, 'account_id', 'id');
     }
+
+    public function isAdmin()
+    {
+        return $this->rule === 1; // Assuming rule 1 is for admin
+    }
 }

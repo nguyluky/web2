@@ -27,7 +27,7 @@ use App\Http\Controllers\user\ProfileController;
 use OpenApi\Annotations as OA;
 
 //order
-Route::prefix('admin')->group(function () {
+Route::prefix('admin')->middleware('admin')->group(function () {
     Route::controller(OrderDetails::class)->group(function () {
         Route::get('/OrderDetails', 'getAll');
 
@@ -109,15 +109,8 @@ Route::prefix('admin')->group(function () {
     Route::get('/admin/top-customers', [Statistical::class, 'topCustomersByDateRange']);
     Route::get('/admin/customer-orders', [Statistical::class, 'getOrdersByCustomer']);
     Route::get('/admin/order-details', [Statistical::class, 'getOrderDetails']);
-});
 
-
-
-
-
-
-// account
-Route::prefix('admin')->group(function () {
+    // account
     Route::controller(Accounts::class)->group(function () {
         Route::post('/accounts', 'create');
         Route::get('/accounts', 'getAll');
@@ -125,10 +118,8 @@ Route::prefix('admin')->group(function () {
         Route::put('/accounts/{id}', 'update');
         Route::delete('/accounts/{id}', 'delete');
     });
-});
 
-// rule
-Route::prefix('admin')->group(function () {
+    // rule
     Route::controller(Rules::class)->group(function () {
         Route::post('/rules', 'create');
         Route::get('/rules', 'getAll');
@@ -136,11 +127,9 @@ Route::prefix('admin')->group(function () {
         Route::delete('/rules/{id}', 'delete');
         Route::get('/rules/search', 'search');
     });
-});
 
-// product variant
+    // product variant
 
-Route::prefix('admin')->group(function () {
     Route::controller(ProductVariants::class)->group(function () {
         Route::get('/product-variants', 'getAll');
         // Route::get('/product-variants/{id}', 'getById');
@@ -149,10 +138,7 @@ Route::prefix('admin')->group(function () {
         Route::delete('/product-variants/{id}', 'delete');
         Route::get('/product-variants/search', 'search');
     });
-});
-
-//prolife
-Route::prefix('admin')->group(function () {
+    //prolife
     Route::controller(Profiles::class)->group(function () {
         Route::post('/users', 'create');
         Route::get('/users', 'getAll');
@@ -161,9 +147,7 @@ Route::prefix('admin')->group(function () {
         Route::delete('/users/{id}', 'delete');
         Route::get('/check-email/{email}', 'checkEmail');
     });
-});
-// import detail
-Route::prefix('admin')->group(function () {
+    // import detail
     Route::controller(ImportDetails::class)->group(function () {
         Route::post('/import-details', 'create');
         Route::get('/import-details', 'getAll');
@@ -216,13 +200,15 @@ Route::middleware(['auth:api'])->group(function () {
 
     Route::get('/users/profile', [ProfileController::class, 'getProfile']);
     Route::put('/users/profile', [ProfileController::class, 'updateProfile']);
+        Route::get('/users/info', [AccountController::class, 'getUserInfo']);
 });
 
 
 // account
 Route::controller(AccountController::class)->group(function () {
-    Route::post('auth/register', 'register');
-    Route::post('auth/login', 'login')->name('login');
+
+    Route::post('/auth/register', 'register');
+    Route::post('/auth/login', 'login')->name('login');
     Route::put('/users/change-password', 'changePassword');
     // khong biet chen do dung khong nhung ma lam dai ____
     Route::get('/users/forgot-password', 'forgetPassword');

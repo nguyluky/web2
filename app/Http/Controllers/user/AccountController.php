@@ -20,6 +20,16 @@ use OpenApi\Annotations as OA;
  */
 class AccountController extends Controller
 {
+
+    public function getUserInfo()
+    {
+        $user = auth()->user();
+        if (!$user) {
+            return response()->json(['error' => 'not found user'], 404);
+        }
+        return response()->json(['user' => $user], 200);
+    }
+
     public function register(Request $request)
     {
         $validate = $request->validate([
