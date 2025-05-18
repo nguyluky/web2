@@ -265,6 +265,8 @@ Route::controller(CategoryController::class)->group(function () {
     Route::get('/categories', 'getAll');
     Route::get('/categories/{id}/filter', 'getFilter');
     Route::get('/categories/{id}', 'getById');
+     Route::get('/tk_categories/main',  'getMainCategories');
+    Route::get('/tk_categories/all', 'getAllCategories');
     // Route::get('/categories/{id}/products', 'getProductsByCategory');
 });
 
@@ -281,4 +283,3 @@ Route::prefix('admin')->group(function () {
     });
 
 });
-

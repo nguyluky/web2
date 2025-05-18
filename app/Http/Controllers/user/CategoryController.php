@@ -6,6 +6,9 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use App\Models\Category;
+use App\Models\ProductVariant;
+use App\Models\ProductImage;
+
 use OpenApi\Annotations as OA;
 
 /**
@@ -47,7 +50,7 @@ class CategoryController extends Controller
         $subcategories = Category::where('parent_id', $id)->pluck('id')->toArray();
         $categoryIds = array_merge([$id], $subcategories);
 
-        // Get all products in this category and its subcategories
+        // Get all product in this category and its subcategories
         $pruducts = Product::whereIn('category_id', $categoryIds)->get();
 
         $data = array();
@@ -116,5 +119,70 @@ class CategoryController extends Controller
          * @body Category
          */
         return response()->json(['data' => $category]);
+    }
+
+public function getMainCategories(Request $request)
+    {
+        try {
+            $categories = Category::select('id', 'name')
+                ->with(['product' => function ($query) {
+                    $query->with(['product_images' => function ($q) {
+                        $q->where('is_primary', 1)->orWhereNull('is_primary')->first();
+                    }])->first();
+                }])
+                ->take(6)
+                ->get()
+                ->map(function ($categories) {
+                    // Lấy ảnh chính từ sản phẩm đầu tiên
+                    $firstImage = $categories->product->first()?->productImages->first()?->image_url ?? 'https://placehold.co/400x200';
+
+                    return [
+                        'id' => $categories->id,
+                        'name' => $categories->name,
+                        'image_url' => $firstImage,
+                        'description' => 'Khám phá các sản phẩm ' . strtolower($categories->name) . ' chất lượng cao từ các thương hiệu hàng đầu.'
+                    ];
+                });
+
+            return response()->json([
+                'message' => 'Lấy danh mục chính thành công',
+                'data' => $categories
+            ], 200);
+        } catch (\Exception $e) {
+            \Log::error('Error in getMainCategories: ' . $e->getMessage());
+            return response()->json([
+                'message' => 'Lỗi khi lấy danh mục chính',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function getAllCategories(Request $request)
+    {
+        try {
+$categories = Category::with(['products.productImages' => function ($query) {
+    $query->where('is_primary', 1);
+}])->get()->map(function ($category) {
+    $image = $category->products->first()?->productImages->first()?->image_url ?? 'https://placehold.co/100x100';
+    
+    return [
+        'id' => $category->id,
+        'name' => $category->name,
+        'image_url' => $image,
+        'product_count' => $category->products->count(),
+    ];
+});
+
+            return response()->json([
+                'message' => 'Lấy tất cả danh mục thành công',
+                'data' => $categories
+            ], 200);
+        } catch (\Exception $e) {
+            \Log::error('Error in getAllCategories: ' . $e->getMessage());
+            return response()->json([
+                'message' => 'Lỗi khi lấy tất cả danh mục',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 }

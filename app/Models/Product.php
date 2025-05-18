@@ -109,4 +109,9 @@ class Product extends Model
 		
 		return $array;
 	}
+
+public function productImages()
+{
+    return $this->hasMany(ProductImage::class, 'product_id');
+}
 }
