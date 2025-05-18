@@ -33,8 +33,8 @@ class Categorys extends Controller
                 'name' => 'required|string|max:45|unique:categories,name',
                 'status' => 'required|in:active,hidden',
                 'require_fields' => 'string',
-                'small_image' => 'image|mimes:jpeg,jpg,png,gif|max:2048',
-                'large_image' => 'image|mimes:jpeg,jpg,png,gif|max:2048',
+                'small_image' => 'image',
+                'large_image' => 'image',
                 'description' => 'string|max:255',
                 'parent_id' => 'integer|exists:categories,id',
             ]);
@@ -111,8 +111,8 @@ class Categorys extends Controller
             'name' => 'required|string|max:45',
             'status' => 'required|in:active,hidden',
             'require_fields' => 'string',
-            'small_image' => 'image|mimes:jpeg,jpg,png,gif|max:2048',
-            'large_image' => 'image|mimes:jpeg,jpg,png,gif|max:2048',
+            'small_image' => 'image',
+            'large_image' => 'image',
             'description' => 'string|max:255',
             'parent_id' => 'integer|exists:categories,id',
         ]);

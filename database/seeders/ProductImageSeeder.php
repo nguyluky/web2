@@ -3,8 +3,11 @@
 namespace Database\Seeders;
 
 use App\Models\ProductImage;
+use App\Models\Product;
+use App\Models\ProductVariant;
 use Illuminate\Database\Seeder;
 use Carbon\Carbon;
+use Faker\Factory as Faker;
 
 class ProductImageSeeder extends Seeder
 {
@@ -13,153 +16,107 @@ class ProductImageSeeder extends Seeder
      */
     public function run(): void
     {
-        // Product 1 - Gaming Pro X1
-        ProductImage::create([
-            'id' => 1,
-            'product_id' => 1,
-            'variant_id' => null,
-            'image_url' => 'https://placehold.co/600x600',
-            'is_primary' => true,
-            'sort_order' => 1,
-            'created_at' => Carbon::now()
-        ]);
-
-        ProductImage::create([
-            'id' => 2,
-            'product_id' => 1,
-            'variant_id' => null,
-            'image_url' => 'https://placehold.co/600x600',
-            'is_primary' => false,
-            'sort_order' => 2,
-            'created_at' => Carbon::now()
-        ]);
-
-        // Product 2 - Business Elite B5
-        ProductImage::create([
-            'id' => 3,
-            'product_id' => 2,
-            'variant_id' => null,
-            'image_url' => 'https://placehold.co/600x600',
-            'is_primary' => true,
-            'sort_order' => 1,
-            'created_at' => Carbon::now()
-        ]);
-
-        ProductImage::create([
-            'id' => 4,
-            'product_id' => 2,
-            'variant_id' => null,
-            'image_url' => 'https://placehold.co/600x600',
-            'is_primary' => false,
-            'sort_order' => 2,
-            'created_at' => Carbon::now()
-        ]);
-
-        // Product 3 - Galaxy Ultra S25
-        ProductImage::create([
-            'id' => 5,
-            'product_id' => 3,
-            'variant_id' => null,
-            'image_url' => 'https://placehold.co/600x600',
-            'is_primary' => true,
-            'sort_order' => 1,
-            'created_at' => Carbon::now()
-        ]);
-
-        ProductImage::create([
-            'id' => 6,
-            'product_id' => 3,
-            'variant_id' => null,
-            'image_url' => 'https://placehold.co/600x600',
-            'is_primary' => false,
-            'sort_order' => 2,
-            'created_at' => Carbon::now()
-        ]);
-
-        // Product 4 - iPhone 16 Pro
-        ProductImage::create([
-            'id' => 7,
-            'product_id' => 4,
-            'variant_id' => null,
-            'image_url' => 'https://placehold.co/600x600',
-            'is_primary' => true,
-            'sort_order' => 1,
-            'created_at' => Carbon::now()
-        ]);
-
-        ProductImage::create([
-            'id' => 8,
-            'product_id' => 4,
-            'variant_id' => null,
-            'image_url' => 'https://placehold.co/600x600',
-            'is_primary' => false,
-            'sort_order' => 2,
-            'created_at' => Carbon::now()
-        ]);
-
-        // Product 5 - Pro Wireless Earbuds
-        ProductImage::create([
-            'id' => 9,
-            'product_id' => 5,
-            'variant_id' => null,
-            'image_url' => 'https://placehold.co/600x600',
-            'is_primary' => true,
-            'sort_order' => 1,
-            'created_at' => Carbon::now()
-        ]);
-
-        // Product 6 - Smart Watch Series 5
-        ProductImage::create([
-            'id' => 10,
-            'product_id' => 6,
-            'variant_id' => null,
-            'image_url' => 'https://placehold.co/600x600',
-            'is_primary' => true,
-            'sort_order' => 1,
-            'created_at' => Carbon::now()
-        ]);
-
-        // Product 7 - Gaming Mouse Pro
-        ProductImage::create([
-            'id' => 11,
-            'product_id' => 7,
-            'variant_id' => null,
-            'image_url' => 'https://placehold.co/600x600',
-            'is_primary' => true,
-            'sort_order' => 1,
-            'created_at' => Carbon::now()
-        ]);
-
-        // Product 8 - Gaming Stealth G7
-        ProductImage::create([
-            'id' => 12,
-            'product_id' => 8,
-            'variant_id' => null,
-            'image_url' => 'https://placehold.co/600x600',
-            'is_primary' => true,
-            'sort_order' => 1,
-            'created_at' => Carbon::now()
-        ]);
+        $faker = Faker::create();
         
-        // Variant specific images
-        ProductImage::create([
-            'id' => 13,
-            'product_id' => 3,
-            'variant_id' => 5, // Galaxy Ultra S25 - Black
-            'image_url' => 'https://placehold.co/600x600',
-            'is_primary' => false,
-            'sort_order' => 3,
-            'created_at' => Carbon::now()
-        ]);
+        // Get all products
+        $products = Product::all();
         
-        ProductImage::create([
-            'id' => 14,
-            'product_id' => 3,
-            'variant_id' => 6, // Galaxy Ultra S25 - Silver
-            'image_url' => 'https://placehold.co/600x600',
-            'is_primary' => false,
-            'sort_order' => 4,
-            'created_at' => Carbon::now()
-        ]);
+        // Generate images for each product
+        foreach ($products as $product) {
+            // Determine how many images to create based on category
+            $imageCount = $faker->numberBetween(3, 8);
+            
+            // Create primary image
+            ProductImage::create([
+                'product_id' => $product->id,
+                'variant_id' => null,
+                'image_url' => $this->generateImageUrl($product->category_id, $product->slug, 'main'),
+                'is_primary' => true,
+                'sort_order' => 1
+            ]);
+            
+            // Create additional product images
+            for ($i = 2; $i <= $imageCount; $i++) {
+                ProductImage::create([
+                    'product_id' => $product->id,
+                    'variant_id' => null,
+                    'image_url' => $this->generateImageUrl($product->category_id, $product->slug, $i),
+                    'is_primary' => false,
+                    'sort_order' => $i
+                ]);
+            }
+            
+            // Get product variants and create images for each variant
+            $variants = ProductVariant::where('product_id', $product->id)->get();
+            
+            foreach ($variants as $variant) {
+                // Create at least one image per variant
+                $variantImageCount = $faker->numberBetween(1, 3);
+                
+                for ($i = 1; $i <= $variantImageCount; $i++) {
+                    ProductImage::create([
+                        'product_id' => $product->id,
+                        'variant_id' => $variant->id,
+                        'image_url' => $this->generateVariantImageUrl($product->category_id, $product->slug, $variant->id, $i),
+                        'is_primary' => ($i === 1), // First image is primary for the variant
+                        'sort_order' => $i
+                    ]);
+                }
+            }
+        }
+    }
+    
+    /**
+     * Generate a realistic image URL based on category and product name
+     */
+    private function generateImageUrl($categoryId, $slug, $index)
+    {
+        $categories = [
+            // Gaming laptop
+            'laptop-gaming' => 'laptops/gaming',
+            // Office laptop
+            'laptop-van-phong' => 'laptops/office',
+            // Macbook
+            'macbook' => 'laptops/macbook',
+            // iPhone
+            'iphone' => 'phones/iphone',
+            // Samsung
+            'samsung' => 'phones/samsung',
+            // Power bank
+            'sac-du-phong' => 'accessories/powerbanks',
+            // Smartwatch
+            'dong-ho-thong-minh' => 'wearables/smartwatches'
+        ];
+        
+        // Get category name from category ID
+        $category = \App\Models\Category::find($categoryId);
+        $categoryFolder = $categories[$category->slug] ?? 'products';
+        
+        // Format: /images/products/[category_folder]/[product_slug]-[index].jpg
+        return "/images/products/{$categoryFolder}/{$slug}-{$index}.jpg";
+    }
+    
+    /**
+     * Generate image URL for product variants
+     */
+    private function generateVariantImageUrl($categoryId, $slug, $variantId, $index)
+    {
+        $category = \App\Models\Category::find($categoryId);
+        
+        // Different folder structure for variants
+        $categories = [
+            'laptop-gaming' => 'laptops/gaming/variants',
+            'laptop-van-phong' => 'laptops/office/variants',
+            'macbook' => 'laptops/macbook/variants',
+            'iphone' => 'phones/iphone/variants',
+            'samsung' => 'phones/samsung/variants',
+            'sac-du-phong' => 'accessories/powerbanks/variants',
+            'dong-ho-thong-minh' => 'wearables/smartwatches/variants'
+        ];
+        
+        $categoryFolder = $categories[$category->slug] ?? 'products/variants';
+        
+        // Format: /images/products/[category_folder]/[product_slug]-v[variant_id]-[index].jpg
+        return "/images/products/{$categoryFolder}/{$slug}-v{$variantId}-{$index}.jpg";
     }
 }

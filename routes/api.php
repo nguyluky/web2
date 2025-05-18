@@ -28,142 +28,8 @@ use App\Http\Controllers\user\ProfileController;
 use OpenApi\Annotations as OA;
 
 //order
-Route::prefix('admin')->middleware('admin')->group(function () {
-    Route::controller(OrderDetails::class)->group(function () {
-        Route::get('/OrderDetails', 'getAll');
 
-    });
-    // products
-    Route::controller(Products::class)->group(function () {
-        Route::post('/products', 'create');
-        Route::get('/products', 'getAll');
-        Route::get('/products/search', 'search');
-        Route::get('/products/top', 'topProducts');
-        Route::get('/products/{id}', 'getById');
-        Route::put('/products/{id}', 'update');
-        // Route::delete('/products/{id}', 'delete');
-        Route::post('/products/{id}', 'addStatus');
-        Route::delete('/products/{id}', 'updateStatus');
-    });
-    // product-images
-    Route::controller(ProductImages::class)->group(function () {
-        Route::get('/product-images', 'getAll');
-        Route::get('/product-images/search', 'search');
-        Route::get('/product-images/{id}', 'getById');
-        Route::post('/product-images', 'create');
-        Route::put('/product-images/{id}', 'update');
-        Route::delete('/product-images/{id}', 'delete');
-    });
-
-    // categories
-    Route::controller(Categorys::class)->group(function () {
-        Route::post('/categories', 'create');
-        Route::get('/categories', 'getAll');
-        Route::get('/categories/search', 'search');
-        Route::put('/categories/{id}', 'update');
-        Route::delete('/categories/{id}', 'delete');
-    });
-
-    // orders
-    Route::controller(Orders::class)->group(function () {
-        Route::get('/orders', 'getAll');
-        Route::get('/orders/{id}', 'getById');
-        Route::put('/orders/{id}', 'updateStatus');
-        Route::delete('/orders/{id}', 'cancelOrder');
-        Route::get('/orders/{id}/details', 'getOrderDetails');
-    });
-    // orderDetails
-    Route::controller(OrderDetails::class)->group(function () {
-        Route::get('/order/detail', 'getAll');
-    });
-
-    // suppliers
-    Route::controller(Suppliers::class)->group(function () {
-        Route::post('/suppliers', 'create');
-        Route::get('/suppliers', 'getAll');
-        Route::get('/suppliers/search', 'search');
-        Route::get('/suppliers/{id}', 'getById');
-        Route::get('/suppliers/check/{data}', 'checkData');
-        Route::put('/suppliers/{id}', 'update');
-        Route::delete('/suppliers/{id}', 'delete');
-    });
-
-    // import
-    Route::controller(Imports::class)->group(function () {
-        Route::post('/imports', 'create');
-        Route::get('/imports', 'getAll');
-        Route::get('/imports/{id}', 'getById');
-        Route::put('/imports/{id}', 'updateStatus');
-        Route::delete('/imports/{id}', 'cancelImport');
-    });
-
-    //Warranty
-    Route::controller(Warrantys::class)->group(function () {
-        Route::post('/warrantys', 'create');
-        Route::get('/warrantys', 'getAll');
-        Route::get('/warrantys/search', 'search');
-        Route::get('/warrantys/{id}', 'getById');
-        Route::put('/warrantys/{id}', 'update');
-        Route::delete('/warrantys/{id}', 'delete');
-    });
-
-    Route::get('/admin/top-customers', [Statistical::class, 'topCustomersByDateRange']);
-    Route::get('/admin/customer-orders', [Statistical::class, 'getOrdersByCustomer']);
-    Route::get('/admin/order-details', [Statistical::class, 'getOrderDetails']);
-
-    Route::controller(OrderControllerAdmin::class)->group(function () {
-        Route::get('/tk_orders', 'getOrders');
-        Route::get('/tk_orders/stats', 'getMonthlyStats');
-        Route::get('/tk_orders/status-stats', 'getStatusStats');
-        
-    });
-
-    // account
-    Route::controller(Accounts::class)->group(function () {
-        Route::post('/accounts', 'create');
-        Route::get('/accounts', 'getAll');
-        Route::get('/accounts/search', 'search');
-        Route::put('/accounts/{id}', 'update');
-        Route::delete('/accounts/{id}', 'delete');
-    });
-
-    // rule
-    Route::controller(Rules::class)->group(function () {
-        Route::post('/rules', 'create');
-        Route::get('/rules', 'getAll');
-        Route::put('/rules/{id}', 'update');
-        Route::delete('/rules/{id}', 'delete');
-        Route::get('/rules/search', 'search');
-    });
-
-    // product variant
-
-    Route::controller(ProductVariants::class)->group(function () {
-        Route::get('/product-variants', 'getAll');
-        // Route::get('/product-variants/{id}', 'getById');
-        Route::post('/product-variants', 'create');
-        Route::put('/product-variants/{id}', 'update');
-        Route::delete('/product-variants/{id}', 'delete');
-        Route::get('/product-variants/search', 'search');
-    });
-    //prolife
-    Route::controller(Profiles::class)->group(function () {
-        Route::post('/users', 'create');
-        Route::get('/users', 'getAll');
-        Route::get('/users/search', 'search');
-        Route::put('/users/{id}', 'update');
-        Route::delete('/users/{id}', 'delete');
-        Route::get('/check-email/{email}', 'checkEmail');
-    });
-    // import detail
-    Route::controller(ImportDetails::class)->group(function () {
-        Route::post('/import-details', 'create');
-        Route::get('/import-details', 'getAll');
-        Route::get('/import-details/{id}', 'getById');
-        Route::put('/import-details/{id}', 'update');
-        Route::delete('/import-details/{id}', 'delete');
-    });
-});
+// Route::middleware(['auth:api'])->
 
 // product
 Route::controller(ProductController::class)->group(function () {
@@ -182,6 +48,142 @@ Route::controller(ProductReviewController::class)->group(function () {
 
 // cart
 Route::middleware(['auth:api'])->group(function () {
+    Route::prefix('admin')->middleware('admin')->group(function () {
+        Route::controller(OrderDetails::class)->group(function () {
+            Route::get('/OrderDetails', 'getAll');
+
+        });
+        // products
+        Route::controller(Products::class)->group(function () {
+            Route::post('/products', 'create');
+            Route::get('/products', 'getAll');
+            Route::get('/products/search', 'search');
+            Route::get('/products/top', 'topProducts');
+            Route::get('/products/{id}', 'getById');
+            Route::put('/products/{id}', 'update');
+            // Route::delete('/products/{id}', 'delete');
+            Route::post('/products/{id}', 'addStatus');
+            Route::delete('/products/{id}', 'updateStatus');
+        });
+        // product-images
+        Route::controller(ProductImages::class)->group(function () {
+            Route::get('/product-images', 'getAll');
+            Route::get('/product-images/search', 'search');
+            Route::get('/product-images/{id}', 'getById');
+            Route::post('/product-images', 'create');
+            Route::put('/product-images/{id}', 'update');
+            Route::delete('/product-images/{id}', 'delete');
+        });
+
+        // categories
+        Route::controller(Categorys::class)->group(function () {
+            Route::post('/categories', 'create');
+            Route::get('/categories', 'getAll');
+            Route::get('/categories/search', 'search');
+            Route::put('/categories/{id}', 'update');
+            Route::delete('/categories/{id}', 'delete');
+        });
+
+        // orders
+        Route::controller(Orders::class)->group(function () {
+            Route::get('/orders', 'getAll');
+            Route::get('/orders/{id}', 'getById');
+            Route::put('/orders/{id}', 'updateStatus');
+            Route::delete('/orders/{id}', 'cancelOrder');
+            Route::get('/orders/{id}/details', 'getOrderDetails');
+        });
+        // orderDetails
+        Route::controller(OrderDetails::class)->group(function () {
+            Route::get('/order/detail', 'getAll');
+        });
+
+        // suppliers
+        Route::controller(Suppliers::class)->group(function () {
+            Route::post('/suppliers', 'create');
+            Route::get('/suppliers', 'getAll');
+            Route::get('/suppliers/search', 'search');
+            Route::get('/suppliers/{id}', 'getById');
+            Route::get('/suppliers/check/{data}', 'checkData');
+            Route::put('/suppliers/{id}', 'update');
+            Route::delete('/suppliers/{id}', 'delete');
+        });
+
+        // import
+        Route::controller(Imports::class)->group(function () {
+            Route::post('/imports', 'create');
+            Route::get('/imports', 'getAll');
+            Route::get('/imports/{id}', 'getById');
+            Route::put('/imports/{id}', 'updateStatus');
+            Route::delete('/imports/{id}', 'cancelImport');
+        });
+
+        //Warranty
+        Route::controller(Warrantys::class)->group(function () {
+            Route::post('/warrantys', 'create');
+            Route::get('/warrantys', 'getAll');
+            Route::get('/warrantys/search', 'search');
+            Route::get('/warrantys/{id}', 'getById');
+            Route::put('/warrantys/{id}', 'update');
+            Route::delete('/warrantys/{id}', 'delete');
+        });
+
+        Route::get('/admin/top-customers', [Statistical::class, 'topCustomersByDateRange']);
+        Route::get('/admin/customer-orders', [Statistical::class, 'getOrdersByCustomer']);
+        Route::get('/admin/order-details', [Statistical::class, 'getOrderDetails']);
+
+        Route::controller(OrderControllerAdmin::class)->group(function () {
+            Route::get('/tk_orders', 'getOrders');
+            Route::get('/tk_orders/stats', 'getMonthlyStats');
+            Route::get('/tk_orders/status-stats', 'getStatusStats');
+
+        });
+
+        // account
+        Route::controller(Accounts::class)->group(function () {
+            Route::post('/accounts', 'create');
+            Route::get('/accounts', 'getAll');
+            Route::get('/accounts/search', 'search');
+            Route::put('/accounts/{id}', 'update');
+            Route::delete('/accounts/{id}', 'delete');
+        });
+
+        // rule
+        Route::controller(Rules::class)->group(function () {
+            Route::post('/rules', 'create');
+            Route::get('/rules', 'getAll');
+            Route::put('/rules/{id}', 'update');
+            Route::delete('/rules/{id}', 'delete');
+            Route::get('/rules/search', 'search');
+        });
+
+        // product variant
+
+        Route::controller(ProductVariants::class)->group(function () {
+            Route::get('/product-variants', 'getAll');
+            // Route::get('/product-variants/{id}', 'getById');
+            Route::post('/product-variants', 'create');
+            Route::put('/product-variants/{id}', 'update');
+            Route::delete('/product-variants/{id}', 'delete');
+            Route::get('/product-variants/search', 'search');
+        });
+        //prolife
+        Route::controller(Profiles::class)->group(function () {
+            Route::post('/users', 'create');
+            Route::get('/users', 'getAll');
+            Route::get('/users/search', 'search');
+            Route::put('/users/{id}', 'update');
+            Route::delete('/users/{id}', 'delete');
+            Route::get('/check-email/{email}', 'checkEmail');
+        });
+        // import detail
+        Route::controller(ImportDetails::class)->group(function () {
+            Route::post('/import-details', 'create');
+            Route::get('/import-details', 'getAll');
+            Route::get('/import-details/{id}', 'getById');
+            Route::put('/import-details/{id}', 'update');
+            Route::delete('/import-details/{id}', 'delete');
+        });
+    });
 
     Route::controller(CartController::class)->group(function () {
         Route::get('/cart', 'getAllCart');
@@ -190,13 +192,13 @@ Route::middleware(['auth:api'])->group(function () {
         Route::delete('/cart/{variant_id}', 'deleteCart');
     });
 
-     Route::controller(OrderController::class)->group(function () {
-         // order
-         Route::post('/orders', 'createOrders');
-         Route::get('/users/orders', 'getUserOrders');
-         Route::get('/orders/{id}', 'getOrderDetail');
-         Route::put('/orders/{id}/cancel', 'cancelOrder');
-     });
+    Route::controller(OrderController::class)->group(function () {
+        // order
+        Route::post('/orders', 'createOrders');
+        Route::get('/users/orders', 'getUserOrders');
+        Route::get('/orders/{id}', 'getOrderDetail');
+        Route::put('/orders/{id}/cancel', 'cancelOrder');
+    });
 
     Route::controller(AddressController::class)->group(function () {
         // address
@@ -208,7 +210,7 @@ Route::middleware(['auth:api'])->group(function () {
 
     Route::get('/users/profile', [ProfileController::class, 'getProfile']);
     Route::put('/users/profile', [ProfileController::class, 'updateProfile']);
-        Route::get('/users/info', [AccountController::class, 'getUserInfo']);
+    Route::get('/users/info', [AccountController::class, 'getUserInfo']);
 });
 
 

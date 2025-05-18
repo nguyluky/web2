@@ -15,9 +15,14 @@ class CheckAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        \Log::info('CheckAdmin middleware called');
-        $user = $request->user();
-        if (!$user || !$user->isAdmin()) {
+
+        $user = auth()->user();
+
+        if (!$user) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+        
+        if (!$user->isAdmin()) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
         return $next($request);
