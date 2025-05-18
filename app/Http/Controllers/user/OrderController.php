@@ -98,7 +98,7 @@ class OrderController extends Controller
                 'address_id' => $validated['address_id'],
             ];
 
-            $order = Order::create($order_data);
+    //         $order = Order::create($order_data);
 
             foreach ($validated['products'] as $product) {
                 OrderDetail::create([

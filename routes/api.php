@@ -21,6 +21,7 @@ use App\Http\Controllers\admin\Statistical;
 use App\Http\Controllers\admin\Accounts;
 use App\Http\Controllers\admin\Rules;
 use App\Http\Controllers\admin\ProductImages;
+use App\Http\Controllers\admin\OrderControllerAdmin;
 use App\Http\Controllers\user\CategoryController;
 use App\Http\Controllers\user\ProfileController;
 
@@ -110,6 +111,13 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     Route::get('/admin/customer-orders', [Statistical::class, 'getOrdersByCustomer']);
     Route::get('/admin/order-details', [Statistical::class, 'getOrderDetails']);
 
+    Route::controller(OrderControllerAdmin::class)->group(function () {
+        Route::get('/tk_orders', 'getOrders');
+        Route::get('/tk_orders/stats', 'getMonthlyStats');
+        Route::get('/tk_orders/status-stats', 'getStatusStats');
+        
+    });
+
     // account
     Route::controller(Accounts::class)->group(function () {
         Route::post('/accounts', 'create');
@@ -182,13 +190,13 @@ Route::middleware(['auth:api'])->group(function () {
         Route::delete('/cart/{variant_id}', 'deleteCart');
     });
 
-    // Route::controller(OrderController::class)->group(function () {
-    //     // order
-    //     Route::post('/orders', 'createOrders');
-    //     Route::get('/users/orders', 'getUserOrders');
-    //     Route::get('/orders/{id}', 'getOrderDetail');
-    //     Route::put('/orders/{id}/cancel', 'cancelOrder');
-    // });
+     Route::controller(OrderController::class)->group(function () {
+         // order
+         Route::post('/orders', 'createOrders');
+         Route::get('/users/orders', 'getUserOrders');
+         Route::get('/orders/{id}', 'getOrderDetail');
+         Route::put('/orders/{id}/cancel', 'cancelOrder');
+     });
 
     Route::controller(AddressController::class)->group(function () {
         // address

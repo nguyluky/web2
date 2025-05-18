@@ -46,13 +46,20 @@ class AccountController extends Controller
             $validate['rule'] = 4; // Mặc định là user
             $validate['status'] = 'active'; // Mặc định là active
             $validate['password'] = bcrypt($validate['password']); // Mã hóa mật khẩu
-            $account = Account::create($validate);
+            $account = Account::create([
+                'rule' => $validate['rule'],
+                'username' => $validate['username'],
+                'password' => $validate['password'],
+                'status' => $validate['status'],
+                'created' => now(),
+                'updated' => now()
+            ]);
 
             // Tạo profile cho tài khoản
             $account->profile()->create([
-                'fullname' => $request->input('fullname', ''),
-                'phone_number' => $request->input('phone_number', ''),
-                'email' => $request->input('email'),
+                'fullname' => $validate['fullname'],
+                'phone_number' => $validate['phone_number'],
+                'email' => $validate['email'],
             ]);
             DB::commit();
 

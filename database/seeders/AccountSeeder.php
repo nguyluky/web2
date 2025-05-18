@@ -44,16 +44,16 @@ class AccountSeeder extends Seeder
         ]);
 
         // Create 10 customer accounts
-        for ($i = 4; $i <= 13; $i++) {
-            Account::create([
-                'id' => $i,
-                'rule' => 4,
-                'username' => 'customer' . ($i - 3),
-                'password' => Hash::make('customer123'),
-                'status' => 'active',
-                'created' => now(),
-                'updated' => now()
-            ]);
-        }
+      for ($i = 4; $i <= 13; $i++) {
+           Account::create([
+               'id' => $i,
+               'rule' => 4,
+               'username' => 'customer' . ($i - 3),
+               'password' => Hash::make('customer123'),
+               'status' => 'active',
+               'created' => now(),
+               'updated' => now()
+           ]);
+       }
     }
 }
