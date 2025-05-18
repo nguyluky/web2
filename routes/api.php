@@ -21,6 +21,7 @@ use App\Http\Controllers\admin\Statistical;
 use App\Http\Controllers\admin\Accounts;
 use App\Http\Controllers\admin\Rules;
 use App\Http\Controllers\admin\ProductImages;
+use App\Http\Controllers\admin\OrderControllerAdmin;
 use App\Http\Controllers\user\CategoryController;
 use App\Http\Controllers\user\ProfileController;
 
@@ -39,6 +40,7 @@ Route::prefix('admin')->group(function () {
         Route::post('/products', 'create');
         Route::get('/products', 'getAll');
         Route::get('/products/search', 'search');
+        Route::get('/products/top', 'topProducts');
         Route::get('/products/{id}', 'getById');
         Route::put('/products/{id}', 'update');
         // Route::delete('/products/{id}', 'delete');
@@ -132,6 +134,17 @@ Route::prefix('admin')->group(function () {
 Route::get('/admin/top-customers', [Statistical::class, 'topCustomersByDateRange']);
 Route::get('/admin/customer-orders', [Statistical::class, 'getOrdersByCustomer']);
 Route::get('/admin/order-details', [Statistical::class, 'getOrderDetails']);
+
+// code thống kê 
+Route::prefix('admin')->group(function () {
+    Route::controller(OrderControllerAdmin::class)->group(function () {
+        Route::get('/tk_orders', 'getOrders');
+        Route::get('/tk_orders/stats', 'getMonthlyStats');
+        Route::get('/tk_orders/status-stats', 'getStatusStats');
+        
+    });
+});
+
 
 // account
 Route::prefix('admin')->group(function () {
