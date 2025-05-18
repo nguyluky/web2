@@ -39,6 +39,7 @@ class ProductReviewController extends Controller
 
         // Add image path to meta_data
         $review = ProductReview::create([
+            $id = ProductReview::max('id'),
             ...$validated,
             'meta_data' => ['image' => $imagePath]
         ]);

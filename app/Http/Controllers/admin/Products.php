@@ -70,10 +70,30 @@ class Products extends Controller
         ]);
     }
 
-    public function create(CreateProductsRequest $request)
+    public function create(Request $request)
     {
 
-        $validatedData = $request->validated();
+        // Validate dữ liệu đầu vào
+        $validatedData = $request->validate([
+            // Product Info
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string|max:2000',
+            'category_id' => 'nullable|integer|exists:categories,id',
+
+            // Pricing
+            'base_price' => 'required|numeric|min:0',
+            'base_original_price' => 'nullable|numeric|min:0',
+
+            // Inventory
+            'status' => 'nullable|string|in:active,inactive,draft',
+
+            // JSON Data
+            'specifications' => 'nullable|array',
+            'features' => 'nullable|array',
+            'features.*' => 'string|max:255',
+            'meta_data' => 'nullable|array',
+        ]);
+
         $validatedData['slug'] = str_slug($validatedData['name']);
         while (Product::where('slug', $validatedData['slug'])->exists()) {
             $validatedData['slug'] = str_slug($validatedData['name']) . '-' . uniqid();

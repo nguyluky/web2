@@ -50,7 +50,8 @@ class Order extends Model
     public function profile()
     {
         // Liên kết qua account
-        return $this->hasOneThrough(Profile::class, Account::class, 'id', 'id', 'account_id', 'id');
+        // return $this->hasOneThrough(Profile::class, Account::class, 'id', 'id', 'account_id', 'id');
+		return $this->belongsTo(Profile::class, 'profile_id');
     }
 
 	public function order_details()

@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class EnsureTokenIsValid
+class CheckAdmin
 {
     /**
      * Handle an incoming request.
@@ -15,7 +15,11 @@ class EnsureTokenIsValid
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // TODO: kieem tra xem token co ton tai hay khong
+        \Log::info('CheckAdmin middleware called');
+        $user = $request->user();
+        if (!$user || !$user->isAdmin()) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
         return $next($request);
     }
 }

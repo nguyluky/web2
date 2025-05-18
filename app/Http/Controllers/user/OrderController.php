@@ -98,7 +98,7 @@ class OrderController extends Controller
                 'address_id' => $validated['address_id'],
             ];
 
-            $order = Order::create($order_data);
+    //         $order = Order::create($order_data);
 
             foreach ($validated['products'] as $product) {
                 OrderDetail::create([
@@ -137,13 +137,13 @@ class OrderController extends Controller
         if (!$user) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
-        
+
         // Check if order belongs to the user
         $order = Order::where('id', $id)->where('profile_id', $user->id)->first();
         if (!$order) {
             return response()->json(['error' => 'Order not found or unauthorized'], 404);
         }
-        
+
         $orderDetails = OrderDetail::where('order_id', $id)
             ->with(['product_variant.product', 'product_variant.product.product_images'])
             ->get()
