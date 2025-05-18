@@ -210,6 +210,7 @@ Route::middleware(['auth:api'])->group(function () {
 
     Route::get('/users/profile', [ProfileController::class, 'getProfile']);
     Route::put('/users/profile', [ProfileController::class, 'updateProfile']);
+    Route::post('/users/profile/avatar', [ProfileController::class, 'uploadAvatar']);
     Route::get('/users/info', [AccountController::class, 'getUserInfo']);
 });
 
