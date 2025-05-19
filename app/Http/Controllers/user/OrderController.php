@@ -19,65 +19,64 @@ use Illuminate\Routing\Controller;
  */
 class OrderController extends Controller
 {
-
-public function createOrders(Request $request)
-{
-    $validated = $request->validate([
-        'products' => 'required|array|min:1',
-        'products.*.product_variant_id' => 'required|integer|exists:product_variants,id',
-        'products.*.amount' => 'required|integer|min:1',
-        'payment_method' => 'required|integer',
-        'address_id' => 'required|integer|exists:address,id',
-    ]);
-
-    $profile_id = auth()->user()->id;
-
-    foreach ($validated['products'] as $product) {
-        $variant = ProductVariant::find($product['product_variant_id']);
-
-        if (!$variant) {
-            return response()->json([
-                'message' => 'Không tìm thấy biến thể sản phẩm.',
-            ], 404);
-        }
-
-        if ($variant->stock < $product['amount']) {
-            return response()->json([
-                'message' => "Không đủ hàng trong kho cho sản phẩm: {$variant->sku}",
-            ], 409);
-        }
-    }
-
-    $order = DB::transaction(function () use ($validated, $profile_id) {
-        $order = Order::create([
-            'profile_id' => $profile_id,
-            'status' => 'pending',
-            'payment_method' => $validated['payment_method'],
-            'address_id' => $validated['address_id'],
+    public function createOrders(Request $request)
+    {
+        $validated = $request->validate([
+            'products' => 'required|array|min:1',
+            'products.*.product_variant_id' => 'required|integer|exists:product_variants,id',
+            'products.*.amount' => 'required|integer|min:1',
+            'payment_method' => 'required|integer|in:0,1,2,3',
+            'address_id' => 'required|integer|exists:address,id',
         ]);
 
+        $profile_id = auth()->user()->id;
+
         foreach ($validated['products'] as $product) {
-            $variant = ProductVariant::lockForUpdate()->find($product['product_variant_id']);
-            $variant->decrement('stock', $product['amount']);
+            $variant = ProductVariant::find($product['product_variant_id']);
 
-            for ($i = 0; $i < $product['amount']; $i++) {
-                do {
-                    $serial = random_int(1000000000, 9999999999);
-                } while (OrderDetail::where('serial', $serial)->exists());
+            if (!$variant) {
+                return response()->json([
+                    'message' => 'Không tìm thấy biến thể sản phẩm.',
+                ], 404);
+            }
 
-                OrderDetail::create([
-                    'order_id'   => $order->id,
-                    'product_variant_id' => $variant->id,
-                    'serial'     => $serial,
-                ]);
+            if ($variant->stock < $product['amount']) {
+                return response()->json([
+                    'message' => "Không đủ hàng trong kho cho sản phẩm: {$variant->sku}",
+                ], 409);
             }
         }
 
-        return $order;
-    });
+        $order = DB::transaction(function () use ($validated, $profile_id) {
+            $order = Order::create([
+                'profile_id' => $profile_id,
+                'payment_method' => $validated['payment_method'],
+                'status' => in_array($validated['payment_method'], [0, 1, 2]) ? 'processing' : 'pending',
+                'address_id' => $validated['address_id'],
+            ]);
 
-    return response()->json(['order' => $order], 201);
-}
+            foreach ($validated['products'] as $product) {
+                $variant = ProductVariant::lockForUpdate()->find($product['product_variant_id']);
+                $variant->decrement('stock', $product['amount']);
+
+                for ($i = 0; $i < $product['amount']; $i++) {
+                    do {
+                        $serial = random_int(1000000000, 9999999999);
+                    } while (OrderDetail::where('serial', $serial)->exists());
+
+                    OrderDetail::create([
+                        'order_id'   => $order->id,
+                        'product_variant_id' => $variant->id,
+                        'serial'     => $serial,
+                    ]);
+                }
+            }
+
+            return $order;
+        });
+
+        return response()->json(['order' => $order], 201);
+    }
 
     public function checkOrderStatus(Request $request)
     {

@@ -7,6 +7,8 @@ use Illuminate\Routing\Controller;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\ProductVariant;
+use App\Models\Warranty;
+use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
 use OpenApi\Annotations as OA;
 
@@ -178,6 +180,19 @@ class Orders extends Controller
                 
                     // Dùng update() thay vì save()
                     $variant->update(['stock' => $newStock]);
+                }
+            }
+
+            if ($newStatus === 'completed') {
+                $orderDetails = OrderDetail::where('order_id', $orderId)->get();
+
+                foreach ($orderDetails as $detail) {
+                    Warranty::create([
+                        'product_id' => $detail->id,
+                        'issue_date' => Carbon::now()->format('Y-m-d'),
+                        'expiration_date' => Carbon::now()->addMonths(12)->format('Y-m-d'),
+                        'status' => 'active',
+                    ]);
                 }
             }
 
