@@ -30,7 +30,7 @@ class ImportDetails extends Controller
         // Xác thực dữ liệu đầu vào dựa trên cấu trúc bảng import_detail
         $validated = $request->validate([
             'import_id' => 'required|integer|exists:imports,id', // Kiểm tra import_id tồn tại trong bảng imports
-            'product_id' => 'required|integer|exists:products,id', // Kiểm tra product_id tồn tại trong bảng products
+            'product_variant_id' => 'required|integer|exists:product_variants,id', // Kiểm tra product_id tồn tại trong bảng products
             'import_price' => 'required|integer|min:0', // Giá nhập phải là số nguyên, không âm
         ]);
 

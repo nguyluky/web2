@@ -32,11 +32,11 @@ class Import extends Model
 	public $timestamps = false;
 
 	protected $casts = [
-		'supplier_id' => 'int',
+		'suppiler_id' => 'int',
 		'employee_id' => 'int'
 	];
 
-protected $fillable = ['supplier_id', 'employee_id', 'status', 'created_at'];
+protected $fillable = ['suppiler_id', 'employee_id', 'status', 'created_at'];
 
 	public function account()
 	{
@@ -45,7 +45,7 @@ protected $fillable = ['supplier_id', 'employee_id', 'status', 'created_at'];
 
 	public function supplier()
 	{
-		return $this->belongsTo(Supplier::class, 'supplier_id');
+		return $this->belongsTo(Supplier::class, 'suppiler_id');
 	}
 
 	public function import_details()

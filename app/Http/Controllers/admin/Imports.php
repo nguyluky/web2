@@ -84,7 +84,7 @@ public function create(Request $request)
         //     'import_detail.*.amount' => 'required|integer|min:1',
         // ]);
         $validated = $request->validate([
-            'supplier_id' => 'required|integer|exists:supplier,id',
+            'suppiler_id' => 'required|integer|exists:supplier,id',
             'employee_id' => 'required|integer|exists:account,id',
             'import_details' => 'required|array',
             'import_details.*.product_variant_id' => 'required|integer|exists:product_variants,id',
@@ -95,7 +95,7 @@ public function create(Request $request)
         try {
             // Create the import record with default status 'pending'
             $import = Import::create([
-                'supplier_id' => $validated['supplier_id'],
+                'suppiler_id' => $validated['suppiler_id'],
                 'employee_id' => $validated['employee_id'],
                 'status' => 'pending',
              'created_at' => now()

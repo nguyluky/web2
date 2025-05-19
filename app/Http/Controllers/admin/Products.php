@@ -356,4 +356,38 @@ class Products extends Controller
 
         return $products->sortByDesc('total_sold')->values();
     }
+
+    public function topProductsTruoc()
+    {
+        $currentYear = Carbon::now()->year;
+        $currentMonth = Carbon::now()->month-1;
+
+        $orders = Order::with(['order_details.product_variant.product'])
+            ->where('status', 'completed')
+            ->whereYear('created_at', $currentYear)
+            ->whereMonth('created_at', $currentMonth)
+            ->get();
+
+        $productCounts = collect();
+
+        foreach ($orders as $order) {
+            foreach ($order->order_details as $detail) {
+                $product = $detail->product_variant->product;
+                if ($product) {
+                    $productCounts[$product->id] = ($productCounts[$product->id] ?? 0) + 1;
+                }
+            }
+        }
+
+        $topProducts = collect($productCounts)
+            ->sortDesc()
+            ->take(5);
+
+        $products = Product::whereIn('id', $topProducts->keys())->get()->map(function ($product) use ($topProducts) {
+            $product->total_sold = $topProducts[$product->id];
+            return $product;
+        });
+
+        return $products->sortByDesc('total_sold')->values();
+    }
 }

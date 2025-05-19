@@ -38,7 +38,7 @@ class Statistical extends Controller
         )
             ->join('order_detail', 'order.id', '=', 'order_detail.order_id')
             ->join('product_variants', 'order_detail.product_variant_id', '=', 'product_variants.id')
-            ->join('account', 'order.account_id', '=', 'account.id')
+            ->join('account', 'order.profile_id', '=', 'account.id')
             ->leftJoin('profile', 'profile.id', '=', 'account.id')
             ->where('order.status', 'completed')
             ->whereBetween('order.created_at', [$startDate, $endDate])
@@ -57,7 +57,7 @@ class Statistical extends Controller
             )
                 ->join('order_detail', 'order.id', '=', 'order_detail.order_id')
                 ->join('product_variants', 'order_detail.product_variant_id', '=', 'product_variants.id')
-                ->where('order.account_id', $customer->profile_id)
+                ->where('order.profile_id', $customer->profile_id)
                 ->where('order.status', 'completed')
                 ->whereBetween('order.created_at', [$startDate, $endDate])
                 ->groupBy('order.id', 'order.created_at')
@@ -131,7 +131,7 @@ public function getOrderDetails(Request $request)
         'order_detail.id',
         'product.name as product_name',
         'product_variants.price',
-        'product_variants.attributes'
+        'product_variants.specifications'
     )
         ->join('product_variants', 'order_detail.product_variant_id', '=', 'product_variants.id')
         ->join('product', 'product_variants.product_id', '=', 'product.id')
@@ -141,16 +141,16 @@ public function getOrderDetails(Request $request)
     return response()->json([
         'status' => 'completed',
         'data' => $orderDetails->map(function ($detail) {
-            $attributes = is_string($detail->attributes) ? json_decode($detail->attributes, true) : [];
+            $specifications = is_string($detail->specifications) ? json_decode($detail->specifications, true) : [];
             if (json_last_error() !== JSON_ERROR_NONE) {
-                $attributes = [];
+                $specifications = [];
             }
 
             return [
                 'detail_id' => $detail->id,
                 'product_name' => $detail->product_name,
                 'price' => (float) ($detail->price ?? 0),
-                'attributes' => $attributes,
+                'specifications' => $specifications,
             ];
         }),
         'message' => $orderDetails->isEmpty() ? 'No order details found' : null

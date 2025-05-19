@@ -47,9 +47,10 @@ class OrderControllerAdmin extends Controller
             ->join('product_variants', 'order_detail.product_variant_id', '=', 'product_variants.id')
             ->select(
                 DB::raw('MONTH(order.created_at) as month'),
-                DB::raw('SUM(product_variants.price * order_detail.serial) as total')
+                DB::raw('SUM(product_variants.price) as total')
             )
             ->whereYear('order.created_at', $currentYear)
+            ->where('order.status', 'completed')
             ->groupBy(DB::raw('MONTH(order.created_at)'))
             ->pluck('total', 'month')
             ->toArray();
@@ -61,9 +62,10 @@ class OrderControllerAdmin extends Controller
             ->join('product_variants', 'order_detail.product_variant_id', '=', 'product_variants.id')
             ->select(
                 DB::raw('MONTH(order.created_at) as month'),
-                DB::raw('SUM(product_variants.price * order_detail.serial) as total')
+                DB::raw('SUM(product_variants.price) as total')
             )
             ->whereYear('order.created_at', $previousYear)
+            ->where('order.status', 'completed')
             ->groupBy(DB::raw('MONTH(order.created_at)'))
             ->pluck('total', 'month')
             ->toArray();

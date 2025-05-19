@@ -57,5 +57,7 @@ class OrderDetails extends Controller
             'data' => $order_detail
         ]);
     }
-    //3.2 Lấy
+    
+    // lấy tổng tiền của đơn hàng
+    
 }

@@ -23,6 +23,18 @@ class Accounts extends Controller
             'limit' => $limit
         ]);
     }
+    public function getAlls(Request $request)
+    {
+        $limit = $request->query('limit', 100);
+        $query = Account::query();
+        $accounts = $query->paginate($limit);
+
+        return response()->json([
+            'message' => 'Lấy danh sách tài khoản thành công',
+            'data' => $accounts,
+            'limit' => $limit
+        ]);
+    }
 
     //8.2 Tạo tài khoản
     public function create(Request $request)

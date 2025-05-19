@@ -195,4 +195,61 @@ class Orders extends Controller
             ], 500);
         }
     }
+
+      public function getCurrentMonthOrders(Request $request)
+    {
+        // Get current month's start and end dates
+        $startOfMonth = Carbon::now()->startOfMonth()->toDateTimeString();
+        $endOfMonth = Carbon::now()->endOfMonth()->toDateTimeString();
+    
+        $query = Order::query()->with('profile')
+            ->where('status', 'completed')
+            ->whereBetween('created_at', [$startOfMonth, $endOfMonth]);
+    
+        // Apply filters if provided
+        if ($account_id = $request->query('account_id')) {
+            $query->where('account_id', $account_id);
+        }
+        if ($employee_id = $request->query('employee_id')) {
+            $query->where('employee_id', $employee_id);
+        }
+    
+        // Get all results without pagination
+        $orders = $query->get();
+    
+        return response()->json([
+            'message' => 'Lấy danh sách đơn hàng hoàn thành tháng hiện tại thành công',
+            'data' => $orders
+        ]);
+    }
+    
+    /**
+     * Get all completed orders for the previous month
+     */
+    public function getPreviousMonthOrders(Request $request)
+    {
+        // Get previous month's start and end dates
+        $startOfPreviousMonth = Carbon::now()->subMonth()->startOfMonth()->toDateTimeString();
+        $endOfPreviousMonth = Carbon::now()->subMonth()->endOfMonth()->toDateTimeString();
+    
+        $query = Order::query()->with('profile')
+            ->where('status', 'completed')
+            ->whereBetween('created_at', [$startOfPreviousMonth, $endOfPreviousMonth]);
+    
+        // Apply filters if provided
+        if ($account_id = $request->query('account_id')) {
+            $query->where('account_id', $account_id);
+        }
+        if ($employee_id = $request->query('employee_id')) {
+            $query->where('employee_id', $employee_id);
+        }
+    
+        // Get all results without pagination
+        $orders = $query->get();
+    
+        return response()->json([
+            'message' => 'Lấy danh sách đơn hàng hoàn thành tháng trước thành công',
+            'data' => $orders
+        ]);
+    }
 }

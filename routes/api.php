@@ -46,6 +46,11 @@ Route::controller(ProductReviewController::class)->group(function () {
     Route::post('/products/{id}/reviews', 'addReviewById');
 });
 
+
+
+
+
+
 // cart
 Route::middleware(['auth:api'])->group(function () {
     Route::prefix('admin')->middleware('admin')->group(function () {
@@ -59,6 +64,7 @@ Route::middleware(['auth:api'])->group(function () {
             Route::get('/products', 'getAll');
             Route::get('/products/search', 'search');
             Route::get('/products/top', 'topProducts');
+            Route::get('/products/toptruoc', 'topProductsTruoc');
             Route::get('/products/{id}', 'getById');
             Route::put('/products/{id}', 'update');
             // Route::delete('/products/{id}', 'delete');
@@ -91,6 +97,8 @@ Route::middleware(['auth:api'])->group(function () {
             Route::put('/orders/{id}', 'updateStatus');
             Route::delete('/orders/{id}', 'cancelOrder');
             Route::get('/orders/{id}/details', 'getOrderDetails');
+            Route::get('/orders/current-month','getCurrentMonthOrders');
+            Route::get('/orders/previous-month','getPreviousMonthOrders');
         });
         // orderDetails
         Route::controller(OrderDetails::class)->group(function () {
@@ -127,9 +135,12 @@ Route::middleware(['auth:api'])->group(function () {
             Route::delete('/warrantys/{id}', 'delete');
         });
 
-        Route::get('/admin/top-customers', [Statistical::class, 'topCustomersByDateRange']);
-        Route::get('/admin/customer-orders', [Statistical::class, 'getOrdersByCustomer']);
-        Route::get('/admin/order-details', [Statistical::class, 'getOrderDetails']);
+        Route::controller(Statistical::class)->group(function () {
+            Route::get('/top-customers', 'topCustomersByDateRange');
+            Route::get('/customer-orders', 'getOrdersByCustomer');
+            Route::get('/order-details', 'getOrderDetails');
+
+        });
 
         Route::controller(OrderControllerAdmin::class)->group(function () {
             Route::get('/tk_orders', 'getOrders');
@@ -137,11 +148,13 @@ Route::middleware(['auth:api'])->group(function () {
             Route::get('/tk_orders/status-stats', 'getStatusStats');
 
         });
+ 
 
         // account
         Route::controller(Accounts::class)->group(function () {
             Route::post('/accounts', 'create');
             Route::get('/accounts', 'getAll');
+             Route::get('/aaccounts', 'getAlls');
             Route::get('/accounts/search', 'search');
             Route::put('/accounts/{id}', 'update');
             Route::delete('/accounts/{id}', 'delete');
@@ -212,7 +225,10 @@ Route::middleware(['auth:api'])->group(function () {
     Route::put('/users/profile', [ProfileController::class, 'updateProfile']);
     Route::post('/users/profile/avatar', [ProfileController::class, 'uploadAvatar']);
     Route::get('/users/info', [AccountController::class, 'getUserInfo']);
+
+
 });
+
 
 
 // account
@@ -250,3 +266,6 @@ Route::prefix('admin')->group(function () {
     });
 
 });
+
+
+
