@@ -44,7 +44,14 @@ class ProductController extends Controller
 
     public function getNewProduct() {
         $limit = request()->input('limit', 10);
-        $data = Product::orderBy('created_at', 'desc')->with(['product_images'])->limit($limit)->get();
+        
+        // lấy được sao chung bình của sản phẩm và số lượng đã đánh giá
+        $data = Product::with(['product_images', 'product_reviews'])
+            ->withAvg('product_reviews', 'rating')
+            ->withCount('product_reviews')
+            ->orderBy('created_at', 'desc')
+            ->limit($limit)
+            ->get();
 
 
         return response()->json([
