@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  * 
  * @property int $id
  * @property int $import_id
- * @property int $product_id
+ * @property int $product_variant_id
  * @property int $import_price
  * @property int $amount
  * 

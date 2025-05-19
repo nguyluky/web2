@@ -14,12 +14,12 @@ return new class extends Migration
         Schema::create('import_detail', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('import_id');
-            $table->unsignedBigInteger('product_id');
+            $table->unsignedBigInteger('product_variant_id');
             $table->integer('import_price');
             $table->integer('amount');
             
             $table->foreign('import_id')->references('id')->on('import');
-            $table->foreign('product_id')->references('id')->on('product');
+            $table->foreign('product_variant_id')->references('id')->on('product_variants');
         });
     }
 
