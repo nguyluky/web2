@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\admin;
 
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Carbon;
 use App\Models\Warranty;
 use Illuminate\Http\Request;
 
@@ -133,7 +134,13 @@ class Warrantys extends Controller
             'status' => 'sometimes|in:active,expired',
             'note' => 'nullable|string',
         ]);
+        // Tự động cập nhật status nếu có expiration_date
+        if (isset($validated['expiration_date'])) {
+            $expirationDate = Carbon::parse($validated['expiration_date']);
+            $today = Carbon::today();
 
+            $validated['status'] = $expirationDate->lt($today) ? 'expired' : 'active';
+        }
         // Cập nhật thông tin bảo hành
         $warranty->update($validated);
 
@@ -166,10 +173,13 @@ class Warrantys extends Controller
     public function search(Request $request)
     {
         try {
-            $query = Warranty::query();
+            $query = Warranty::query()
+                ->with('order_detail.product_variant.product');
+
+            // Filter theo keyword
             if ($request->filled('keyword')) {
                 $keyword = $request->input('keyword');
-            
+
                 $query->where(function ($q) use ($keyword) {
                     $q->whereHas('order_detail', function ($q1) use ($keyword) {
                         $q1->where('serial', 'like', "%$keyword%");
@@ -179,39 +189,33 @@ class Warrantys extends Controller
                     });
                 });
             }
-            // Lọc theo status
+
+            // Filter status
             if ($request->has('status') && $request->input('status') !== 'all') {
-                    $query->where('status', $request->input('status'));
+                $query->where('status', $request->input('status'));
             }
-            // Lọc theo khoảng thời gian
+
+            // Filter thời gian
             if ($request->filled('date_start') && $request->filled('date_end')) {
-                $start = $request->input('date_start');
-                $end = $request->input('date_end');
-            
-                $query->where(function ($q) use ($start, $end) {
-                    $q->whereBetween('issue_date', [$start, $end])
-                      ->orWhereBetween('expiration_date', [$start, $end]);
+                $query->where(function ($q) use ($request) {
+                    $q->whereBetween('issue_date', [$request->date_start, $request->date_end])
+                      ->orWhereBetween('expiration_date', [$request->date_start, $request->date_end]);
                 });
-            
             } elseif ($request->filled('date_start')) {
-                $start = $request->input('date_start');
-            
-                $query->where(function ($q) use ($start) {
-                    $q->where('issue_date', '>=', $start)
-                      ->orWhere('expiration_date', '>=', $start);
+                $query->where(function ($q) use ($request) {
+                    $q->where('issue_date', '>=', $request->date_start)
+                      ->orWhere('expiration_date', '>=', $request->date_start);
                 });
-            
             } elseif ($request->filled('date_end')) {
-                $end = $request->input('date_end');
-            
-                $query->where(function ($q) use ($end) {
-                    $q->where('issue_date', '<=', $end)
-                      ->orWhere('expiration_date', '<=', $end);
+                $query->where(function ($q) use ($request) {
+                    $q->where('issue_date', '<=', $request->date_end)
+                      ->orWhere('expiration_date', '<=', $request->date_end);
                 });
             }
-            // Phân trang
-            $perPage = $request->input('per_page', 10); // Mặc định 10 bản ghi mỗi trang
+
+            $perPage = $request->input('per_page', 10);
             $warranties = $query->paginate($perPage);
+
             return response()->json([
                 'message' => 'Tìm kiếm thành công',
                 'data' => $warranties
