@@ -28,7 +28,10 @@ class Orders extends Controller
         $date_end = $request->query('date_end');
         $limit = $request->query('limit', 10);
     
-        $query = Order::query()->with('profile');
+        $query = Order::query()
+            ->with(['profile', 
+                    'address',
+                    'order_details.product_variant.product']);
     
         // Tìm kiếm
         if ($search) {
