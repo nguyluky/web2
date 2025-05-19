@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\user;
 
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Carbon;
@@ -40,12 +41,12 @@ class AccountController extends Controller
             "phone_number" => 'required|string|max:256'
         ]);
 
-
         DB::beginTransaction();
         try {
             $validate['rule'] = 4; // Mặc định là user
             $validate['status'] = 'active'; // Mặc định là active
-            $validate['password'] = bcrypt($validate['password']); // Mã hóa mật khẩu
+
+            $validate['password'] = Hash::make($validate['password']); // Mã hóa mật khẩu
             $account = Account::create([
                 'rule' => $validate['rule'],
                 'username' => $validate['username'],
