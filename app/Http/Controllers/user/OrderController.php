@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use OpenApi\Annotations as OA;
+use App\Models\ProductVariant;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use Illuminate\Routing\Controller;
@@ -18,46 +19,65 @@ use Illuminate\Routing\Controller;
  */
 class OrderController extends Controller
 {
-    public function createOrders(Request $request)
-    {
-        $validated = $request->validate([
-            'products.*.product_variant_id' => 'required|integer|exists:product_variants,id',
-            'products.*.amount' => 'required|integer|min:1',
-            'payment_method' => 'required|integer',
-            'products' => 'required|array',
-            'address_id' => 'required|integer|exists:address,id',
+
+public function createOrders(Request $request)
+{
+    $validated = $request->validate([
+        'products' => 'required|array|min:1',
+        'products.*.product_variant_id' => 'required|integer|exists:product_variants,id',
+        'products.*.amount' => 'required|integer|min:1',
+        'payment_method' => 'required|integer',
+        'address_id' => 'required|integer|exists:address,id',
+    ]);
+
+    $profile_id = auth()->user()->id;
+
+    foreach ($validated['products'] as $product) {
+        $variant = ProductVariant::find($product['product_variant_id']);
+
+        if (!$variant) {
+            return response()->json([
+                'message' => 'Không tìm thấy biến thể sản phẩm.',
+            ], 404);
+        }
+
+        if ($variant->stock < $product['amount']) {
+            return response()->json([
+                'message' => "Không đủ hàng trong kho cho sản phẩm: {$variant->sku}",
+            ], 409);
+        }
+    }
+
+    $order = DB::transaction(function () use ($validated, $profile_id) {
+        $order = Order::create([
+            'profile_id' => $profile_id,
+            'status' => 'pending',
+            'payment_method' => $validated['payment_method'],
+            'address_id' => $validated['address_id'],
         ]);
 
-        $profile_id = auth()->user()->id;
-        $validated['profile_id'] = $profile_id;
+        foreach ($validated['products'] as $product) {
+            $variant = ProductVariant::lockForUpdate()->find($product['product_variant_id']);
+            $variant->decrement('stock', $product['amount']);
 
-        // try {
-        $order = DB::transaction(function () use ($validated) {
-            $order_data = [
-                'profile_id' => $validated['profile_id'],
-                'status' => 'pending',
-                'payment_method' => $validated['payment_method'],
-                // 'created_at' => Carbon::now(),
-                'address_id' => $validated['address_id'],
-            ];
+            for ($i = 0; $i < $product['amount']; $i++) {
+                do {
+                    $serial = random_int(1000000000, 9999999999);
+                } while (OrderDetail::where('serial', $serial)->exists());
 
-            $order = Order::create($order_data);
-
-            foreach ($validated['products'] as $product) {
-                for ($i = 0; $i < $product['amount']; $i++) {
-                    // Create a new order detail for each product variant
-                    $order_detail = [
-                        'order_id' => $order->id,
-                        'product_variant_id' => $product['product_variant_id'],
-                        'serial' => rand(),
-                    ];
-                    OrderDetail::create($order_detail);
-                }
+                OrderDetail::create([
+                    'order_id'   => $order->id,
+                    'product_variant_id' => $variant->id,
+                    'serial'     => $serial,
+                ]);
             }
-            return $order;
-        });
-        return response()->json(['order' => $order], 201);
-    }
+        }
+
+        return $order;
+    });
+
+    return response()->json(['order' => $order], 201);
+}
 
     public function checkOrderStatus(Request $request)
     {
