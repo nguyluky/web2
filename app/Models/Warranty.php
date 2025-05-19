@@ -13,7 +13,6 @@ use Illuminate\Database\Eloquent\Model;
  * 
  * @property int $id
  * @property int $product_id
- * @property int $supplier_id
  * @property string|null $issue_date
  * @property string|null $expiration_date
  * @property string|null $status
@@ -31,12 +30,10 @@ class Warranty extends Model
 
 	protected $casts = [
 		'product_id' => 'int',
-		'supplier_id' => 'int'
 	];
 
 	protected $fillable = [
 		'product_id',
-		'supplier_id',
 		'issue_date',
 		'expiration_date',
 		'status',

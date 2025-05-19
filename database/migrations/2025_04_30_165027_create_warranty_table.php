@@ -14,13 +14,11 @@ return new class extends Migration
         Schema::create('warranty', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('product_id');
-            $table->unsignedBigInteger('supplier_id');
             $table->string('issue_date')->nullable();
             $table->string('expiration_date')->nullable();
             $table->string('status')->nullable();
             $table->text('note')->nullable();
             
-            $table->foreign('product_id')->references('id')->on('order_detail');
             $table->foreign('supplier_id')->references('id')->on('supplier');
         });
     }

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id')->autoIncrement(); // Change to bigint
             $table->unsignedBigInteger('order_id'); // Change to bigint
             $table->unsignedBigInteger('product_variant_id'); // Change to bigint
-            $table->integer('serial');
+            $table->unsignedBigInteger('serial');
             
             $table->foreign('order_id')->references('id')->on('order');
             $table->foreign('product_variant_id')->references('id')->on('product_variants');
