@@ -9,6 +9,7 @@ use OpenApi\Annotations as OA;
 use App\Models\ProductVariant;
 use App\Models\Order;
 use App\Models\OrderDetail;
+use App\Models\Cart;
 use Illuminate\Routing\Controller;
 
 /**
@@ -74,6 +75,27 @@ class OrderController extends Controller
 
             return $order;
         });
+
+        $user = auth()->user();
+        if (!$user || !$user->profile) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $order = Order::where('profile_id', $user->profile->id)
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        if (!$order) {
+            return response()->json(['error' => 'Order not found'], 404);
+        }
+
+        $orderDetails = OrderDetail::where('order_id', $order->id)->get();
+
+        foreach ($orderDetails as $orderDetail) {
+            Cart::where('profile_id', $user->profile->id)
+                ->where('product_variant_id', $orderDetail->product_variant_id)
+                ->delete();
+        }
 
         return response()->json(['order' => $order], 201);
     }

@@ -1,1 +1,0 @@
-{"message":"Filters: 6","context":{"__pail":{"origin":{"type":"http","method":"GET","path":"api/products/search","auth_id":null,"auth_email":null,"trace":null}}},"level":200,"level_name":"INFO","channel":"pail","datetime":"2025-05-20T01:27:23.228683+07:00","extra":{}}
