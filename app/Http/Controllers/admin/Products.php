@@ -270,7 +270,7 @@ class Products extends Controller
     public function search(Request $request)
     {
         try {
-            $query = Product::query();
+            $query = Product::query()->with('category');
 
             if ($request->filled('keyword')) {
                 $keyword = $request->input('keyword');
